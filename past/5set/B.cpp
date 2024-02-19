@@ -1,0 +1,46 @@
+// 
+//./B<test.txt
+
+#include <bits/stdc++.h>
+#define endl '\n'
+#define cediv(a,b) ((a)%(b)==0?((a)/(b)):((a)/(b))+1)
+#define fi first
+#define se second
+#define pb push_back
+
+using namespace std;
+
+typedef long long ll;
+typedef unsigned int ui;
+typedef unsigned long long ull;
+
+template<typename T>
+inline T umax(T &u, T v){return u = max(u, v);}
+template<typename T>
+inline T umin(T &u, T v){return u = min(u, v);}
+
+int datas[200000];
+
+int main(){
+    ios_base::sync_with_stdio(false); cin.tie(NULL);
+    int t;
+    cin>>t;
+    while(t--){
+        int n,a;
+        bool all_zero=true;
+        bool is_zero=false;
+        int cnt=0; // cluster
+        cin>>n;
+        for(int i=0; i<n; i++){
+            cin>>datas[i];
+            if(datas[i]!=0 && (i==0 || datas[i-1]==0)) cnt++;
+            if(datas[i]==0) is_zero=true;
+            if(datas[i]!=0) all_zero=false;
+        }
+
+        if(all_zero) cout<<0<<endl;
+        else if(!is_zero || (is_zero && cnt==1)) cout<<1<<endl;
+        else cout<<2<<endl;
+    }
+    return 0;
+}
