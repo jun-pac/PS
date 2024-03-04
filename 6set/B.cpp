@@ -30,25 +30,14 @@ using t3=tuple<int,int,int>;
 #define MOD 998244353
 #define INF 1000000007 
 
-ll datas[N];
-
 void Solve(){
-    int n;
-    cin>>n;
-    rng(i,0,n-1) cin>>datas[i];
-    ll cur=0;
-    rng(i,0,n-2){
-        ll s,t;
-        cin>>s>>t;
-        datas[i+1]+=datas[i]/s*t;
-    }
-    cout<<datas[n-1]<<'\n';
+
 }
 
 int main(){
     ios_base::sync_with_stdio(false); cin.tie(NULL);
     int t=1;
-    //cin>>t;
+    cin>>t;
     while(t--){
         Solve();
     }

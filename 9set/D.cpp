@@ -28,30 +28,10 @@ using t3=tuple<int,int,int>;
 
 #define N 300030
 #define MOD 998244353
-#define INF 2147483647 
-
-map<int,int> mp;
-int datas[N];
+#define INF 1000000007 
 
 void Solve(){
-    int n;
-    cin>>n;
-    mp.clear();
-    rng(i,0,n-1){
-        cin>>datas[i];
-        mp[datas[i]]++;
-    }
-    int cnt=0;
-    rng(i,0,n-1){
-        if(mp[datas[i]]!=0){
-            //cout<<datas[i]<<' '<<INF-datas[i]<<' '<<mp[datas[i]]<<' '<<mp[INF-datas[i]]<<'\n';
-            int mn=min(mp[datas[i]],mp[INF-datas[i]]);
-            cnt+=mn;
-            mp[datas[i]]-=mn;
-            mp[INF-datas[i]]-=mn;
-        }
-    }
-    cout<<n-cnt<<'\n';
+
 }
 
 int main(){

@@ -30,16 +30,8 @@ using t3=tuple<int,int,int>;
 #define MOD 998244353
 #define INF 1000000007 
 
-ll datas[10000];
-
 void Solve(){
-    int n;
-    cin>>n;
-    rng(i,0,2*n-1) cin>>datas[i];
-    sort(datas,datas+2*n);
-    ll res=0;
-    rng(i,0,n-1) res+=datas[2*i];
-    cout<<res<<'\n';
+
 }
 
 int main(){

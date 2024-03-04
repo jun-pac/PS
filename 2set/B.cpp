@@ -30,20 +30,8 @@ using t3=tuple<int,int,int>;
 #define MOD 998244353
 #define INF 1000000007 
 
-ll datas[N];
-ll sum[N];
-
 void Solve(){
-    int n;
-    cin>>n;
-    rng(i,0,n-1) cin>>datas[i];
-    rng(i,0,n-1) sum[i]=(i==0?0:sum[i-1])+datas[i];
-    ll muls=sum[n-1]/n;
-    bool flag=1;
-    rng(i,0,n-1){
-        if(sum[i]<(i+1)*muls) flag=0;
-    }    
-    cout<<(flag?"YES\n":"NO\n");
+
 }
 
 int main(){

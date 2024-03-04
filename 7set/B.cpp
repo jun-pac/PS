@@ -31,13 +31,7 @@ using t3=tuple<int,int,int>;
 #define INF 1000000007 
 
 void Solve(){
-    int n;
-    cin>>n;
-    rng(i,0,n/2-1){
-        cout<<i+1<<' '<<i+n/2+1<<' ';
-    }
-    if(n%2==1) cout<<n;
-    cout<<'\n';
+
 }
 
 int main(){

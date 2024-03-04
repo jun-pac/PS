@@ -31,12 +31,7 @@ using t3=tuple<int,int,int>;
 #define INF 1000000007 
 
 void Solve(){
-    string s;
-    cin>>s;
-    int aa=0;
-    rng(i,0,4) if(s[i]=='A') aa++;
-    if(aa>=3) cout<<"A\n";
-    else cout<<"B\n";
+
 }
 
 int main(){

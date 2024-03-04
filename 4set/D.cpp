@@ -30,49 +30,8 @@ using t3=tuple<int,int,int>;
 #define MOD 998244353
 #define INF 1000000007 
 
-vc<int> edges[N];
-ll DP1[N], DP2[N]; // 각각 부모자식없는, 부모자식존재하는
-
-void DFS1(int idx, int p){
-    ll temp=1; // DP1은 아무것도 없는 경우도 포함한다.
-    for(auto next : edges[idx]){
-        if(next!=p){
-            DFS1(next,idx);
-            temp=(temp*DP1[next])%MOD;
-        }
-    }
-    DP1[idx]=(temp+1)%MOD;
-    //cout<<"DP1 "<<idx+1<<' '<<DP1[idx]<<'\n';
-}
-
-void DFS2(int idx, int p){
-    ll temp=0;
-    for(auto next : edges[idx]){
-        if(next!=p){
-            DFS2(next, idx);
-            temp=(temp+DP1[next]-1)%MOD;
-        }
-    }
-    DP2[idx]=temp;
-    //cout<<"DP2 "<<idx+1<<' '<<DP2[idx]<<'\n';
-}
-
 void Solve(){
-    int n;
-    cin>>n;
-    rng(i,0,n-1) edges[i].clear();
-    rng(i,0,n-2){
-        int a,b;
-        cin>>a>>b;
-        a--, b--;
-        edges[a].pb(b);
-        edges[b].pb(a);
-    }
-    DFS1(0,-1);
-    DFS2(0,-1);
-    ll res=DP1[0];
-    rng(i,0,n-1) res=(res+DP2[i])%MOD;
-    cout<<(res%MOD+MOD)%MOD<<'\n';
+
 }
 
 int main(){

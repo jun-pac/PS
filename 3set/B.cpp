@@ -30,24 +30,8 @@ using t3=tuple<int,int,int>;
 #define MOD 998244353
 #define INF 1000000007 
 
-int gcd(int x, int y){
-    if(x<y) swap(x,y);
-    if(y==0) return x;
-    if(x%y==0) return y;
-    return gcd(y,x%y);
-}
-
-int datas[N];
-
 void Solve(){
-    int n;
-    cin>>n;
-    rng(i,0,n-1) cin>>datas[i];
-    int res=abs(datas[0]-datas[n-1]);
-    rng(i,0,n/2-1){
-        res=gcd(res,abs(datas[i]-datas[n-1-i]));
-    }
-    cout<<res<<'\n';
+
 }
 
 int main(){

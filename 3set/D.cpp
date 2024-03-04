@@ -30,46 +30,8 @@ using t3=tuple<int,int,int>;
 #define MOD 998244353
 #define INF 1000000007 
 
-int datas[N];
-pii sda[N];
-set<pii> st;
-
 void Solve(){
-    int n;
-    cin>>n;
-    st.clear();
-    rng(i,0,n-1) cin>>datas[i];
-    rng(i,0,n-1) sda[i]={datas[i],-i};
-    sort(sda,sda+n);
-    reverse(sda,sda+n);
 
-    int mx=-10000;
-    //st.insert({-sda[0].se,sda[0].fi});
-    //cout<<"val:"<<sda[0].fi<<'\n';
-    rng(i,0,n-1){
-        int idx=-sda[i].se;
-        int val=sda[i].fi;
-        //cout<<"val:"<<val<<'\n';
-        auto nn=st.upper_bound({idx,val});
-        if(nn!=st.end() && next(nn)!=st.end()){
-            auto nnn=next(nn);
-            mx=max(mx,val+(nn->se)+(nnn->se)-((nnn->fi)-idx));
-        }
-        if(nn==st.begin()){
-            st.insert({idx,val});
-            continue;
-        }
-        auto pp=prev(nn);
-        if(nn!=st.end()){
-            mx=max(mx,val+(nn->se)+(pp->se)-((nn->fi)-(pp->fi)));
-        }
-        if(pp!=st.begin()){
-            auto ppp=prev(pp);
-            mx=max(mx,val+(pp->se)+(ppp->se)-(idx-(ppp->fi)));
-        }
-        st.insert({idx,val});
-    }
-    cout<<mx<<'\n';
 }
 
 int main(){

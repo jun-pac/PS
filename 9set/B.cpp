@@ -30,20 +30,8 @@ using t3=tuple<int,int,int>;
 #define MOD 998244353
 #define INF 1000000007 
 
-string datas[100];
-
 void Solve(){
-    int n;
-    cin>>n;
-    rng(i,0,n-1) cin>>datas[i];
-    bool flag=0;
-    rng(i,0,n-1){
-        int cnt=0;
-        rng(j,0,n-1) if(datas[i][j]=='1') cnt++;
-        if(cnt==1) flag=1;
-    }
-    cout<<(flag?"TRIANGLE":"SQUARE");
-    cout<<'\n';
+
 }
 
 int main(){

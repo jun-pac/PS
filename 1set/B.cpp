@@ -30,40 +30,8 @@ using t3=tuple<int,int,int>;
 #define MOD 998244353
 #define INF 1000000007 
 
-int datas[N];
-int unidata[N];
-
 void Solve(){
-    int n;
-    cin>>n;
-    rng(i,0,n-1) cin>>datas[i];
-    sort(datas,datas+n);
-    int cnt=0;
-    int last=-1;
-    rng(i,0,n-1){
-        if(datas[i]!=last) unidata[cnt++]=datas[i];
-        last=datas[i];
-    }
-    last=-1;
-    int mx=1;
 
-
-    // cout<<"uni : ";
-    // rng(i,0,cnt-1) cout<<unidata[i]<<' '; cout<<'\n';
-
-    rng(i,0,n-1){
-        if(datas[i]==last) continue;
-        last=datas[i];
-        int temp=i;
-        //while(i+1<n && datas[i+1]==last) i++;
-        //int cur_cnt=i-temp+1; // i가 마지막 last값을 가지는 원소로 수렴함.
-        // 이제 [last-n,last-1]에 속하는 원소의 개수를 구할 차례임
-        int num=upper_bound(unidata,unidata+cnt,last)-lower_bound(unidata,unidata+cnt,last-n+1);
-        mx=max(mx,num);
-        // cout<<"i "<<i<<' '<<datas[i]<<' '<<cur_cnt<<' '<<num<<'\n';
-    }
-    assert(mx<=n);
-    cout<<mx<<'\n';
 }
 
 int main(){

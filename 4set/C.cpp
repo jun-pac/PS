@@ -31,23 +31,7 @@ using t3=tuple<int,int,int>;
 #define INF 1000000007 
 
 void Solve(){
-    ll mul,x,ini; // a°¡ initial coin
-    cin>>mul>>x>>ini;
-    ll cur, cur_loss=0;
-    ll tot_bet=0;
-    rng(i,1,x+1){
-        cur=cur_loss/(mul-1)+1;
-        cur_loss+=cur;
-        if(cur_loss>ini){
-            cout<<"NO\n";
-            return;
-        }
-        //cout<<"cur "<<cur<<' '<<cur_loss<<'\n';
 
-    }
-    //cout<<"cur_loss "<<cur_loss<<'\n';
-    //if(cur_loss>ini) cout<<"NO\n";
-    cout<<"YES\n";
 }
 
 int main(){

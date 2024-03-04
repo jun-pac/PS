@@ -30,35 +30,14 @@ using t3=tuple<int,int,int>;
 #define MOD 998244353
 #define INF 1000000007 
 
-ll gcd(ll x, ll y){
-    if(x<y) swap(x,y);
-    if(y==0) return x;
-    if(x%y==0) return y;
-    return gcd(y,x%y);
-}
-
 void Solve(){
-    ll n,m,k;
-    cin>>n>>m>>k;
-    ll nn=n/gcd(n,m);
-    ll mm=m/gcd(n,m);
-    
-    ll res=(k%(nn+mm-2)==0?nn+mm-2:k%(nn+mm-2)); // residual
-    //cout<<"res "<<res<<' '<<nn<<' '<<mm<<'\n';
-    ll l=1, r=nn*mm-1;
-    while(l<r){
-        ll mid=(l+r)/2;
-        if(mid/nn+mid/mm>=res) r=mid;
-        else l=mid+1;
-    }
-    ll mul=((k%(nn+mm-2)==0?-1:0)+k/(nn+mm-2))*(nn*mm)+l;
-    cout<<mul*gcd(n,m);
+
 }
 
 int main(){
     ios_base::sync_with_stdio(false); cin.tie(NULL);
     int t=1;
-    //cin>>t;
+    cin>>t;
     while(t--){
         Solve();
     }

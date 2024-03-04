@@ -31,16 +31,7 @@ using t3=tuple<int,int,int>;
 #define INF 1000000007 
 
 void Solve(){
-    int n;
-    cin>>n;
-    string s;
-    cin>>s;
-    int res=0;
-    rng(i,1,n-1){
-        if(s[i]=='*' && s[i-1]=='*') break;
-        if(s[i]=='@') res++;
-    }
-    cout<<res<<'\n';
+
 }
 
 int main(){

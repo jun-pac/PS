@@ -30,50 +30,8 @@ using t3=tuple<int,int,int>;
 #define MOD 998244353
 #define INF 1000000007 
 
-vc<int> datas[N];
-vc<int> edges[N];
-
-int in[N], out[N], cnt;
-bool DFS(int idx){
-    if(in[idx]!=-1 && out[idx]==-1) return 0;
-    else if(in[idx]!=-1) return 1;
-    in[idx]=cnt++;
-    for(auto next : edges[idx]){
-        if(!DFS(next)) return 0;
-    }
-    out[idx]=cnt++;
-    return 1;
-}
-
 void Solve(){
-    int n,k;
-    cin>>n>>k;
-    rng(i,0,k-1) datas[i].resize(n);
-    rng(i,0,n-1) edges[i].clear();
-    rng(i,0,k-1) rng(j,0,n-1) cin>>datas[i][j];
-    if(k<=1){
-        cout<<"YES\n";
-        return;
-    }
-    rng(i,0,k-1){
-        rng(j,2,n-1){
-            //cout<<datas[i][j]-1<<' '<<datas[i][j-1]-1<<endl;
-            edges[datas[i][j]-1].pb(datas[i][j-1]-1);
-        }
-    }
-    // cycle detection
-    fill(in,in+n,-1);
-    fill(out,out+n,-1);
-    bool flag=1;
-    cnt=0;
-    rng(i,0,n-1){
-        if(in[i]==-1){
-            if(!DFS(i)){
-                flag=0; break;
-            }
-        }
-    }
-    cout<<(flag?"YES\n":"NO\n");
+
 }
 
 int main(){

@@ -31,16 +31,13 @@ using t3=tuple<int,int,int>;
 #define INF 1000000007 
 
 void Solve(){
-    int n;
-    cin>>n;
-    rng(i,0,2*n) cout<<(i%2==0?1:0);
-    cout<<'\n';
+
 }
 
 int main(){
     ios_base::sync_with_stdio(false); cin.tie(NULL);
     int t=1;
-    //cin>>t;
+    cin>>t;
     while(t--){
         Solve();
     }

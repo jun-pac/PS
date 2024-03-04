@@ -30,24 +30,8 @@ using t3=tuple<int,int,int>;
 #define MOD 998244353
 #define INF 1000000007 
 
-int datas[N];
-map<pair<int,int>,ll> mp;
-
 void Solve(){
-    int n,x,y; // 더한게 x의 배수, 뺀게 y의 배수인 pair의 수?
-    cin>>n>>x>>y;
-    rng(i,0,n-1) cin>>datas[i];
-    mp.clear();
-    ll res=0;
 
-    rng(i,0,n-1){
-        int a=(datas[i]%x+x)%x;
-        int b=(datas[i]%y+y)%y;
-        res+=mp[{(-a+x)%x,b}];
-        // {-a,b}를 찾는다.
-        mp[{a,b}]++;
-    }
-    cout<<res<<'\n';
 }
 
 int main(){

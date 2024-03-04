@@ -26,41 +26,12 @@ using pli=pair<ll,int>;
 using pll=pair<ll,ll>;
 using t3=tuple<int,int,int>;
 
-#define N 400040
+#define N 300030
 #define MOD 998244353
 #define INF 1000000007 
 
-string s;
-int ans[N];
-ll datas[N];
-ll sum[N];
-
 void Solve(){
-    int n;
-    cin>>n;
-    cin>>s;
-    rng(i,0,n-1) datas[n-1-i]=(s[i]-'0');
-    rng(i,0,n-1) sum[i]=(i==0?0:sum[i-1])+datas[i];
-    ll carry=0;
-    rng(i,0,n-1){
-        carry=carry/10;
-        carry+=sum[n-1]-(i==0?0:sum[i-1]);
-        ans[i]=(carry%10);
-    }
-    carry=carry/10;
-    if(carry!=0){
-        cout<<carry;
-        rng(i,0,n-1) cout<<ans[n-1-i];
-    }
-    else{
-        bool flag=0;
-        rng(i,0,n-1){
-            if(!flag && ans[n-1-i]==0) continue;
-            flag=1;
-            cout<<ans[n-1-i];
-        }
-    }
-    cout<<'\n';
+
 }
 
 int main(){

@@ -31,24 +31,7 @@ using t3=tuple<int,int,int>;
 #define INF 1000000007 
 
 void Solve(){
-    int n;
-    cin>>n;
-    n-=3;
-    char a,b,c;
-    if(n<=50) a='a';
-    else{
-        a=n-50+'a';
-        n=50;
-    }
 
-    if(n<=25) b='a';
-    else{
-        b=n-25+'a';
-        n=25;
-    }
-
-    c=n+'a';
-    cout<<a<<b<<c<<'\n';
 }
 
 int main(){

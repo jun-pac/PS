@@ -30,45 +30,8 @@ using t3=tuple<int,int,int>;
 #define MOD 998244353
 #define INF 1000000007 
 
-int datas[N];
-int backz[N], num[N];
-priority_queue<int> pq;
-
 void Solve(){
-    int n,m;
-    cin>>n>>m;
-    rng(i,0,n-1){
-        cin>>datas[i];
-        int temp=datas[i];
-        num[i]=0;
-        while(temp!=0){
-            num[i]++;
-            temp/=10;
-        }
-        temp=datas[i];
-        backz[i]=0;
-        while(temp%10==0){
-            backz[i]++;
-            temp/=10;
-        }
-        //cout<<datas[i]<<' '<<num[i]<<' '<<backz[i]<<'\n';
-    }
-    // 합쳐서 m자리보다 커야 sasha승리구나
-    // 그럼 0을 최대한 적게 제거
-    // anna가 먼저 하는데 anna입장에서는 가장 많이 0을 제거하는게 맞음.
 
-    int tnum=0;
-    rng(i,0,n-1) tnum+=num[i];
-    //while(!pq.empty()) pq.pop();
-    //rng(i,0,n-1) pq.push(-backz[i]);
-    sort(backz,backz+n);
-    reverse(backz,backz+n);
-    int ssc=0;
-    rng(i,0,n-1){
-        if(i%2==0) ssc+=backz[i];
-    }
-    if(tnum-ssc>m) cout<<"Sasha\n";
-    else cout<<"Anna\n";
 }
 
 int main(){

@@ -29,27 +29,9 @@ using t3=tuple<int,int,int>;
 #define N 300030
 #define MOD 998244353
 #define INF 1000000007 
-int datas[N];
 
 void Solve(){
-    int n;
-    cin>>n;
-    rng(i,0,n-1) cin>>datas[i];
-    sort(datas,datas+n);
-    reverse(datas,datas+n);
-    if(datas[0]==0){
-        cout<<0<<'\n';
-        return;
-    }
-    rng(i,0,n-2){
-        if(datas[i]==datas[i+1]) continue;
-        // i+1 lier, < datas[i] and >= datas[i+1]
-        if(datas[i+1]<=i+1 && datas[i]>i+1){
-            cout<<i+1<<'\n';
-            return;
-        }
-    }
-    cout<<-1<<'\n';
+
 }
 
 int main(){

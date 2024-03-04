@@ -31,21 +31,7 @@ using t3=tuple<int,int,int>;
 #define INF 1000000007 
 
 void Solve(){
-    int k,n;
-    cin>>n>>k;
-    int cur=0, mul=1;
-    while(n!=0){
-        int num=(n+1)/2;
-        if(cur<k && k<=cur+num){
-            //assert(1<=(2*(k-cur)-1)*mul && (2*(k-cur)-1)*mul<=n);
-            cout<<(2*(k-cur)-1)*mul<<'\n';
-            return;
-        }
-        cur+=(n+1)/2;
-        mul=mul*2;
-        n=n/2;
-    }
-    cout<<'-'<<'\n';
+
 }
 
 int main(){

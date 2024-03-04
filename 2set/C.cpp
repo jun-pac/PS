@@ -30,30 +30,8 @@ using t3=tuple<int,int,int>;
 #define MOD 998244353
 #define INF 1000000007 
 
-int datas[N];
-
 void Solve(){
-    int n;
-    cin>>n;
-    rng(i,0,n-1){
-        cin>>datas[i];
-    }
-    bool as=1;
-    rng(i,0,n-1) if(datas[i]!=datas[0]) as=0;
-    if(as){
-        cout<<0<<'\n';
-        return;
-    }
-    int ln=0, rn=0;
-    while(ln+1<n && datas[ln+1]==datas[0]) ln++;
-    while(rn+1<n && datas[n-2-rn]==datas[n-1]) rn++;
-    ln++;
-    rn++;
-    if(datas[0]==datas[n-1]) cout<<n-ln-rn<<'\n';
-    else{
-        cout<<n-max(ln,rn)<<'\n';
-    }
-    
+
 }
 
 int main(){

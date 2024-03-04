@@ -31,13 +31,7 @@ using t3=tuple<int,int,int>;
 #define INF 1000000007 
 
 void Solve(){
-    int n,k;
-    cin>>n>>k;
-    if(k==4*n-2) cout<<2*n<<'\n';
-    else if(k==4*n-3) cout<<2*n-1<<'\n';
-    else{
-        cout<<(k+1)/2<<'\n';
-    }
+
 }
 
 int main(){

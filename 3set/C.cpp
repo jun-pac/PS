@@ -31,28 +31,8 @@ using t3=tuple<int,int,int>;
 #define INF 1000000007 
 
 void Solve(){
-    int n,m;
-    cin>>m>>n;
-    // 종국에는 m의 약수가 계속 살아남는다.
-    // m보다 작은 어떤 값으로 줄이는 것은 쉬운 일이다.
-    // 즉 n은 m의 1이 아닌 가장 작은 약수보다도 작아야 한다는 말이다.
-    if(m==1){
-        cout<<"YES\n";
-        return;
-    }
-    if(n>=m){
-        cout<<"NO\n";
-        return;
-    }
-    rng(i,2,min(n,(int)sqrt(m))){
-        if(m%i==0){
-            cout<<"NO\n";
-            return;
-        }    
-    }
-    cout<<"YES\n";
-}
 
+}
 
 int main(){
     ios_base::sync_with_stdio(false); cin.tie(NULL);

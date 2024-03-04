@@ -3,56 +3,44 @@
 using namespace std;
 #define fi first
 #define se second
+#define cediv(a,b) ((a)%(b)==0?((a)/(b)):((a)/(b))+1)
 #define rng(i,a,b) for(int i=int(a);i<=int(b);i++)
+#define rep(i,b) rng(i,0,b-1)  
 #define gnr(i,b,a) for(int i=int(b);i>=int(a);i--)
+#define per(i,b) gnr(i,b-1,0)
+#define pb push_back
+#define eb emplace_back
+#define bg begin()
+#define ed end()
+#define all(x) x.bg,x.ed
+#define si(x) int(x.size())
+template<class t> using vc=vector<t>;
+template<class t> using vvc=vc<vc<t>>;
 typedef long long ll;
 using pii=pair<int,int>;
+using vi=vc<int>;
+using uint=unsigned;
 using ull=unsigned long long;
+using pil=pair<int,ll>;
+using pli=pair<ll,int>;
+using pll=pair<ll,ll>;
+using t3=tuple<int,int,int>;
 
-ll profit[5050];
-uint16_t datas[505][5050];
-pii temp[5050];
-ull small[5050][100];
-ull cur_small[100];
-ll DP[5050];
+#define N 300030
+#define MOD 998244353
+#define INF 1000000007 
 
-__attribute__((optimize("Ofast,unroll-loops"),target("avx,avx2,fma")))
+void Solve(){
 
+}
 
 int main(){
     ios_base::sync_with_stdio(false); cin.tie(NULL);
-    int m,n; // m : show, n : models
-    cin>>m>>n;
-
-    rng(i,0,n-1) cin>>profit[i];
-    rng(i,0,m-1){
-        rng(j,0,n-1) cin>>datas[i][j];
-        rng(j,0,n-1) temp[j]={datas[i][j],j};
-        rng(k,0,n/64) cur_small[k]=0; // maximum n/64+1
-
-        sort(temp,temp+n);
-        int cur=0;
-        rng(j,0,n-1){
-            while(temp[cur].fi<temp[j].fi){
-                cur_small[temp[cur].se/64]|=((ull)1<<(temp[cur].se%64));
-                cur++;
-            }
-            if(i==0) rng(k,0,n/64) small[temp[j].se][k]=cur_small[k];
-            else rng(k,0,n/64) small[temp[j].se][k]=small[temp[j].se][k]&cur_small[k];
-        }
+    int t=1;
+    cin>>t;
+    while(t--){
+        Solve();
     }
-    fill(DP,DP+n,0);
-    ll mx=0;
-    rng(i,0,n-1){
-        DP[temp[i].se]=profit[temp[i].se];
-        rng(j,0,n-1){
-            if(small[temp[i].se][temp[j].se/64]&((ull)1<<(temp[j].se%64))){
-                DP[temp[i].se]=max(DP[temp[i].se],DP[temp[j].se]+profit[temp[i].se]);
-            }
-        }
-        mx=max(mx,DP[temp[i].se]);
-    }
-    cout<<mx<<'\n';
     return 0;
 }
 

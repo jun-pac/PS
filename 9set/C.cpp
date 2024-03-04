@@ -31,23 +31,7 @@ using t3=tuple<int,int,int>;
 #define INF 1000000007 
 
 void Solve(){
-    int n;
-    cin>>n;
-    ll res=0;
-    // 0~n까지를 생각
-    ll mul=1;
-    rng(i,0,7){
-        ll temp=0;
-        rng(j,0,9){
-            ll num=(((n+1)/(10*mul))*mul+min(max(0LL,n+1-(n+1)/(10*mul)*(10*mul)-j*mul),mul));
-            //cout<<"i j num "<<i<<' '<<j<<' '<<num<<'\n';
-            res+=j*num;
-            temp+=num;
-        }
-        assert(temp==n+1);
-        mul=mul*10;
-    }
-    cout<<res<<'\n';
+
 }
 
 int main(){

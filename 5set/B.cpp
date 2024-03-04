@@ -30,48 +30,8 @@ using t3=tuple<int,int,int>;
 #define MOD 998244353
 #define INF 1000000007 
 
-string s;
-int DP[N];
-pii pred[N]; // DP
-int n;
-
-int sz[9]={0,1,2,3,2,1,2,3,4};
-inline bool check(int pos,int num){
-    if(pos+sz[num]>n) return 0;
-    if(num==1 && s[pos]=='I') return 1;
-    if(num==2 && s[pos]=='I' && s[pos+1]=='I') return 1;
-    if(num==3 && s[pos]=='I' && s[pos+1]=='I' && s[pos+2]=='I') return 1;
-    if(num==4 && s[pos]=='I' && s[pos+1]=='V') return 1;
-    if(num==5 && s[pos]=='V') return 1;
-    if(num==6 && s[pos]=='V' && s[pos+1]=='I') return 1;
-    if(num==7 && s[pos]=='V' && s[pos+1]=='I' && s[pos+2]=='I') return 1;
-    if(num==8 && s[pos]=='V' && s[pos+1]=='I' && s[pos+2]=='I' && s[pos+3]=='I') return 1;
-    return 0;
-}
-
 void Solve(){
-    cin>>s;
-    n=s.size();
-    gnr(i,n-1,0){
-        DP[i]=INF;
-        //rng(j,1,8) cout<<"pre "<<i<<' '<<j<<' '<<check(i,j)<<' '<<s[i]<<'\n';
-        rng(j,1,8) if(check(i,j) && 1+(i+sz[j]==n?0:DP[i+sz[j]])<DP[i]){
-            //cout<<i<<' '<<"hello "<<j<<'\n';
-            DP[i]=1+(i+sz[j]==n?0:DP[i+sz[j]]);
-            pred[i]={sz[j],j};
-        }
-        //cout<<i<<' '<<DP[i]<<' '<<pred[i].fi<<' '<<pred[i].se<<'\n';
-    }    
-    vc<int> ans;
-    int cur=0;
-    while(cur<n){
-        //cout<<cur<<' '<<pred[cur].fi<<' '<<pred[cur].se<<endl;
-        ans.pb(pred[cur].se);
-        cur=cur+pred[cur].fi;
-    }
-    //reverse(all(ans));
-    rng(i,0,(int)ans.size()-1) cout<<ans[i];
-    cout<<'\n';
+
 }
 
 int main(){
