@@ -10,7 +10,7 @@ import torch
 import torch.nn.functional as F
 
 from model import *
-from final_utils import *
+from utils import *
 
 
 
@@ -18,8 +18,8 @@ def main(args):
     if args.seed > 0:
         set_random_seed(args.seed)
     
-    name="final_"+args.name
-    name=name+'_'+args.mode+'_'+args.synthesis_mode
+    name=args.name
+    name=name+'_'+args.mode
     if(args.extra_embedding):
         name=name+'_emb'
     else:
@@ -28,7 +28,7 @@ def main(args):
         name=name+str(args.hidden)
     if(args.debug):
         name=name+"_debug"
-    f_log=open('./txtlog/'+name+'.txt','a')
+    f_log=open('/users/PAS1289/oiocha/Adaptive_Sampling/SeHGNN/txtlog/'+name+'.txt','a')
     
     g, init_labels, num_nodes, n_classes, train_nid, val_nid, test_nid, evaluator, paper_year = load_dataset(args,f_log,args.time_bit)
     
@@ -54,7 +54,9 @@ def main(args):
 
         assert len(train_nid)==train_node_nums and valid_node_nums==len(val_nid) and test_node_nums==len(test_nid)
         f_log.write(f'dataset successfully shuffled!\n')
-        f_log.flush()
+        f_log.flush()    
+    
+    
 
     if total_num_nodes < num_nodes:
         flag = torch.ones(num_nodes, dtype=bool)
@@ -69,59 +71,31 @@ def main(args):
         extra_nid = torch.tensor([], dtype=torch.long)
 
     init2sort = torch.cat([train_nid, val_nid, test_nid, extra_nid])
-    sort2init = torch.argsort(init2sort)
+    sort2init = torch.argsort(init2sort) # init2sort[sort2init[0]]<=init2sort[sort2init[1]]<=... 
     assert torch.all(init_labels[init2sort][sort2init] == init_labels)
     labels = init_labels[init2sort]
     
-    # print(f"max(paper_year[train_nid]) : {max(paper_year[train_nid])} | min(paper_year[train_nid]) : {min(paper_year[train_nid])}")
-    # print(f"max(paper_year[val_nid]) : {max(paper_year[val_nid])} | min(paper_year[val_nid]) : {min(paper_year[val_nid])}")
-    # print(f"max(paper_year[test_nid]) : {max(paper_year[test_nid])} | min(paper_year[test_nid]) : {min(paper_year[test_nid])}")
-    # f_log.write(f"max(paper_year[train_nid]) : {max(paper_year[train_nid])} | min(paper_year[train_nid]) : {min(paper_year[train_nid])}\n")
-    # f_log.write(f"max(paper_year[val_nid]) : {max(paper_year[val_nid])} | min(paper_year[val_nid]) : {min(paper_year[val_nid])}\n")
-    # f_log.write(f"max(paper_year[test_nid]) : {max(paper_year[test_nid])} | min(paper_year[test_nid]) : {min(paper_year[test_nid])}\n")
-    # f_log.flush()
+    #print(f"max(paper_year[train_nid]) : {max(paper_year[train_nid])} | min(paper_year[train_nid]) : {min(paper_year[train_nid])}")
+    #print(f"max(paper_year[val_nid]) : {max(paper_year[val_nid])} | min(paper_year[val_nid]) : {min(paper_year[val_nid])}")
+    #print(f"max(paper_year[test_nid]) : {max(paper_year[test_nid])} | min(paper_year[test_nid]) : {min(paper_year[test_nid])}")
+    #f_log.write(f"max(paper_year[train_nid]) : {max(paper_year[train_nid])} | min(paper_year[train_nid]) : {min(paper_year[train_nid])}\n")
+    #f_log.write(f"max(paper_year[val_nid]) : {max(paper_year[val_nid])} | min(paper_year[val_nid]) : {min(paper_year[val_nid])}\n")
+    #f_log.write(f"max(paper_year[test_nid]) : {max(paper_year[test_nid])} | min(paper_year[test_nid]) : {min(paper_year[test_nid])}\n")
+    #f_log.flush()
     # train : 2010~2017 | valid : 2018 | test : 2019
     more_train_idx=[]
     if args.messi:
-        assert not args.messi2017 
-        assert args.exp_node[0]==0
-        assert args.exp_error[0]==0
         for idx in range(len(train_nid)):
             if (paper_year[train_nid[idx]]>=2016):
                 more_train_idx.append(idx)
     if args.messi2017:
-        assert not args.messi
-        assert args.exp_node[0]==0
-        assert args.exp_error[0]==0
         for idx in range(len(train_nid)):
             if (paper_year[train_nid[idx]]>=2017):
                 more_train_idx.append(idx)
-    if args.exp_node[0]!=0: # Clarify this first. And what about newly added node?
-        # Add additional train node by P=exp(args.exp_node*(cur_year-2017)) chance
-        assert not args.messi
-        assert not args.messi2017
-        assert args.exp_error[0]==0
-        # debugging purpose
-        # for idx in range(30):
-        #     print(f"Is this same ? {idx} {train_nid[idx]}")
-        #     f_log.write(f"Is this same ? {idx} {train_nid[idx]}\n")
-
-        cntt=0
-        # for idx in range(len(train_nid)):
-        #     if(train_nid[idx]!=idx and cntt<30):
-        #         print(f"Different train idx : {idx} {train_nid[idx]}")
-        #         f_log.write(f"Different train idx : {idx} {train_nid[idx]}\n")
-        #         cntt+=1
-
-        for idx in range(len(train_nid)):
-            cur_year=paper_year[train_nid[idx]]
-            assert(cur_year<=2017)
-            if (random.uniform(0, 1)<args.exp_node[0]*args.exp_node[1]**(2017-cur_year)):
-                more_train_idx.append(idx)
     more_train_idx=torch.tensor(more_train_idx).to(torch.long)
-    # print(f"len(more_train_idx) : {len(more_train_idx)} | len(train set) : {len(train_nid)+len(more_train_idx)}")
-    # f_log.write(f"len(more_train_idx) : {len(more_train_idx)} | len(train set) : {len(train_nid)+len(more_train_idx)}\n")
-    # f_log.flush()
+    print(f"len(more_train_idx) : {len(more_train_idx)} | len(train set) : {len(train_nid)+len(more_train_idx)}")
+    f_log.write(f"len(more_train_idx) : {len(more_train_idx)} | len(train set) : {len(train_nid)+len(more_train_idx)}\n")
+    f_log.flush()
     # =======
     # features propagate alongside the metapath
     # =======
@@ -133,9 +107,9 @@ def main(args):
         for hop in range(args.num_hops):
             g.update_all(fn.copy_u(f'hop_{hop}', 'm'), fn.mean('m', f'hop_{hop+1}'))
         keys = list(g.ndata.keys())
-        # print(f'Involved feat keys {keys}')
-        # f_log.write(f'Involved feat keys {keys}\n')
-        # f_log.flush()
+        print(f'Involved feat keys {keys}')
+        f_log.write(f'Involved feat keys {keys}\n')
+        f_log.flush()
         feats = {k: g.ndata.pop(k) for k in keys}
 
     elif args.dataset in ['ogbn-arxiv', 'ogbn-papers100M']: # single-node-type & double-edge-types
@@ -152,9 +126,9 @@ def main(args):
                         fn.mean('msg', f't{k}'), etype='cited_by')
 
         keys = list(g.ndata.keys())
-        # print(f'Involved feat keys {keys}')
-        # f_log.write(f'Involved feat keys {keys}\n')
-        # f_log.flush()
+        print(f'Involved feat keys {keys}')
+        f_log.write(f'Involved feat keys {keys}\n')
+        f_log.flush()
         feats = {k: g.ndata.pop(k) for k in keys}
 
     elif args.dataset == 'ogbn-mag': # multi-node-types & multi-edge-types
@@ -163,46 +137,46 @@ def main(args):
         extra_metapath = [] # ['AIAP', 'PAIAP']
         extra_metapath = [ele for ele in extra_metapath if len(ele) > args.num_hops + 1]
 
-        # print(f'Current num hops = {args.num_hops}')
-        # f_log.write(f'Current num hops = {args.num_hops}\n')
-        # f_log.flush()
+        print(f'Current num hops = {args.num_hops}')
+        f_log.write(f'Current num hops = {args.num_hops}\n')
+        f_log.flush()
         if len(extra_metapath):
             max_hops = max(args.num_hops + 1, max([len(ele) for ele in extra_metapath]))
         else:
             max_hops = args.num_hops + 1
 
         # compute k-hop feature
-        g = hg_sym_propagate(g, tgt_type, args.num_hops, max_hops, extra_metapath, args.mode, f_log, args.debug, echo=args.debug)
-        # if(args.debug):
-        #     print(f"DEBUG0 | type(g) : {type(g)} | g : {g}")
-        #     f_log.write(f"DEBUG0 | type(g) : {type(g)} | g : {g}\n")
-        #     f_log.flush()
+        g = hg_propagate(g, tgt_type, args.num_hops, max_hops, extra_metapath, args.mode, f_log, echo=True)
+        if(args.debug):
+            print(f"DEBUG0 | type(g) : {type(g)} | g : {g}")
+            f_log.write(f"DEBUG0 | type(g) : {type(g)} | g : {g}\n")
+            f_log.flush()
 
         feats = {}
         keys = list(g.nodes[tgt_type].data.keys())
-        # print(f'Involved feat keys {keys}')
-        # f_log.write(f'Involved feat keys {keys}\n')
-        # f_log.flush()
+        print(f'Involved feat keys {keys}')
+        f_log.write(f'Involved feat keys {keys}\n')
+        f_log.flush()
         # Involved feat keys ['P', 'PA', 'PF', 'PP', 'PAI', 'PAP', 'PFP', 'PPA', 'PPF', 'PPP']
         for k in keys:
             feats[k] = g.nodes[tgt_type].data.pop(k)
-            # if(args.debug):
-            #     print(f"DEBUG | k : {k} | type(k) : {type(k)} | type(feats[k]) : {type(feats[k])} | feats[k].shape : {feats[k].shape}")
-            #     f_log.write(f"DEBUG | k : {k} | type(k) : {type(k)} | type(feats[k]) : {type(feats[k])} | feats[k].shape : {feats[k].shape}\n")
-            #     f_log.flush()
+            if(args.debug):
+                print(f"DEBUG | k : {k} | type(k) : {type(k)} | type(feats[k]) : {type(feats[k])} | feats[k].shape : {feats[k].shape}")
+                f_log.write(f"DEBUG | k : {k} | type(k) : {type(k)} | type(feats[k]) : {type(feats[k])} | feats[k].shape : {feats[k].shape}\n")
+                f_log.flush()
 
             # torch.Size([736389, 128]) for P ... P and torch.Size([736389, 256]) for P ... others.
             
-        g = clear_hg(g, echo=args.debug)
+        g = clear_hg(g, echo=True)
     else:
         assert 0
 
     feats = {k: v[init2sort] for k, v in feats.items()}
 
     prop_toc = datetime.datetime.now()
-    # print(f'Time used for feat prop {prop_toc - prop_tic}')
-    # f_log.write(f'Time used for feat prop {prop_toc - prop_tic}\n')
-    # f_log.flush()
+    print(f'Time used for feat prop {prop_toc - prop_tic}')
+    f_log.write(f'Time used for feat prop {prop_toc - prop_tic}\n')
+    f_log.flush()
     gc.collect()
 
     # train_loader = torch.utils.data.DataLoader(
@@ -225,8 +199,6 @@ def main(args):
 
     checkpt_file = checkpt_folder + uuid.uuid4().hex
     print(checkpt_file)
-    f_log.write(f'Checkpoint file : {checkpt_file}\n')
-    f_log.flush()
 
     for stage in range(args.start_stage, len(args.stages)):
         epochs = args.stages[stage]
@@ -262,15 +234,6 @@ def main(args):
             val_enhance_nid     = val_enhance_offset + trainval_point
             test_enhance_nid    = test_enhance_offset + valtest_point
             enhance_nid = torch.cat((val_enhance_nid, test_enhance_nid))
-            # This Part is so useless... Why?
-            if(args.exp_node[0]!=0):
-                more_enhance_idx=[]
-                for idx in enhance_nid:
-                    if(random.uniform(0, 1)<args.exp_node[0]):
-                        more_enhance_idx.append(idx)
-                more_enhance_idx=torch.tensor(more_enhance_idx).to(torch.long)
-                enhance_nid=torch.cat((enhance_nid,more_enhance_idx),dim=0)
-                
 
             print(f'Stage: {stage}, threshold {args.threshold}, confident nodes: {len(enhance_nid)} / {total_num_nodes - trainval_point}')
             f_log.write(f'Stage: {stage}, threshold {args.threshold}, confident nodes: {len(enhance_nid)} / {total_num_nodes - trainval_point}\n')
@@ -380,16 +343,16 @@ def main(args):
                 else:
                     max_hops = args.num_label_hops + 1
 
-                g = hg_propagate(g, tgt_type, args.num_label_hops, max_hops, extra_metapath, args.mode, f_log, echo=args.debug)
- 
+                g = hg_propagate(g, tgt_type, args.num_label_hops, max_hops, extra_metapath, args.mode, f_log, echo=True)
+
                 keys = list(g.nodes[tgt_type].data.keys())
                 print(f'Involved label keys {keys}')
                 f_log.write(f'Involved label keys {keys}\n')
                 f_log.flush()
                 for k in keys:
                     if k == tgt_type: continue
-                    label_feats[k] = g.nodes[tgt_type].data.pop(k) # 
-                g = clear_hg(g, echo=args.debug)
+                    label_feats[k] = g.nodes[tgt_type].data.pop(k)
+                g = clear_hg(g, echo=True)
 
                 # label_feats = remove_self_effect_on_label_feats(label_feats, label_onehot)
                 for k in ['PPP', 'PAP', 'PFP', 'PPPP', 'PAPP', 'PPAP', 'PFPP', 'PPFP']:
@@ -397,11 +360,11 @@ def main(args):
                         print(f"k : {k}")
 
                         if args.mode=='mono' and k=='PPP':
-                            diag = torch.load(f'{args.root}subgraph/{args.dataset}_P<P<P_diag.pt')
+                            diag = torch.load(f'{args.dataset}_P<P<P_diag.pt')
                         elif args.mode=='toggle' and k=='PPP':
-                            diag = torch.load(f'{args.root}subgraph/{args.dataset}_P<PP_diag.pt')
+                            diag = torch.load(f'{args.dataset}_P<PP_diag.pt')
                         else:
-                            diag = torch.load(f'{args.root}subgraph/{args.dataset}_{k}_diag.pt')
+                            diag = torch.load(f'{args.dataset}_{k}_diag.pt')
                             
                         label_feats[k] = label_feats[k] - diag.unsqueeze(-1) * label_onehot
 
@@ -549,7 +512,7 @@ def parse_args(args=None):
     parser.add_argument("--cpu", action='store_true', default=False)
     parser.add_argument("--root", type=str, default='../data/')
     #parser.add_argument("--root", type=str, default="~/Adaptive_Sampling/dataset")
-    parser.add_argument("--stages", nargs='+',type=int, default=[300, 300, 300, 300, 300],
+    parser.add_argument("--stages", nargs='+',type=int, default=[300, 300, 300, 300],
                         help="The epoch setting for each stage.")
     ## For pre-processing
     parser.add_argument("--emb_path", type=str, default='../data/')
@@ -605,143 +568,80 @@ def parse_args(args=None):
     parser.add_argument("--reload", type=str, default='')
     parser.add_argument("--name", type=str, default=None)
     parser.add_argument("--debug", action='store_true')
-    parser.add_argument("--mode", type=str, default='full', choices=['full', 'mono', 'toggle'])
-    parser.add_argument("--synthesis_mode", type=str, default='tts', choices=['oo', 'ot', 'to','tt','oos','ots','tos','tts'])
+    parser.add_argument("--mode", type=str, default='toggle', choices=['full', 'mono', 'toggle'])
     parser.add_argument("--time-bit", type=int, default=0)
     parser.add_argument("--messi", action = 'store_true')
     parser.add_argument("--messi2017", action = 'store_true')
-    parser.add_argument("--exp_node", nargs='+', type=float, default=[0.0, 0.0]) # last_add, decay_factor
-    parser.add_argument("--exp_error", nargs='+', type=float, default=[0.0, 0.0])
     parser.add_argument("--shuffle", action = 'store_true')
-
     return parser.parse_args(args)
 
 '''
-240222
-python final_main.py --num-hops 3 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.0008 --weight-decay 0 --threshold 0.8 --patience 100 --gama 5 --amp --seeds 1 --name model4_seed1 --mode full --synthesis_mode oo
-python final_main.py --num-hops 3 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.0008 --weight-decay 0 --threshold 0.8 --patience 100 --gama 5 --amp --seeds 1 --name model4_seed1 --mode full --synthesis_mode to
-python final_main.py --num-hops 3 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.0008 --weight-decay 0 --threshold 0.8 --patience 100 --gama 5 --amp --seeds 1 --name model4_seed1 --mode full --synthesis_mode ot
-python final_main.py --num-hops 3 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.0008 --weight-decay 0 --threshold 0.8 --patience 100 --gama 5 --amp --seeds 1 --name model4_seed1 --mode full --synthesis_mode tt
+python main.py --stages 300 300 300 300 --extra-embedding complex --num-hops 2 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.001 --weight-decay 0 --threshold 0.75 --patience 100 --gama 10 --amp --seeds 1 --name first_test
+Debug : python main.py --stages 300 300 300 300 --extra-embedding complex --num-hops 2 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.001 --weight-decay 0 --threshold 0.75 --patience 100 --gama 10 --amp --seeds 1 --name first_test --debug
 
-python final_main.py --mode full --synthesis_mode oo --name model9 --extra-embedding complex --hidden 584 --messi2017 --num-hops 3 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.0008 --weight-decay 0 --threshold 0.8 --patience 100 --gama 5 --amp --seeds 1 
-Test acc: 53.0270 (Stage 2, Epoch 157)
-python final_main.py --mode full --synthesis_mode ot --name model9 --extra-embedding complex --hidden 584 --messi2017 --num-hops 3 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.0008 --weight-decay 0 --threshold 0.8 --patience 100 --gama 5 --amp --seeds 1
-Test acc: 53.1605 (Stage 3, Epoch 126)
-python final_main.py --mode full --synthesis_mode to --name model9 --extra-embedding complex --hidden 584 --messi2017 --num-hops 3 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.0008 --weight-decay 0 --threshold 0.8 --patience 100 --gama 5 --amp --seeds 1 
-Test acc: 57.1616 (Stage 2, Epoch 88)
-python final_main.py --mode full --synthesis_mode tt --name model9 --extra-embedding complex --hidden 584 --messi2017 --num-hops 3 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.0008 --weight-decay 0 --threshold 0.8 --patience 100 --gama 5 --amp --seeds 1 
-Test acc: 56.9375 (Stage 3, Epoch 133)
+221220 - Toggle, mono test
+python main.py --stages 300 300 300 300 --extra-embedding complex --num-hops 2 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.001 --weight-decay 0 --threshold 0.75 --patience 100 --gama 10 --amp --seeds 1 --name secondTest --mode toggle
+python main.py --stages 300 300 300 300 --extra-embedding complex --num-hops 2 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.001 --weight-decay 0 --threshold 0.75 --patience 100 --gama 10 --amp --seeds 1 --name secondTest --mode mono
+python main.py --stages 300 300 300 300 --extra-embedding complex --num-hops 2 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.001 --weight-decay 0 --threshold 0.75 --patience 100 --gama 10 --amp --seeds 1 --name revTest --mode toggle
+python main.py --stages 300 300 300 300 --extra-embedding complex --num-hops 2 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.001 --weight-decay 0 --threshold 0.75 --patience 100 --gama 10 --amp --seeds 1 --name dummyTest --mode toggle
+python main.py --stages 300 300 300 300 --extra-embedding complex --num-hops 2 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.001 --weight-decay 0 --threshold 0.75 --patience 100 --gama 10 --amp --seeds 1 --name onlymono --mode mono
 
-240224
-python final_main.py --mode mono --synthesis_mode to --name model9 --extra-embedding complex --hidden 584 --messi2017 --num-hops 3 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.0008 --weight-decay 0 --threshold 0.8 --patience 100 --gama 5 --amp --seeds 1 
-Test acc: 57.1020 (Stage 2, Epoch 158)
-python final_main.py --mode mono --synthesis_mode tt --name model9 --extra-embedding complex --hidden 584 --messi2017 --num-hops 3 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.0008 --weight-decay 0 --threshold 0.8 --patience 100 --gama 5 --amp --seeds 1 
-Test acc: 56.8874 (Stage 2, Epoch 80)
+python main.py --stages 300 300 300 300 --extra-embedding complex --num-hops 2 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.001 --weight-decay 0 --threshold 0.75 --patience 100 --gama 10 --amp --seeds 1 --name thirdTest --mode mono
+python main.py --stages 300 300 300 300 --extra-embedding complex --num-hops 2 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.001 --weight-decay 0 --threshold 0.75 --patience 100 --gama 10 --amp --seeds 1 --name thirdTestrev --mode mono
+python main.py --stages 300 300 300 300 --extra-embedding complex --num-hops 2 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.001 --weight-decay 0 --threshold 0.75 --patience 100 --gama 10 --amp --seeds 1 --name tfourthTest --mode mono
 
-[For reference] 
+
+python main.py --stages 300 300 300 300 --extra-embedding complex --num-hops 2 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.001 --weight-decay 0 --threshold 0.75 --patience 100 --gama 10 --amp --seeds 1 --name thirdTestrev --mode toggle
+python main.py --stages 300 300 300 300 --num-hops 2 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.001 --weight-decay 0 --threshold 0.75 --patience 100 --gama 10 --amp --seeds 1 --name woEmb --mode toggle
+python main.py --stages 300 300 300 300 --num-hops 2 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.001 --weight-decay 0 --threshold 0.75 --patience 100 --gama 10 --amp --seeds 1 --name add_same_year --mode toggle
+python main.py --stages 300 300 300 300 --time-bit 20 --extra-embedding complex --num-hops 2 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.001 --weight-decay 0 --threshold 0.75 --patience 100 --gama 10 --amp --seeds 1 --name time_positional --mode toggle
+python main.py --stages 300 300 300 300 --time-bit 20 --num-hops 2 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.002 --weight-decay 0 --threshold 0.75 --patience 100 --gama 10 --amp --seeds 1 --name time_double_lr --mode toggle
+
+221222
+python main.py --stages 300 300 300 300 --time-bit 20 --num-hops 2 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.001 --weight-decay 0 --threshold 0.75 --patience 100 --gama 10 --amp --seeds 1 --name time_normal --mode full
+python main.py --stages 300 300 300 300 --extra-embedding complex --time-bit 20 --num-hops 2 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.001 --weight-decay 0 --threshold 0.75 --patience 100 --gama 10 --amp --seeds 1 --name time_normal --mode full
+python main.py --stages 300 300 300 300 --extra-embedding complex --num-hops 2 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.001 --weight-decay 0 --threshold 0.75 --patience 100 --gama 10 --amp --seeds 1 --name time_normal --mode full
+
+221223
+python main.py --stages 300 300 300 300 --extra-embedding complex --num-hops 2 --hidden 520 --time-bit 20 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.001 --weight-decay 0 --threshold 0.75 --patience 100 --gama 10 --amp --seeds 1 --name time_more_hidden --mode full
+python main.py --stages 300 300 300 300 --extra-embedding complex --num-hops 2 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.0005 --weight-decay 0 --threshold 0.75 --patience 100 --gama 10 --amp --seeds 1 --name toggle_half_lr --mode toggle
+python main.py --stages 300 300 300 300 --extra-embedding complex --num-hops 2 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.00025 --weight-decay 0 --threshold 0.75 --patience 100 --gama 10 --amp --seeds 1 --name toggle_quarter_lr --mode toggle
+
+221224
+python main.py --extra-embedding complex --num-hops 2 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.0008 --weight-decay 0 --threshold 0.75 --patience 100 --gama 10 --amp --seeds 1 --name mono_less_lr --mode mono
+python main.py --extra-embedding complex --time-bit 20 --num-hops 2 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.0008 --weight-decay 0 --threshold 0.75 --patience 100 --gama 10 --amp --seeds 1 --name time_less_lr --mode mono
+python main.py --extra-embedding complex --messi --num-hops 2 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.001 --weight-decay 0 --threshold 0.75 --patience 100 --gama 10 --amp --seeds 1 --name with_messi --mode full
+python main.py --extra-embedding complex --messi --num-hops 2 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.001 --weight-decay 0 --threshold 0.75 --patience 100 --gama 10 --amp --seeds 1 --name with_messi --mode mono
+python main.py --extra-embedding complex --num-hops 2 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.001 --weight-decay 0 --threshold 0.75 --patience 100 --gama 10 --amp --seeds 1 --name mono_ori_lr --mode mono
+python main.py --extra-embedding complex --messi2017 --num-hops 2 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.001 --weight-decay 0 --threshold 0.75 --patience 100 --gama 10 --amp --seeds 1 --name messi2017 --mode full
+python main.py --extra-embedding complex --messi2017 --num-hops 2 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.001 --weight-decay 0 --threshold 0.75 --patience 100 --gama 10 --amp --seeds 1 --name messi2017 --mode mono
+python main.py --extra-embedding complex --num-hops 2 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.001 --weight-decay 0 --threshold 0.75 --patience 100 --gama 10 --amp --seeds 2 --name first_test_seed2 --mode full
+
+python main.py --extra-embedding complex --hidden 540 --messi2017 --num-hops 2 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.0005 --weight-decay 0 --threshold 0.75 --patience 100 --gama 10 --amp --seeds 1 --name model1 --mode mono
+python main.py --extra-embedding complex --messi2017 --num-hops 2 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.0008 --weight-decay 0 --threshold 0.65 --patience 100 --gama 5 --amp --seeds 1 --name model2 --mode mono
+python main.py --extra-embedding complex --messi2017 --num-hops 2 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.0008 --weight-decay 0 --threshold 0.8 --patience 100 --gama 5 --amp --seeds 1 --name model3 --mode mono
+
+221226
+python main.py --extra-embedding complex --messi2017 --num-hops 3 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.0008 --weight-decay 0 --threshold 0.8 --patience 100 --gama 5 --amp --seeds 1 --name model4 --mode mono
+python main.py --extra-embedding complex --messi2017 --num-hops 3 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.0005 --weight-decay 0 --threshold 0.8 --patience 100 --gama 3 --amp --seeds 1 --name model5 --mode mono
+python main.py --extra-embedding complex --hidden 460 --messi2017 --num-hops 3 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.0012 --weight-decay 0 --threshold 0.75 --patience 100 --gama 5 --amp --seeds 1 --name model6 --mode mono
+python main.py --extra-embedding complex --hidden 380 --messi2017 --num-hops 3 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.001 --weight-decay 0 --threshold 0.75 --patience 100 --gama 7 --amp --seeds 1 --name model7 --mode mono
+python main.py --extra-embedding complex --num-hops 3 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.0008 --weight-decay 0 --threshold 0.8 --patience 100 --gama 5 --amp --seeds 1 --name model4_womessi --mode mono
+python main.py --extra-embedding complex --messi2017 --num-hops 3 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.001 --weight-decay 0 --threshold 0.8 --patience 100 --gama 5 --amp --seeds 1 --name model8 --mode mono
 python main.py --extra-embedding complex --hidden 584 --messi2017 --num-hops 3 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.0008 --weight-decay 0 --threshold 0.8 --patience 100 --gama 5 --amp --seeds 1 --name model9 --mode mono
-python main.py --extra-embedding complex --hidden 584 --messi2017 --num-hops 3 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.0008 --weight-decay 0 --threshold 0.8 --patience 100 --gama 5 --amp --seeds 1 --name model9_PP_modify --mode mono
-Test acc: 57.3905 /Stage 2, Epoch 184) // Those two are identical, But why not 57.7005?
- 
-python final_main.py --mode full --synthesis_mode tos --name model9 --extra-embedding complex --hidden 584 --messi2017 --num-hops 3 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.0008 --weight-decay 0 --threshold 0.8 --patience 100 --gama 5 --amp --seeds 1 
-python final_main.py --mode full --synthesis_mode tts --name model9 --extra-embedding complex --hidden 584 --messi2017 --num-hops 3 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.0008 --weight-decay 0 --threshold 0.8 --patience 100 --gama 5 --amp --seeds 1
-Test acc: 57.5574 (Stage 2, Epoch 167) Best val : 57.5574
 
-python final_main.py --mode mono --synthesis_mode tos --name model9 --extra-embedding complex --hidden 584 --messi2017 --num-hops 3 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.0008 --weight-decay 0 --threshold 0.8 --patience 100 --gama 5 --amp --seeds 1 
-python final_main.py --mode mono --synthesis_mode tts --name model9 --extra-embedding complex --hidden 584 --messi2017 --num-hops 3 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.0008 --weight-decay 0 --threshold 0.8 --patience 100 --gama 5 --amp --seeds 1 
-Test acc: 57.4310 (Stage 2, Epoch 173) Best val : Test 57.3905
-Aborted // 'to' and 'tt' show identical results, mode 'full' is slightly better than 'mono' 
+python main.py --extra-embedding complex --hidden 472 --messi2017 --num-hops 3 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.001 --weight-decay 0 --threshold 0.75 --patience 100 --gama 5 --amp --seeds 1 --name model10 --mode mono
+python main.py --extra-embedding complex --hidden 440 --messi2017 --num-hops 3 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.0012 --weight-decay 0 --threshold 0.75 --patience 100 --gama 5 --amp --seeds 1 --name model11 --mode mono
 
-python final_main.py --mode full --synthesis_mode ots --name model9 --extra-embedding complex --hidden 584 --messi2017 --num-hops 3 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.0008 --weight-decay 0 --threshold 0.8 --patience 100 --gama 5 --amp --seeds 1 
-python final_main.py --mode mono --synthesis_mode oos --name model9 --extra-embedding complex --hidden 584 --messi2017 --num-hops 3 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.0008 --weight-decay 0 --threshold 0.8 --patience 100 --gama 5 --amp --seeds 1 
-Aborted // 'ot' and 'tt' show identical results, 'oo' and 'to' show identical result. So front two letters are not really important.
+python main.py --extra-embedding complex --num-hops 3 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.0008 --weight-decay 0 --threshold 0.8 --patience 100 --gama 5 --amp --seeds 2 --name model4_womessi_seed2 --mode mono
+python main.py --extra-embedding complex --hidden 584 --num-hops 3 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.0008 --weight-decay 0 --threshold 0.75 --patience 100 --gama 5 --amp --seeds 1 --name model9_womessi --mode mono
+python main.py --extra-embedding complex --hidden 472 --num-hops 3 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.001 --weight-decay 0 --threshold 0.75 --patience 100 --gama 5 --amp --seeds 1 --name model10_womessi --mode mono
 
-python final_main.py --mode full --synthesis_mode tts --name model9_2 --extra-embedding complex --hidden 584 --messi2017 --num-hops 3 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.0008 --weight-decay 0 --threshold 0.8 --patience 100 --gama 5 --amp --seeds 2
-Test acc: 57.9747 (Stage 3, Epoch 184) Best val : Test 57.8960
-python final_main.py --mode mono --synthesis_mode tts --name model9_2 --extra-embedding complex --hidden 584 --messi2017 --num-hops 3 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.0008 --weight-decay 0 --threshold 0.8 --patience 100 --gama 5 --amp --seeds 2 
-Test acc: 57.6576 (Stage 2, Epoch 205) Best val : Test 57.5073
-python final_main.py --mode full --synthesis_mode tts --name model9_3 --extra-embedding complex --hidden 584 --messi2017 --num-hops 3 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.0008 --weight-decay 0 --threshold 0.8 --patience 100 --gama 5 --amp --seeds 3
-Test acc: 57.8221 (Stage 3, Epoch 123) Best val : Test 57.6385
-python final_main.py --mode full --synthesis_mode tts --name model9_4 --extra-embedding complex --hidden 584 --messi2017 --num-hops 3 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.0008 --weight-decay 0 --threshold 0.8 --patience 100 --gama 5 --amp --seeds 4
-Test acc: 58.0033 (Stage 3, Epoch 112) Best val : Test 57.9222
-python final_main.py --mode full --synthesis_mode tts --name model9_5 --extra-embedding complex --hidden 584 --messi2017 --num-hops 3 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.0008 --weight-decay 0 --threshold 0.8 --patience 100 --gama 5 --amp --seeds 5
-Test acc: 57.8388 (Stage 3, Epoch 49) Best val : Test 57.8388
+230130
+python main.py --num-hops 3 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.0008 --weight-decay 0 --threshold 0.8 --patience 100 --gama 5 --amp --seeds 1 --name model4_womessi_seed1 --mode mono
+python main.py --num-hops 3 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.0008 --weight-decay 0 --threshold 0.8 --patience 100 --gama 5 --amp --seeds 2 --name model4_womessi_seed2 --mode mono
 
-python final_main.py --mode full --synthesis_mode tts --name model9_upstage --extra-embedding complex --hidden 584 --messi2017 --num-hops 3 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.0008 --weight-decay 0 --threshold 0.8 --patience 100 --gama 5 --amp --seeds 2
-Test acc: 57.9532 (Stage 2, Epoch 264) Best val : Test 57.8578
-
-python main.py --name superoriginal --stages 300 300 300 300 --extra-embedding complex --num-hops 2 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.001 --weight-decay 0 --threshold 0.75 --patience 100 --gama 10 --amp --seeds 1
-Test acc: 56.9232 (Stage 2, Epoch 247), Best val : Test 56.8159
-
-
-[240229] : Experiment concurrent training - Not fully converged in 4 hrs
-python final_main.py --mode full --synthesis_mode tts --name model19_1 --extra-embedding complex --hidden 584 --num-hops 3 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.0008 --weight-decay 0 --threshold 0.8 --patience 100 --gama 5 --amp --seeds 1
-(1 process)
-python final_main.py --mode full --synthesis_mode tts --name model19_2 --extra-embedding complex --hidden 584 --num-hops 3 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.0008 --weight-decay 0 --threshold 0.8 --patience 100 --gama 5 --amp --seeds 2
-(2 process)
-python final_main.py --mode full --synthesis_mode tts --name model19_3 --extra-embedding complex --hidden 584 --num-hops 3 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.0008 --weight-decay 0 --threshold 0.8 --patience 100 --gama 5 --amp --seeds 3
-(3 process)
-
-
-[240301]
-python final_main.py --mode full --syntmahesis_mode tts --name model9_1 --extra-embedding complex --hidden 584 --messi2017 --num-hops 3 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.0008 --weight-decay 0 --threshold 0.8 --patience 100 --gama 5 --amp --seeds 6
-Test acc: 57.7648 (Stage 4, Epoch 147), Best val : Test 57.7648
-python final_main.py --mode full --synthesis_mode tts --name model9_2 --extra-embedding complex --hidden 584 --messi2017 --num-hops 3 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.0008 --weight-decay 0 --threshold 0.8 --patience 100 --gama 5 --amp --seeds 6
-Test acc: 57.8030 (Stage 3, Epoch 191), Best val : Test 57.6599
-
-[240302] - 2 process, 6 hours (Maybe more train is needed to fully converge)
-python final_main.py --mode full --synthesis_mode tts --name model9_6 --extra-embedding complex --hidden 584 --messi2017 --num-hops 3 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.0008 --weight-decay 0 --threshold 0.8 --patience 100 --gama 5 --amp --seeds 6
-Test acc: 57.7887 (Stage 2, Epoch 264), Best val : Test 57.4883
-python final_main.py --mode full --synthesis_mode tts --name model9_7 --extra-embedding complex --hidden 584 --messi2017 --num-hops 3 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.0008 --weight-decay 0 --threshold 0.8 --patience 100 --gama 5 --amp --seeds 7
-Test acc: 58.0963 (Stage 3, Epoch 207), Best val : Test 58.0224
-
-[240305]
-python final_main.py --mode full --synthesis_mode tts --name 0305_exp1 --extra-embedding complex --hidden 584 --exp_node 1.0 0.9 --num-hops 3 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.0008 --weight-decay 0 --threshold 0.8 --patience 100 --gama 5 --amp --seeds 7
-Test acc: 57.8888 (Stage 3, Epoch 243), Best val : Test 57.8435 (Stage 3, Epoch 154)
-python final_main.py --mode full --synthesis_mode tts --name 0305_exp2 --extra-embedding complex --hidden 584 --exp_node 1.0 0.6 --num-hops 3 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.0008 --weight-decay 0 --threshold 0.8 --patience 100 --gama 5 --amp --seeds 7
-Test acc: 58.1917 (Stage 3, Epoch 232), Best val : Test 58.1917 (Stage 3, Epoch 232)
-python final_main.py --mode full --synthesis_mode tts --name 0305_exp3 --extra-embedding complex --hidden 584 --exp_node 0.4 0.9 --num-hops 3 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.0008 --weight-decay 0 --threshold 0.8 --patience 100 --gama 5 --amp --seeds 7
-Test acc: 57.8912 (Stage 3, Epoch 230), Best val : Test 57.8245 (Stage 3, Epoch 264)
-python final_main.py --mode full --synthesis_mode tts --name 0305_exp4 --extra-embedding complex --hidden 584 --exp_node 0.4 0.6 --num-hops 3 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.0008 --weight-decay 0 --threshold 0.8 --patience 100 --gama 5 --amp --seeds 7
-Test acc: 57.7648 (Stage 3, Epoch 240), Best val : Test 57.7219 (Stage 3, Epoch 283)
-
-# Apply exp_node in enhance_nid and some debugging effort
-python final_main.py --mode full --synthesis_mode tts --name 0305_exp5 --extra-embedding complex --hidden 584 --exp_node 1.0 0.9 --num-hops 3 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.0008 --weight-decay 0 --threshold 0.8 --patience 100 --gama 5 --amp --seeds 7
-Test acc: 57.8912 (Stage 3, Epoch 183), Best val : Test 57.6981 (Stage 2, Epoch 150)
-python final_main.py --mode full --synthesis_mode tts --name 0305_exp6 --extra-embedding complex --hidden 584 --exp_node 1.0 0.6 --num-hops 3 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.0008 --weight-decay 0 --threshold 0.8 --patience 100 --gama 5 --amp --seeds 7
-Test acc: 57.9341 (Stage 3, Epoch 218), Best val : Test 57.7792 (Stage 3, Epoch 247)
-python final_main.py --mode full --synthesis_mode tts --name 0305_exp7 --extra-embedding complex --hidden 584 --exp_node 0.4 0.9 --num-hops 3 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.0008 --weight-decay 0 --threshold 0.8 --patience 100 --gama 5 --amp --seeds 7
-python final_main.py --mode full --synthesis_mode tts --name 0305_exp8 --extra-embedding complex --hidden 584 --exp_node 0.4 0.6 --num-hops 3 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.0008 --weight-decay 0 --threshold 0.8 --patience 100 --gama 5 --amp --seeds 7
-
-
-
-[240309]
-python shuffle_main.py --name 0309_exp1 --shuffle --stages 300 300 300 300 --extra-embedding complex --num-hops 2 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.001 --weight-decay 0 --threshold 0.75 --patience 100 --gama 10 --amp --seeds 1
-Test acc: 63.0535 (Stage 1, Epoch 226), Best val : Test 63.0153 (Stage 1, Epoch 236)
-#python shuffle_main.py --name 0309_exp2 --shuffle --stages 300 300 300 300 --extra-embedding complex --num-hops 2 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.001 --weight-decay 0 --threshold 0.75 --patience 100 --gama 10 --amp --seeds 2
-
-python shuffle_main.py --name 0309_exp3 --shuffle --time-bit 20 --stages 300 300 300 300 --extra-embedding complex --num-hops 2 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.001 --weight-decay 0 --threshold 0.75 --patience 100 --gama 10 --amp --seeds 1
-Test acc: 63.8713 (Stage 1, Epoch 245), Best val : Test 63.8713 (Stage 1, Epoch 261)
-#python shuffle_main.py --name 0309_exp4 --shuffle --time-bit 20 --stages 300 300 300 300 --extra-embedding complex --num-hops 2 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.001 --weight-decay 0 --threshold 0.75 --patience 100 --gama 10 --amp --seeds 2
-
-Test acc: 55.8669 (Stage 2, Epoch 269), Best val : Test 55.8001 (Stage 2, Epoch 209)
-python shuffle_main.py --name 0309_exp6 --time-bit 20 --stages 300 300 300 300 --extra-embedding complex --num-hops 2 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.001 --weight-decay 0 --threshold 0.75 --patience 100 --gama 10 --amp --seeds 2
-Test acc: 55.8931 (Stage 2, Epoch 207), Best val : Test 55.8740 (Stage 2, Epoch 133)
-
-python shuffle_main.py --name 0309_exp7 --stages 300 300 300 300 --extra-embedding complex --num-hops 2 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.001 --weight-decay 0 --threshold 0.75 --patience 100 --gama 10 --amp --seeds 1
-Test acc: 56.9232 (Stage 2, Epoch 247), Best val : Test 56.8159 (Stage 2, Epoch 137)
-python shuffle_main.py --name 0309_exp8 --stages 300 300 300 300 --extra-embedding complex --num-hops 2 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.001 --weight-decay 0 --threshold 0.75 --patience 100 --gama 10 --amp --seeds 2
-Test acc: 56.9232 (Stage 2, Epoch 230), Best val : Test 56.8993 (Stage 3, Epoch 170)
-
-python final_main.py --name 0309_exp9 --shuffle --synthesis_mode tts --mode full --stages 300 300 300 300 --extra-embedding complex --num-hops 2 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.001 --weight-decay 0 --threshold 0.75 --patience 100 --gama 10 --amp --seeds 1
-Test acc: 62.8270 (Stage 2, Epoch 291), Best val : Test 62.8246 (Stage 1, Epoch 263)
-#python final_main.py --name 0309_exp10 --shuffle --synthesis_mode tts --mode full --stages 300 300 300 300 --extra-embedding complex --num-hops 2 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.001 --weight-decay 0 --threshold 0.75 --patience 100 --gama 10 --amp --seeds 2
-
-python final_main.py --name 0309_exp11 --shuffle --time-bit 20 --synthesis_mode tts --mode full --stages 300 300 300 300 --extra-embedding complex --num-hops 2 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.001 --weight-decay 0 --threshold 0.75 --patience 100 --gama 10 --amp --seeds 1
-Test acc: 63.8809 (Stage 1, Epoch 296), Best val : Test 63.7307 (Stage 1, Epoch 246)
-#python final_main.py --name 0309_exp12 --shuffle --time-bit 20 --synthesis_mode tts --mode full --stages 300 300 300 300 --extra-embedding complex --num-hops 2 --label-feats --num-label-hops 2 --n-layers-1 2 --n-layers-2 2 --residual --act leaky_relu --bns --label-bns --lr 0.001 --weight-decay 0 --threshold 0.75 --patience 100 --gama 10 --amp --seeds 2
-
-
+[240130]
 '''
 
 

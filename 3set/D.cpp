@@ -30,14 +30,57 @@ using t3=tuple<int,int,int>;
 #define MOD 998244353
 #define INF 1000000007 
 
-void Solve(){
+string tar;
+vc<string> s[100];
+vc<pii> pos[100]; // matching위치, segment의 길이
+int cur_num=1;
+int DP[1000], tDP[1000]; // i-1까지 채우는데 최소의 비용임
 
+void Solve(){
+    cin>>tar; // 길이 100
+    int m=tar.size();
+    int n;
+    cin>>n;
+    rng(i,0,n-1){ // 100
+        int a;
+        cin>>a;
+        rng(j,0,a-1){ // 10
+            string temp;
+            cin>>temp; // 길이 10
+            s[i].pb(temp);
+            rng(k,0,m-(int)temp.size()){
+                bool flag=1;
+                rng(u,0,(int)temp.size()-1){
+                    if(tar[k+u]!=temp[u]){
+                        flag=0;
+                        break;
+                    }
+                }
+                if(flag) pos[i].pb({k,temp.size()});
+            }
+        }
+    }
+
+    fill(DP,DP+m+1,INF);
+    DP[0]=0;
+    rng(i,0,n-1){
+        fill(tDP,tDP+m+1,INF);
+        for(auto temp : pos[i]){
+            int idx=temp.fi, len=temp.se;
+            assert(idx+len<=m);
+            tDP[idx+len]=min(tDP[idx+len],DP[idx]+1);
+        }
+        rng(j,0,m){
+            DP[j]=min(DP[j],tDP[j]);
+        }
+    }
+    cout<<(DP[m]==INF?(-1):DP[m])<<'\n';
 }
 
 int main(){
     ios_base::sync_with_stdio(false); cin.tie(NULL);
     int t=1;
-    cin>>t;
+    //cin>>t;
     while(t--){
         Solve();
     }

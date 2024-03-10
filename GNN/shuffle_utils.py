@@ -49,168 +49,44 @@ def get_n_params(model):
     return pp
 
 
-def reduce_year(year_name):
-    # reduce P2018AP2018P2018 -> PAPP
-    res=''
-    for s in year_name:
-        if('0'<=s and s<='9'): continue
-        res=res+s
-    return res
-
-def hg_sym_propagate(new_g, tgt_type, num_hops, max_hops, extra_metapath, mode, f_log, debug=False, echo=True):
-    for hop in range(1, max_hops):
-        reserve_heads = [ele[:hop] for ele in extra_metapath if len(ele) > hop] # 
-        # f_log.write(f"DEBUG_hg1 | hop : {hop} | reserve_heads : {reserve_heads}\n")
-        # f_log.flush()
-        for etype in new_g.etypes:
-            # f_log.write(f"DEBUG_hg2 | etype : {etype}\n")
-            # f_log.flush()
-            stype, direction, dtype = new_g.to_canonical_etype(etype)
-            if len(stype)==1 or len(dtype)==1: continue # 
-            # f_log.write(f"DEBUG_hg2.2 | stype : {stype} | dtype : {dtype} | type(new_g.nodes[stype]) : {type(new_g.nodes[stype])}\n")
-
-            for k in list(new_g.nodes[stype].data.keys()): 
-                if len(reduce_year(k)) == hop: #
-                    current_dst_name = f'{dtype}{k}' # {dtype}{stype}
-                    # f_log.write(f"DEBUG_hg3.2 | k : {k} | current_dst_name : {current_dst_name}\n")
-                    # f_log.flush()
-                    if (hop == num_hops and dtype[0] != tgt_type and k not in reserve_heads) \
-                      or (hop > num_hops and k not in reserve_heads):
-                        continue
-                    if echo: print(k, etype, current_dst_name)
-                    # f_log.write(f"type(new_g) : {type(new_g)}\n")
-                    # f_log.write(f"DEBUG_hg4 | actual update k : {k} | etype : {etype} | current_dst_name : {current_dst_name} | type(new_g[etype]) : {type(new_g[etype])}\n")
-                    # f_log.flush()
-                    
-                    new_g[etype].update_all(
-                        fn.copy_u(k, 'm'),
-                        fn.mean('m', current_dst_name), etype=etype)
-                    
-                    # Updated feature : (maybe) new_g.nodes[stype].data[current_dst_name]
-                    # So build new graph with deleted edge, and manually update it!
-
-        # remove no-use items
-        for ntype in new_g.ntypes:
-            if ntype[0] == tgt_type: continue 
-            removes = []
-            for k in new_g.nodes[ntype].data.keys():
-                # f_log.write(f"DEBUG_hg5 | reduce_year(k) : {reduce_year(k)} | remove_append : {len(reduce_year(k)) <= hop}\n")
-                if len(reduce_year(k)) <= hop:
-                    removes.append(k)
-            for k in removes:
-                new_g.nodes[ntype].data.pop(k)
-            if echo and len(removes): print('remove', removes)
-        # f_log.write("\n")
-        gc.collect()
-    
-        if echo: print(f'-- hop={hop} ---')
-        for ntype in new_g.ntypes:
-            for k, v in new_g.nodes[ntype].data.items():
-                if echo: print(f'{ntype} {k} {v.shape}')
-        if echo: print(f'------\n')
-
-            
-    # print(f"Synthesize year feature")
-    # f_log.write(f"Synthesize year feature\n")
-    # f_log.flush()
-    # P2010 ~ P2019 is node itself, not data keys. 
-    # there is a node named 'P', it sholud only contains a key 'Y'. 
-    # Data keys are something like P2018AP2018P2018 # Something propagated!!
-
-    paper_year=new_g.nodes['P'].data['Y'] #
-    # for k in new_g.nodes['P'].data.keys():
-    #     print(f"Feature for key 'P' : {k}")
-    #     f_log.write(f"Feature for key 'P' : {k}\n")
-    #     f_log.flush()
-
-    pfeats={} #
-    for k,v in new_g.nodes['P2019'].data.items():
-        # print(f"type(v) : {type(v)}")
-        # f_log.write(f"type(v) : {type(v)}\n")
-        pfeats[reduce_year(k)]=torch.clone(v) #
-
-    for ntype in new_g.ntypes:
-        if ntype[0]!='P' or len(ntype)==1: continue
-        # ntype is something like P2018
-        yy=int(ntype[1:]) # Something like 2018
-        # print(f"Papers with year : P{yy}")
-        # f_log.write(f"Papers with year : P{yy}\n")
-        # f_log.flush()
-
-        for k in new_g.nodes[ntype].data.keys():
-            # k in something like 
-            reduce_key=reduce_year(k)
-            # print(f"Papers' key and reduced key : {k}, {reduce_key}")
-            # f_log.write(f"Papers' key and reduced key : {k}, {reduce_key}\n")
-            # f_log.flush()
-        
-            year_idx=np.squeeze(np.argwhere(paper_year==yy)) # 
-            pfeats[reduce_key][year_idx]=new_g.nodes[ntype].data[k][year_idx]
-            '''
-            for i in range(len(paper_year)):
-                assert (paper_year[i]>=2010 and paper_year[i]<2020)
-                if yy==paper_year[i]:
-                    pfeats[reduce_key][i]=new_g.nodes[ntype].data[k][i]
-            '''
-            
-    for ntype in new_g.ntypes:
-        if ntype[0]!='P': continue 
-        removes=[]
-        for k in new_g.nodes[ntype].data.keys():
-            # print(f"Delete | ntype : {ntype} | key : {k}")
-            # f_log.write(f"Delete | ntype : {ntype} | key : {k}\n")
-            # f_log.flush()
-            removes.append(k)
-        for k in removes:
-            new_g.nodes[ntype].data.pop(k)
-    
-    for k,v in pfeats.items():
-        new_g.nodes['P'].data[k]=v
-    gc.collect()
-
-    return new_g
-
-
-def hg_propagate(new_g, tgt_type, num_hops, max_hops, extra_metapath, mode, f_log, echo=True):
-    f_log.write(f"DEBUG_hg0 | new_g : {new_g}\n")
-    f_log.write(f"DEBUG_hg0 | tgt_type : {tgt_type}\n")
-    f_log.write(f"DEBUG_hg0 | num_hops : {num_hops}\n")
-    f_log.write(f"DEBUG_hg0 | max_hops : {max_hops}\n")
-    f_log.write(f"DEBUG_hg0 | extra_metapath : {extra_metapath}\n")
-    f_log.flush()
+def hg_propagate(new_g, tgt_type, num_hops, max_hops, extra_metapath, mode, f_log, echo=False):
+    #f_log.write(f"DEBUG_hg0 | new_g : {new_g}\n")
+    #f_log.write(f"DEBUG_hg0 | tgt_type : {tgt_type}\n")
+    #f_log.write(f"DEBUG_hg0 | num_hops : {num_hops}\n")
+    #f_log.write(f"DEBUG_hg0 | max_hops : {max_hops}\n")
+    #f_log.write(f"DEBUG_hg0 | extra_metapath : {extra_metapath}\n")
+    #f_log.flush()
 
     for hop in range(1, max_hops):
         reserve_heads = [ele[:hop] for ele in extra_metapath if len(ele) > hop]
         #print(f"DEBUG_hg1 | hop : {hop} | reserve_heads : {reserve_heads}")
-        # f_log.write(f"DEBUG_hg1 | hop : {hop} | reserve_heads : {reserve_heads}\n")
-        # f_log.flush()
+        #f_log.write(f"DEBUG_hg1 | hop : {hop} | reserve_heads : {reserve_heads}\n")
+        #f_log.flush()
         for etype in new_g.etypes:
             #print(f"DEBUG_hg2 | etype : {etype}")
-            # f_log.write(f"DEBUG_hg2 | etype : {etype}\n")
-            # # A-I A-P F-P I-A P-A P-F P-P # P>P
-            # f_log.flush()
+            #f_log.write(f"DEBUG_hg2 | etype : {etype}\n")
+            # A-I A-P F-P I-A P-A P-F P-P
+            #f_log.flush()
             stype, direction, dtype = new_g.to_canonical_etype(etype)
-            if len(stype)>1 or len(stype)>1: continue
-
             # A-I -> A I
             #print(f"DEBUG_hg2.2 | stype : {stype} | dtype : {dtype} | type(new_g.nodes[stype]) : {type(new_g.nodes[stype])}")
-            # f_log.write(f"DEBUG_hg2.2 | stype : {stype} | dtype : {dtype} | type(new_g.nodes[stype]) : {type(new_g.nodes[stype])}\n")
+            #f_log.write(f"DEBUG_hg2.2 | stype : {stype} | dtype : {dtype} | type(new_g.nodes[stype]) : {type(new_g.nodes[stype])}\n")
 
             for k in list(new_g.nodes[stype].data.keys()):
                 if len(k) == hop:
                     current_dst_name = f'{dtype}{k}'
                     #print(f"DEBUG_hg3.2 | k : {k} | current_dst_name : {current_dst_name}")
-                    # f_log.write(f"DEBUG_hg3.2 | k : {k} | current_dst_name : {current_dst_name}\n")
-                    # f_log.flush()
+                    #f_log.write(f"DEBUG_hg3.2 | k : {k} | current_dst_name : {current_dst_name}\n")
+                    #f_log.flush()
                     if (hop == num_hops and dtype != tgt_type and k not in reserve_heads) \
                       or (hop > num_hops and k not in reserve_heads):
                         continue
                     if echo: print(k, etype, current_dst_name)
-                    # f_log.write(f"type(new_g) : {type(new_g)}\n")
-                    # f_log.write(f"DEBUG_hg4 | actual update k : {k} | etype : {etype} | current_dst_name : {current_dst_name} | type(new_g[etype]) : {type(new_g[etype])}\n")
+                    #f_log.write(f"type(new_g) : {type(new_g)}\n")
+                    #f_log.write(f"DEBUG_hg4 | actual update k : {k} | etype : {etype} | current_dst_name : {current_dst_name} | type(new_g[etype]) : {type(new_g[etype])}\n")
                     
-                    # f_log.write(f"toggle debug | etype : {etype} | hop : {hop} | num_hops : {num_hops} | dtype : {dtype} | direction : {direction} | stype : {stype}\n")
-                    # f_log.flush()
+                    f_log.write(f"toggle debug | etype : {etype} | hop : {hop} | num_hops : {num_hops} | dtype : {dtype} | direction : {direction} | stype : {stype}\n")
+                    f_log.flush()
 
                     if(((mode=='toggle' and hop == num_hops) or mode=='mono') and dtype==tgt_type and stype==tgt_type and direction[1]=='-'):
                         continue
@@ -233,15 +109,13 @@ def hg_propagate(new_g, tgt_type, num_hops, max_hops, extra_metapath, mode, f_lo
             if ntype == tgt_type: continue
             removes = []
             for k in new_g.nodes[ntype].data.keys():
-                # f_log.write(f"DEBUG_hg5 | k : {k} | remove_append : {len(k) <= hop}\n")
-                # f_log.flush()
                 if len(k) <= hop:
                     removes.append(k)
             for k in removes:
                 new_g.nodes[ntype].data.pop(k)
             if echo and len(removes): print('remove', removes)
         gc.collect()
-        
+
         if echo: print(f'-- hop={hop} ---')
         for ntype in new_g.ntypes:
             for k, v in new_g.nodes[ntype].data.items():
@@ -256,7 +130,7 @@ def clear_hg(new_g, echo=False):
     for ntype in new_g.ntypes:
         keys = list(new_g.nodes[ntype].data.keys())
         if len(keys):
-            if echo: print("clear_hg", ntype, keys)
+            if echo: print(ntype, keys)
             for k in keys:
                 new_g.nodes[ntype].data.pop(k)
     return new_g
@@ -461,7 +335,7 @@ def load_homo(args):
     n_classes = dataset.num_classes
     evaluator = get_ogb_evaluator(args.dataset)
 
-    diag_name = f'{args.root}subgraph/{args.dataset}_diag.pt'
+    diag_name = f'{args.dataset}_diag.pt'
     if not os.path.exists(diag_name):
         src, dst, eid = g._graph.edges(0)
         m = SparseTensor(row=dst, col=src, sparse_sizes=(g.num_nodes(), g.num_nodes()))
@@ -528,13 +402,13 @@ def load_mag(args, f_log, time_bit):
     paper_year=g.nodes['paper'].data['year']
 
     init_labels = init_labels['paper'].squeeze()
-    n_classes = int(init_labels.max()) + 1 
+    n_classes = int(init_labels.max()) + 1
     evaluator = get_ogb_evaluator(args.dataset)
 
     # for k in g.ntypes:
     #     print(k, g.ndata['feat'][k].shape)
-    #for k in g.ntypes:
-    #    print(k, g.nodes[k].data['feat'].shape)
+    for k in g.ntypes:
+        print(k, g.nodes[k].data['feat'].shape)
         #f_log.write(f"DEBUG_load1 | {k} {g.nodes[k].data['feat'].shape}\n")
         #f_log.flush()
 
@@ -543,7 +417,7 @@ def load_mag(args, f_log, time_bit):
         src, dst, eid = g._graph.edges(i)
         adj = SparseTensor(row=dst, col=src)
         adjs.append(adj)
-        #print(g.to_canonical_etype(etype), adj)
+        print(g.to_canonical_etype(etype), adj)
         #f_log.write(f"DEBUG_load2 | {g.to_canonical_etype(etype)} {adj}\n")
         #f_log.flush()
 
@@ -552,13 +426,11 @@ def load_mag(args, f_log, time_bit):
     # author: [1134649, 256]
     # institution [8740, 256]
     # field_of_study [59965, 256]
-    
-    nums={'P':736389, 'A':1134649, 'I':8740, 'F':59965}
 
     new_edges = {}
     ntypes = set()
 
-    etypes = [ # src->tgtx
+    etypes = [ # src->tgt
         ('A', 'A-I', 'I'),
         ('A', 'A-P', 'P'),
         ('P', 'P-P', 'P'),
@@ -567,7 +439,6 @@ def load_mag(args, f_log, time_bit):
     
 
     paper_feat=g.nodes['paper'].data['feat']
-    f_log.write(f"init paper_feat.shape : {paper_feat.shape} | paper_feat.dtype : {paper_feat.dtype}\n")
     if time_bit!=0:
         # Build time positional encoding
         positional_encoding=[]
@@ -598,206 +469,78 @@ def load_mag(args, f_log, time_bit):
         f_log.flush()
 
 
-    PP_sym = adjs[2].to_symmetric() #  ('paper', 'cites', 'paper')
+    PP_sym = adjs[2].to_symmetric()
     #adjs[2] = adjs[2].to_symmetric()
     #assert torch.all(adjs[2].get_diag() == 0)
     
-    num_nodes={}
     for etype, adj in zip(etypes, adjs):
         stype, rtype, dtype = etype
+        #f_log.write(f"DEBUG_load3 | etype : {etype} | adj : {adj} | stype : {stype} | rtype : {rtype} | dtype : {dtype}\n")
+        #f_log.flush()
         dst, src, _ = adj.coo()
         src = src.numpy()
         dst = dst.numpy()
 
-        if stype == 'P' and dtype == 'P':
-            # paper to paper
+        if stype == dtype:
             dstc, srcc, _ = PP_sym.coo()
             srcc = srcc.numpy()
             dstc = dstc.numpy()
             src_append = []
             dst_append = []
             # src is newer. i.e. year[src]>=year[dst] but year[src]+1==year[dst] is also possible
-            print(f"Final Edges num | srcc size : {len(srcc)} | dstc size : {len(dstc)} | src size : {len(src)} | dst size : {len(dst)}")
-            # args.synthesis_mode == tos : it used symmetric edges
-            if(len(args.synthesis_mode)==3 and args.synthesis_mode[2]=='s'):
-                for yy in range(2010,2020):
-                    if not (os.path.exists(args.root+'symgraph/'+stype+dtype+str(yy)+'src_'+args.synthesis_mode+'.npy') and os.path.exists(args.root+'symgraph/'+stype+dtype+str(yy)+'dst_'+args.synthesis_mode+'.npy')):
-                        newsrc=[]
-                        newdst=[]
-                        for i in range(len(srcc)):
-                            newsrc.append(srcc[i])
-                            newdst.append(dstc[i]) 
-                            if(args.synthesis_mode[1]=='o'):
-                                if abs(paper_year[srcc[i]]-paper_year[dstc[i]])>min(2019-paper_year[dstc[i]],paper_year[dstc[i]]-2010):
-                                    newsrc.append(srcc[i])
-                                    newdst.append(dstc[i])   
-                            else:
-                                if abs(paper_year[srcc[i]]-paper_year[dstc[i]])>min(2019-paper_year[srcc[i]],paper_year[srcc[i]]-2010):
-                                    newsrc.append(srcc[i])
-                                    newdst.append(dstc[i])
-
-                        if(args.synthesis_mode[0]=='o'):
-                            newsrc, newdst = np.array(newsrc), np.array(newdst) 
-                        else:
-                            newsrc, newdst = np.array(newdst), np.array(newsrc) 
-                        np.save(args.root+'symgraph/'+stype+dtype+str(yy)+'src_'+args.synthesis_mode,newsrc)
-                        np.save(args.root+'symgraph/'+stype+dtype+str(yy)+'dst_'+args.synthesis_mode,newdst)
-                    else:
-                        newsrc=np.load(args.root+'symgraph/'+stype+dtype+str(yy)+'src_'+args.synthesis_mode+'.npy')
-                        newdst=np.load(args.root+'symgraph/'+stype+dtype+str(yy)+'dst_'+args.synthesis_mode+'.npy')
-
-            else:
-                for yy in range(2010,2020):
-                    if not (os.path.exists(args.root+'symgraph/'+stype+dtype+str(yy)+'src_'+args.synthesis_mode+'.npy') and os.path.exists(args.root+'symgraph/'+stype+dtype+str(yy)+'dst_'+args.synthesis_mode+'.npy')):
-                        newsrc=[]
-                        newdst=[]
-                        for i in range(len(src)):
-                            newsrc.append(src[i])
-                            newdst.append(dst[i]) 
-                            if(args.synthesis_mode[1]=='o'):
-                                if abs(paper_year[src[i]]-paper_year[dst[i]])>min(2019-paper_year[dst[i]],paper_year[dst[i]]-2010):
-                                    newsrc.append(src[i])
-                                    newdst.append(dst[i])   
-                            else:
-                                if abs(paper_year[src[i]]-paper_year[dst[i]])>min(2019-paper_year[src[i]],paper_year[src[i]]-2010):
-                                    newsrc.append(src[i])
-                                    newdst.append(dst[i])
-
-                        if(args.synthesis_mode[0]=='o'):
-                            newsrc, newdst = np.array(newsrc), np.array(newdst) 
-                        else:
-                            newsrc, newdst = np.array(newdst), np.array(newsrc) 
-                        np.save(args.root+'symgraph/'+stype+dtype+str(yy)+'src_'+args.synthesis_mode,newsrc)
-                        np.save(args.root+'symgraph/'+stype+dtype+str(yy)+'dst_'+args.synthesis_mode,newdst)
-                    else:
-                        newsrc=np.load(args.root+'symgraph/'+stype+dtype+str(yy)+'src_'+args.synthesis_mode+'.npy')
-                        newdst=np.load(args.root+'symgraph/'+stype+dtype+str(yy)+'dst_'+args.synthesis_mode+'.npy')
-    
-                # print(f"NEW EDGE PP - year : {yy} | before symm size : {len(newsrc)} | {'P'+str(yy)}, {'P'+str(yy)+'-'+'P'+str(yy)}, {'P'+str(yy)}")
-                # f_log.write(f"NEW EDGE PP - year : {yy} | before symm size : {len(newsrc)} | {'P'+str(yy)}, {'P'+str(yy)+'-'+'P'+str(yy)}, {'P'+str(yy)}\n")
-                # f_log.flush()
-                new_edges[('P'+str(yy), 'P'+str(yy)+'-'+'P'+str(yy), 'P'+str(yy))] =(newsrc, newdst) 
-                num_nodes['P'+str(yy)]=nums['P']
-            num_nodes['P']=nums['P']
-
+            
             for i in range(len(src)):
                 if paper_year[src[i]]==paper_year[dst[i]]:
                     src_append.append(dst[i].item())
                     dst_append.append(src[i].item())
             src_append, dst_append = np.array(src_append), np.array(dst_append)
+            print(f"src_append : {src_append} | dst_append : {dst_append} | src : {src} | dst : {dst}")
+            print(f"src_append : {src_append.shape} | dst_append : {dst_append.shape} | src : {src.shape} | dst : {dst.shape}")
+            print(f"src_append : {type(src_append[0])} | dst_append : {type(dst_append[0])} | src : {type(src[0])} | dst : {type(dst[0])}")
+            f_log.write(f"src_append : {src_append} | dst_append : {dst_append} | src : {src} | dst : {dst}\n")
+            f_log.write(f"src_append : {src_append.shape} | dst_append : {dst_append.shape} | src : {src.shape} | dst : {dst.shape}\n")
+            f_log.write(f"src_append : {type(src_append[0])} | dst_append : {type(dst_append[0])} | src : {type(src[0])} | dst : {type(dst[0])}\n")
+            f_log.flush()
+            
             dst=np.concatenate((dst,dst_append))
             src=np.concatenate((src,src_append))
-            #new_edges[(stype, rtype, dtype)] = (np.concatenate((srcc, dstc)), np.concatenate((dstc, srcc))) # Isnt this symmetric already?
+            #new_edges[(stype, rtype, dtype)] = (np.concatenate((srcc, dstc)), np.concatenate((dstc, srcc)))
             new_edges[(stype, rtype, dtype)] = (srcc, dstc) # Always change this at no cost (24.02.25)
-            new_edges[(stype, stype+'>'+dtype, dtype)] = (dst, src) 
-
-    
+            new_edges[(stype, stype+'>'+dtype, dtype)] = (dst, src)
             dst, src= torch.from_numpy(dst).to(dtype=torch.long), torch.from_numpy(src).to(dtype=torch.long)
             adj = SparseTensor(row=dst, col=src)
             adjs[2]=adj
 
             # rev if new_edges[(stype, stype+'>'+dtype, dtype)] = (dst, src) 
             # normal if new_edges[(stype, stype+'>'+dtype, dtype)] = (src, dst)
-            
-        elif(stype=='P'):
-            for yy in range(2010,2020):
-                print(f"yy : {yy} | src : {stype} | dst : {dtype}")
-                if not (os.path.exists(args.root+'symgraph/'+stype+dtype+str(yy)+'src.npy') and os.path.exists(args.root+'symgraph/'+stype+dtype+str(yy)+'dst.npy')):
-                    # f_log.write(f"yy : {yy} | src : {stype} | dst : {dtype}\n")
-                    # f_log.flush()
-                    newsrc=[]
-                    newdst=[]
-                    for i in range(len(src)):
-                        if paper_year[src[i]]<=yy: 
-                            newsrc.append(src[i])
-                            newdst.append(dst[i])
-                    newsrc, newdst = np.array(newsrc), np.array(newdst)
-                    np.save(args.root+'symgraph/'+stype+dtype+str(yy)+'src',newsrc)
-                    np.save(args.root+'symgraph/'+stype+dtype+str(yy)+'dst',newdst)
-                else:
-                    newsrc=np.load(args.root+'symgraph/'+stype+dtype+str(yy)+'src.npy')
-                    newdst=np.load(args.root+'symgraph/'+stype+dtype+str(yy)+'dst.npy')
-                
-                new_edges[(stype+str(yy), stype+str(yy)+'-'+dtype+str(yy), dtype+str(yy))] = (newsrc, newdst)
-                new_edges[(dtype+str(yy), dtype+str(yy)+'-'+stype+str(yy), stype+str(yy))] = (newdst, newsrc)
-                num_nodes[stype+str(yy)]=nums[stype]
-                num_nodes[dtype+str(yy)]=nums[dtype]
-            new_edges[(stype, stype+'-'+dtype, dtype)] = (src, dst) # 
-            new_edges[(dtype, dtype+'-'+stype, stype)] = (dst, src)
-            num_nodes[stype]=nums[stype]
-            num_nodes[dtype]=nums[dtype]
-
-        elif(dtype=='P'):
-            for yy in range(2010,2020):
-                print(f"yy : {yy} | src : {stype} | dst : {dtype}")
-                if not (os.path.exists(args.root+'symgraph/'+stype+dtype+str(yy)+'src.npy') and os.path.exists(args.root+'symgraph/'+stype+dtype+str(yy)+'dst.npy')):
-                    # f_log.write(f"yy : {yy} | src : {stype} | dst : {dtype}\n")
-                    # f_log.flush()
-                    newsrc=[]
-                    newdst=[]
-                    for i in range(len(src)):
-                        if paper_year[dst[i]]<=yy:
-                            newsrc.append(src[i])
-                            newdst.append(dst[i])
-                    newsrc, newdst = np.array(newsrc), np.array(newdst)
-                    np.save(args.root+'symgraph/'+stype+dtype+str(yy)+'src',newsrc)
-                    np.save(args.root+'symgraph/'+stype+dtype+str(yy)+'dst',newdst)
-                else:
-                    newsrc=np.load(args.root+'symgraph/'+stype+dtype+str(yy)+'src.npy')
-                    newdst=np.load(args.root+'symgraph/'+stype+dtype+str(yy)+'dst.npy')
-                
-                new_edges[(stype+str(yy), stype+str(yy)+'-'+dtype+str(yy), dtype+str(yy))] = (newsrc, newdst)
-                new_edges[(dtype+str(yy), dtype+str(yy)+'-'+stype+str(yy), stype+str(yy))] = (newdst, newsrc)
-                num_nodes[stype+str(yy)]=nums[stype]
-                num_nodes[dtype+str(yy)]=nums[dtype]
-            new_edges[(stype, stype+'-'+dtype, dtype)] = (src, dst)
-            new_edges[(dtype, dtype+'-'+stype, stype)] = (dst, src)
-            num_nodes[stype]=nums[stype]
-            num_nodes[dtype]=nums[dtype]
 
         else:
-            for yy in range(2010,2020): # 
-                new_edges[(stype+str(yy), stype+str(yy)+'-'+dtype+str(yy), dtype+str(yy))] = (src, dst)
-                new_edges[(dtype+str(yy), dtype+str(yy)+'-'+stype+str(yy), stype+str(yy))] = (dst, src)
-                num_nodes[stype+str(yy)]=nums[stype]
-                num_nodes[dtype+str(yy)]=nums[dtype]
-            new_edges[(stype, stype+'-'+dtype, dtype)] = (src, dst)
-            new_edges[(dtype, dtype+'-'+stype, stype)] = (dst, src)
-            num_nodes[stype]=nums[stype]
-            num_nodes[dtype]=nums[dtype]
+            new_edges[(stype, rtype, dtype)] = (src, dst)
+            new_edges[(dtype, rtype[::-1], stype)] = (dst, src)
+        ntypes.add(stype)
+        ntypes.add(dtype)
 
-            #ntypes.add(stype)
-            #ntypes.add(dtype)
+    new_g = dgl.heterograph(new_edges)
 
-    new_g = dgl.heterograph(new_edges,num_nodes_dict=num_nodes)
     print(f"g.nodes['paper'].data.keys() : {g.nodes['paper'].data.keys()}")
-    # g.nodes['paper'].data.keys() : dict_keys(['year', 'feat'])
     # feat, year
 
 
     #new_g.nodes['P'].data['P'] = g.nodes['paper'].data['feat']
-    #new_g.nodes['P'].data['P'] = paper_feat
-    #new_g.nodes['A'].data['A'] = g.nodes['author'].data['feat']
-    
-    for i in range(2010,2020):
-        new_g.nodes['P'+str(i)].data['P'+str(i)] = paper_feat
-        new_g.nodes['A'+str(i)].data['A'+str(i)] = g.nodes['author'].data['feat']
-        new_g.nodes['I'+str(i)].data['I'+str(i)] = g.nodes['institution'].data['feat']
-        new_g.nodes['F'+str(i)].data['F'+str(i)] = g.nodes['field_of_study'].data['feat']
-        print(f"paper year : {'P'+str(i)}")
-        # f_log.write(f"paper year : {'P'+str(i)}, 4types : {type(paper_feat)}, {type(g.nodes['author'].data['feat'])}, {g.nodes['institution'].data['feat']}, {g.nodes['field_of_study'].data['feat']}\n")
-        # f_log.flush()
-    new_g.nodes['P'].data['Y'] = paper_year
+    new_g.nodes['P'].data['P'] = paper_feat
+    new_g.nodes['A'].data['A'] = g.nodes['author'].data['feat']
+    new_g.nodes['I'].data['I'] = g.nodes['institution'].data['feat']
+    new_g.nodes['F'].data['F'] = g.nodes['field_of_study'].data['feat']
 
     IA, PA, PP, FP = adjs
 
-    diag_name = f'{args.root}symgraph/{args.dataset}_PFP_diag.pt'
+    diag_name = f'{args.dataset}_PFP_diag.pt'
     if not os.path.exists(diag_name):
         PF = FP.t()
         PFP_diag = sparse_tools.spspmm_diag_sym_ABA(PF)
         torch.save(PFP_diag, diag_name)
 
-    diag_name = f'{args.root}symgraph/{args.dataset}_PPP_diag.pt'
+    diag_name = f'{args.dataset}_PPP_diag.pt'
     if not os.path.exists(diag_name):
         # PP = PP.to_symmetric()
         # assert torch.all(PP.get_diag() == 0)
@@ -807,19 +550,19 @@ def load_mag(args, f_log, time_bit):
 
     PP=PP.t()
 
-    diag_name = f'{args.root}symgraph/{args.dataset}_P<P<P_diag.pt'
+    diag_name = f'{args.dataset}_P<P<P_diag.pt'
     PPP_diag = sparse_tools.spspmm_diag_ABA(PP,PP)
     torch.save(PPP_diag, diag_name)
 
-    diag_name = f'{args.root}symgraph/{args.dataset}_P<PP_diag.pt'
+    diag_name = f'{args.dataset}_P<PP_diag.pt'
     PPP_diag = sparse_tools.spspmm_diag_ABA(PP,PP_sym)
     torch.save(PPP_diag, diag_name)
 
 
-    diag_name = f'{args.root}symgraph/{args.dataset}_PAP_diag.pt'
+    diag_name = f'{args.dataset}_PAP_diag.pt'
     if not os.path.exists(diag_name):
         PAP_diag = sparse_tools.spspmm_diag_sym_ABA(PA)
-        torch.save(PAP_diag, diag_name) 
+        torch.save(PAP_diag, diag_name)
 
     print(f"Load mag Done! ... {time.time()-t0:.5f}s")
     f_log.write(f"Load mag Done! ... {time.time()-t0:.5f}s\n")

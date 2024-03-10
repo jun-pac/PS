@@ -64,10 +64,12 @@ void Solve(){
             assert((cur_pos[y]==-1||cur_pos[y]==0) && cur_pos[x]!=-1);
             cur_pos[y]=cnt++;
             int idxy=cur_pos[y], idxx=cur_pos[x];
+            int nexidx=datas[idxx].ne;
             datas[idxy].val=y;
-            datas[idxy].ne=datas[idxx].ne;
+            datas[idxy].ne=nexidx;
             datas[idxy].pr=idxx;
             datas[idxx].ne=idxy;
+            if(nexidx!=-1) datas[nexidx].pr=idxy;
         }
         else{
             cin>>x;

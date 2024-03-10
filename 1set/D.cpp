@@ -30,8 +30,32 @@ using t3=tuple<int,int,int>;
 #define MOD 998244353
 #define INF 1000000007 
 
-void Solve(){
+ll datas[N];
+set<ll> st;
 
+void Solve(){
+    ll n,mx;
+    cin>>n>>mx;
+    st.clear();
+    rng(i,0,n-1){
+        cin>>datas[i];
+        st.insert(datas[i]);
+    }
+    ll tot=(mx*(mx+1))/2+mx+1;
+    
+    ll addnum=0;
+    rng(i,0,n-1) addnum+=datas[i]/2+1;
+
+    ll decnum=0;
+    rng(i,0,n-1) decnum+=mx-datas[i]+1; 
+
+    ll bothnum=0;
+    ll o=0,e=0;
+    rng(i,0,n-1) if(datas[i]%2==0) o++;
+    e=n-o;
+    bothnum=(o*(o+1))/2+(e*(e+1))/2;
+
+    cout<<tot-addnum-decnum+bothnum<<'\n';
 }
 
 int main(){

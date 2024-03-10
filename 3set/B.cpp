@@ -30,14 +30,23 @@ using t3=tuple<int,int,int>;
 #define MOD 998244353
 #define INF 1000000007 
 
-void Solve(){
+vc<int> datas;
 
+void Solve(){
+    while(true){
+        int x;
+        cin>>x;
+        datas.pb(x);
+        if(x==0) break;
+    }
+    int n=datas.size();
+    rng(i,0,n-1) cout<<datas[n-1-i]<<'\n';
 }
 
 int main(){
     ios_base::sync_with_stdio(false); cin.tie(NULL);
     int t=1;
-    cin>>t;
+    //cin>>t;
     while(t--){
         Solve();
     }

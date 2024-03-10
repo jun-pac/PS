@@ -30,8 +30,50 @@ using t3=tuple<int,int,int>;
 #define MOD 998244353
 #define INF 1000000007 
 
-void Solve(){
+int datas[N];
+int cnt[N];
 
+void Solve(){
+    int n;
+    cin>>n;
+    fill(cnt,cnt+n+1,0);
+    rng(i,0,n-1) cin>>datas[i];
+    rng(i,0,n-1) cnt[datas[i]]++;
+    int val=INF;
+    rng(i,0,n) if(cnt[i]==0){
+        val=i;
+        break;
+    }
+    //cout<<"val "<<val<<'\n';
+    // 0~val-1을 잡을 수 있는 두 개의 구분된 영역이 존재해야 함.
+    fill(cnt,cnt+n+1,0);
+    int under_cnt=0, temp=0; // val이하의 값
+    rng(i,0,n-1){
+        if(datas[i]<val && cnt[datas[i]]==0){
+            under_cnt++;
+        }
+        cnt[datas[i]]++;
+        if(under_cnt==val){
+            temp=i;
+            break;
+        }
+    }
+    //cout<<"temp "<<temp<<'\n';
+    
+    under_cnt=0;
+    fill(cnt,cnt+n+1,0);
+    rng(i,temp+1,n-1){
+        if(datas[i]<val && cnt[datas[i]]==0){
+            under_cnt++;
+        }
+        cnt[datas[i]]++;
+    }
+    if(under_cnt!=val) cout<<"-1\n";
+    else{
+        cout<<2<<'\n';
+        cout<<1<<' '<<temp+1<<'\n';
+        cout<<temp+2<<' '<<n<<'\n';
+    }
 }
 
 int main(){

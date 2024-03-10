@@ -30,14 +30,54 @@ using t3=tuple<int,int,int>;
 #define MOD 998244353
 #define INF 1000000007 
 
-void Solve(){
+pair<int,int> datas[1001];
+vc<pii> ans;
 
+int DFS(int l, int r, int offset){
+    int res=0;
+    while(offset<datas[l].fi){
+        res++;
+        ans.pb({1,offset});
+        offset++;
+    }
+    if(l==r) return res;
+
+    int mid=(l+r)>>1;
+    int temp=offset;
+    if(datas[mid+1].fi>datas[l].fi){
+        rng(i,mid+1,r){
+            res++;
+            ans.pb({2,datas[i].se+1});   
+        }
+        temp++;
+        while(temp<datas[mid+1].fi){
+            res++;
+            ans.pb({1,temp});
+            temp++;
+        }
+    }
+    res+=DFS(l,mid,offset);
+    res+=DFS(mid+1,r,temp);
+    return res;
+}
+
+void Solve(){
+    int n;
+    cin>>n;
+    rng(i,0,n-1) cin>>datas[i].fi;
+    rng(i,0,n-1) datas[i].se=i;
+    sort(datas,datas+n);
+    int k=DFS(0,n-1,0);
+    assert(k<=20000);
+    cout<<k<<'\n';
+
+    rng(i,0,k-1) cout<<ans[i].fi<<' '<<ans[i].se<<'\n';
 }
 
 int main(){
     ios_base::sync_with_stdio(false); cin.tie(NULL);
     int t=1;
-    cin>>t;
+    //cin>>t;
     while(t--){
         Solve();
     }
