@@ -58,18 +58,16 @@ def train(g, features, labels, masks, model):
         optimizer.step()
         acc = evaluate(g, features, labels, val_mask, model)
         if(epoch%10==9):
-            print(
-                "Epoch {:05d} | Loss {:.4f} | Accuracy {:.4f} ".format(
-                    epoch, loss.item(), acc
-                )
-            )
+            print("Epoch {:05d} | Loss {:.4f} | Accuracy {:.4f} ".format(epoch, loss.item(), acc))
+            f_log.write("Epoch {:05d} | Loss {:.4f} | Accuracy {:.4f} \n".format(epoch, loss.item(), acc))
+            f_log.flush()
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--dataset", type=str, default="3_sym")
     parser.add_argument("--dt", type=str, default="float",help="data type(float, bfloat16)")
-    parser.add_argument("--root",type=str, default='../GNN/data/')
+    parser.add_argument("--root",type=str, default='./data/')
     parser.add_argument("--epoch", type=int, default=200)
 
     args = parser.parse_args()
@@ -105,6 +103,8 @@ if __name__ == "__main__":
         features = features.to(dtype=torch.bfloat16)
         model = model.to(dtype=torch.bfloat16)
 
+    f_log=open('./txtlog/'+args.dataset+'.txt','a')
+
     # model training
     print("Training...")
     train(g, features, labels, masks, model)
@@ -113,26 +113,32 @@ if __name__ == "__main__":
     print("Testing...")
     acc = evaluate(g, features, labels, masks[2], model)
     print("Test accuracy {:.4f}".format(acc))
-
+    f_log.write("Test accuracy {:.4f}".format(acc))
+    f_log.flush()
 
 '''
-python3 GCN_train_SBM.py --dataset graph_2.bin (0.1800, 0.1300)
-python3 GCN_train_SBM.py --dataset graph_2.bin --epoch 500 (0.2000, 0.1400)
-python3 GCN_train_SBM.py --dataset graph_time_invar.bin --epoch 500 (0.0650, 0.0900)
-python3 GCN_train_SBM.py --dataset graph3.bin --epoch 500 (0.4200, 0.3850)
-python3 GCN_train_SBM.py --dataset graph3_tinvar.bin --epoch 500 (0.5750, 0.6050)
+[Valid, test]
+(Node 1000, 60:20:20)
+python3 SBM_train.py --dataset MUL2_feat5 --epoch 1000 
+0.6600 0.5700
+python3 SBM_train.py --dataset MUL2_sym_feat5 --epoch 1000 
+0.8000 0.8500
 
+(Node 3000, 55:5:40)
+python3 SBM_train.py --dataset MUL2_feat5 --epoch 1000 
+0.9733 0.9300
+python3 SBM_train.py --dataset MUL2_sym_feat5 --epoch 1000 
+0.9267 0.8850
 
-python3 GCN_train_SBM.py --dataset 3 --epoch 500 (0.5750, 0.5950)
-python3 GCN_train_SBM.py --dataset 3_sym --epoch 500 (0.5550, 0.6450)
+python3 SBM_train.py --dataset MUL1_feat5 --epoch 1000 
+0.1867 0.2467
+python3 SBM_train.py --dataset MUL1_sym_feat5 --epoch 1000 
+0.4400 0.4383
 
-python3 GCN_train_SBM.py --dataset 3_tinvar --epoch 500 (0.5550, 0.6100)
-python3 GCN_train_SBM.py --dataset 3_tinvar_sym --epoch 500 (0.5200, 0.4750)
-
-python3 GCN_train_SBM.py --dataset 3 --epoch 1500 (0.67, 0.67)
-python3 GCN_train_SBM.py --dataset 3_sym --epoch 1500 (0.76, 0.7250)
-
-python3 GCN_train_SBM.py --dataset 3_tinvar --epoch 1500 (0.7550, 0.7500)
-python3 GCN_train_SBM.py --dataset 3_tinvar_sym --epoch 1500 (0.7100, 0.6900)
-
+python3 SBM_train.py --dataset MUL1_feat5 --epoch 2000 
+0.2067 0.2000
+python3 SBM_train.py --dataset MUL1_sym_feat5 --epoch 500
+0.3133 0.3535
+python3 SBM_train.py --dataset MUL1_sym_feat5 --epoch 500 
+0.4267 0.4733
 '''
