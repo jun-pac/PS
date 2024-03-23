@@ -25,49 +25,14 @@ using pil=pair<int,ll>;
 using pli=pair<ll,int>;
 using pll=pair<ll,ll>;
 using t3=tuple<int,int,int>;
+__attribute__((optimize("Ofast,unroll-loops"),target("avx,avx2,fma")))
 
 #define N 300030
 #define MOD 998244353
 #define INF 1000000007 
 
-string s, rev;
-
 void Solve(){
-    int n;
-    cin>>n;
-    cin>>s;
-    int small=0;
-    int sz=s.size();
-    rng(i,0,(int)sz-1){
-        if(s[i]<s[sz-1-i]){
-            small=1;
-            break;
-        }
-        else if(s[i]>s[sz-1-i]){
-            small=2;
-            break;
-        }
-    }
-    //cout<<small<<'\n';
-    if(small==1){
-        if(n%2==0) cout<<s<<'\n';
-        else{
-            cout<<s;
-            reverse(all(s));
-            cout<<s<<'\n';
-        }
-    }
-    else if(small==2){
-        if(n%2==1) cout<<s<<'\n';
-        else{
-            reverse(all(s));
-            cout<<s;
-            reverse(all(s));
-            cout<<s<<'\n';
-            
-        }
-    }
-    else cout<<s<<'\n';
+
 }
 
 int main(){

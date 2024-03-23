@@ -11,84 +11,129 @@ import time
 import torch.nn.functional as F
 from tqdm import tqdm 
 from multiprocessing import Pool
+import multiprocessing
 from itertools import repeat
 chunk_size=100
 sym_chunk_size=1000
-core_num=8
+core_num=multiprocessing.cpu_count()
 len_newsrc=0
 
 t0=time.time()
-num_node=3000
-num_label=10
-num_time=100
-
-label_rands=torch.randperm(num_node)
-time_rands=torch.randperm(num_node)
-
-label=[0]*num_node
-times=[0]*num_node
-train_mask=[0]*num_node
-valid_mask=[0]*num_node
-test_mask=[0]*num_node
-
-for i in range(num_node):
-    label[i]=label_rands[i]%num_label
-    times[i]=time_rands[i]%num_time
-
-for i in range(num_node):
-    train_mask[i]=(times[i]<55)
-    valid_mask[i]=(times[i]>=55 and times[i]<60)
-    test_mask[i]=(times[i]>=60)
-    
-label=torch.Tensor(label).type(torch.long)
-times=torch.Tensor(times).type(torch.long)
-train_mask=torch.Tensor(train_mask).type(torch.bool)
-valid_mask=torch.Tensor(valid_mask).type(torch.bool)
-test_mask=torch.Tensor(test_mask).type(torch.bool)
 
 
 # Define Sample Functions 
 sample_func={}
-'''
-sample_func['3']=lambda cur_label:torch.randn(args.feat_dim)*0.2+feat_center[cur_label]
-sample_func['2']=lambda cur_label:torch.randn(args.feat_dim)*0.2+feat_center[cur_label]
-sample_func['1']=lambda cur_label:torch.randn(args.feat_dim)*0.2+feat_center[cur_label]
-sample_func['0']=lambda cur_label:torch.randn(args.feat_dim)*0.2+feat_center[cur_label]
-sample_func['33']=lambda cur_label:torch.randn(args.feat_dim)*0.2+feat_center[cur_label]
-'''
-sample_func['MUL1']=lambda cur_label:torch.randn(args.feat_dim)*32+feat_center[cur_label]
-sample_func['MUL2']=lambda cur_label:torch.randn(args.feat_dim)*32+feat_center[cur_label]
-sample_func['MUL3']=lambda cur_label:torch.randn(args.feat_dim)*8+feat_center[cur_label]
+
+sample_func['T2']=lambda cur_label:torch.randn(args.feat_dim)*4+feat_center[cur_label]
+sample_func['T3']=lambda cur_label:torch.randn(args.feat_dim)*4+feat_center[cur_label]
+sample_func['T4']=lambda cur_label:torch.randn(args.feat_dim)*4+feat_center[cur_label]
+sample_func['T5']=lambda cur_label:torch.randn(args.feat_dim)*4+feat_center[cur_label]
+sample_func['T6']=lambda cur_label:torch.randn(args.feat_dim)*4+feat_center[cur_label]
+sample_func['T7']=lambda cur_label:torch.randn(args.feat_dim)*4+feat_center[cur_label]
+sample_func['T8']=lambda cur_label:torch.randn(args.feat_dim)*4+feat_center[cur_label]
+sample_func['T9']=lambda cur_label:torch.randn(args.feat_dim)*4+feat_center[cur_label]
+
+sample_func['TM1']=lambda cur_label:torch.randn(args.feat_dim)*4+feat_center[cur_label]
+sample_func['TM2']=lambda cur_label:torch.randn(args.feat_dim)*4+feat_center[cur_label]
+sample_func['TM3']=lambda cur_label:torch.randn(args.feat_dim)*4+feat_center[cur_label]
+sample_func['TM4']=lambda cur_label:torch.randn(args.feat_dim)*4+feat_center[cur_label]
+sample_func['TM5']=lambda cur_label:torch.randn(args.feat_dim)*4+feat_center[cur_label]
+sample_func['TM6']=lambda cur_label:torch.randn(args.feat_dim)*4+feat_center[cur_label]
+sample_func['TM7']=lambda cur_label:torch.randn(args.feat_dim)*4+feat_center[cur_label]
+sample_func['TM8']=lambda cur_label:torch.randn(args.feat_dim)*4+feat_center[cur_label]
+sample_func['TM9']=lambda cur_label:torch.randn(args.feat_dim)*4+feat_center[cur_label]
+
+sample_func['TN1']=lambda cur_label:torch.randn(args.feat_dim)*4+feat_center[cur_label]
+sample_func['TN2']=lambda cur_label:torch.randn(args.feat_dim)*4+feat_center[cur_label]
+sample_func['TN3']=lambda cur_label:torch.randn(args.feat_dim)*4+feat_center[cur_label]
+sample_func['TN4']=lambda cur_label:torch.randn(args.feat_dim)*4+feat_center[cur_label]
+sample_func['TN5']=lambda cur_label:torch.randn(args.feat_dim)*4+feat_center[cur_label]
+sample_func['TN6']=lambda cur_label:torch.randn(args.feat_dim)*4+feat_center[cur_label]
+sample_func['TN7']=lambda cur_label:torch.randn(args.feat_dim)*4+feat_center[cur_label]
+sample_func['TN8']=lambda cur_label:torch.randn(args.feat_dim)*4+feat_center[cur_label]
+sample_func['TN9']=lambda cur_label:torch.randn(args.feat_dim)*4+feat_center[cur_label]
+
+sample_func['TC1']=lambda cur_label:torch.randn(args.feat_dim)*16+feat_center[cur_label]
+sample_func['TC2']=lambda cur_label:torch.randn(args.feat_dim)*16+feat_center[cur_label]
+sample_func['TC3']=lambda cur_label:torch.randn(args.feat_dim)*16+feat_center[cur_label]
+sample_func['TC4']=lambda cur_label:torch.randn(args.feat_dim)*16+feat_center[cur_label]
+sample_func['TC5']=lambda cur_label:torch.randn(args.feat_dim)*16+feat_center[cur_label]
+sample_func['TC6']=lambda cur_label:torch.randn(args.feat_dim)*16+feat_center[cur_label]
+sample_func['TC7']=lambda cur_label:torch.randn(args.feat_dim)*16+feat_center[cur_label]
+sample_func['TC8']=lambda cur_label:torch.randn(args.feat_dim)*16+feat_center[cur_label]
+sample_func['TC9']=lambda cur_label:torch.randn(args.feat_dim)*16+feat_center[cur_label]
+
+# sample_func['TEST1']=lambda cur_label:torch.randn(args.feat_dim)*32+feat_center[cur_label]
+# sample_func['TEST3']=lambda cur_label:torch.randn(args.feat_dim)*32+feat_center[cur_label]
+# sample_func['TEST5']=lambda cur_label:torch.randn(args.feat_dim)*32+feat_center[cur_label]
+# sample_func['TEST7']=lambda cur_label:torch.randn(args.feat_dim)*32+feat_center[cur_label]
+# sample_func['TEST9']=lambda cur_label:torch.randn(args.feat_dim)*32+feat_center[cur_label]
+# sample_func['TEST2']=lambda cur_label:torch.randn(args.feat_dim)*32+feat_center[cur_label]
+# sample_func['TEST4']=lambda cur_label:torch.randn(args.feat_dim)*32+feat_center[cur_label]
+# sample_func['TEST6']=lambda cur_label:torch.randn(args.feat_dim)*32+feat_center[cur_label]
+# sample_func['TEST8']=lambda cur_label:torch.randn(args.feat_dim)*32+feat_center[cur_label]
+
 
 
 # Define SBM probability matrices
 matrix_func={}
-'''
-matrix_func['3']=lambda delta_t,label_i,label_j:(0.8 if label_i==label_j else 0.2*(num_time-delta_t)/num_time)
-matrix_func['3_tinvar']=lambda delta_t,label_i,label_j:(0.8 if label_i==label_j else 0.1)
-matrix_func['2']=lambda delta_t,label_i,label_j:(0.8 if label_i==label_j else 0.8*(num_time-delta_t)/num_time)
-matrix_func['2_tinvar']=lambda delta_t,label_i,label_j:(0.8 if label_i==label_j else 0.4)
-matrix_func['1']=lambda delta_t,label_i,label_j:(0.2 if label_i==label_j else 0.06*(num_time-delta_t)/num_time)
-matrix_func['1_tinvar']=lambda delta_t,label_i,label_j:(0.2 if label_i==label_j else 0.03)
-matrix_func['0']=lambda delta_t,label_i,label_j:(0.8 if label_i==label_j else 0.4*(num_time-delta_t)*(num_time-delta_t)/num_time/num_time)
-matrix_func['0_tinvar']=lambda delta_t,label_i,label_j:(0.8 if label_i==label_j else 0.2)
-matrix_func['33']=lambda delta_t,label_i,label_j:(0.8 if label_i==label_j else 0.2*(num_time-delta_t)/num_time)
-matrix_func['33_tinvar']=lambda delta_t,label_i,label_j:(0.8 if label_i==label_j else 0.1)
-matrix_func['MUL1_tinvar']=lambda delta_t,label_i,label_j:(0.5 if label_i==label_j else 0.2)
-matrix_func['MUL2_tinvar']=lambda delta_t,label_i,label_j:(0.5 if label_i==label_j else 0.2)
-matrix_func['MUL3_tinvar']=lambda delta_t,label_i,label_j:(0.8 if label_i==label_j else 0.3)
-'''
-matrix_func['MUL1']=lambda delta_t,label_i,label_j:(0.5 if label_i==label_j else 0.4*(num_time-delta_t)/num_time)
-matrix_func['MUL2']=lambda delta_t,label_i,label_j:(0.8 if label_i==label_j else 0.4*(num_time-delta_t)/num_time)
-matrix_func['MUL3']=lambda delta_t,label_i,label_j:(0.8 if label_i==label_j else 0.6*(num_time-delta_t)/num_time)
-t0=time.time()
+
+matrix_func['T1']=lambda delta_t,label_i,label_j:(0.04 if label_i==label_j else 0.01333+0.00*(args.num_time-delta_t)/args.num_time)
+matrix_func['T2']=lambda delta_t,label_i,label_j:(0.04 if label_i==label_j else 0.011667+0.0025*(args.num_time-delta_t)/args.num_time)
+matrix_func['T3']=lambda delta_t,label_i,label_j:(0.04 if label_i==label_j else 0.01000+0.005*(args.num_time-delta_t)/args.num_time)
+matrix_func['T4']=lambda delta_t,label_i,label_j:(0.04 if label_i==label_j else 0.008333+0.0075*(args.num_time-delta_t)/args.num_time)
+matrix_func['T5']=lambda delta_t,label_i,label_j:(0.04 if label_i==label_j else 0.00666+0.01*(args.num_time-delta_t)/args.num_time)
+matrix_func['T6']=lambda delta_t,label_i,label_j:(0.04 if label_i==label_j else 0.005000+0.0125*(args.num_time-delta_t)/args.num_time)
+matrix_func['T7']=lambda delta_t,label_i,label_j:(0.04 if label_i==label_j else 0.00333+0.015*(args.num_time-delta_t)/args.num_time)
+matrix_func['T8']=lambda delta_t,label_i,label_j:(0.04 if label_i==label_j else 0.001667+0.0175*(args.num_time-delta_t)/args.num_time)
+matrix_func['T9']=lambda delta_t,label_i,label_j:(0.04 if label_i==label_j else 0.00000+0.02*(args.num_time-delta_t)/args.num_time)
+
+matrix_func['TM1']=lambda delta_t,label_i,label_j:(0.12 if label_i==label_j else 0.04+0.00*(args.num_time-delta_t)/args.num_time)
+matrix_func['TM2']=lambda delta_t,label_i,label_j:(0.12 if label_i==label_j else 0.035+0.0075*(args.num_time-delta_t)/args.num_time)
+matrix_func['TM3']=lambda delta_t,label_i,label_j:(0.12 if label_i==label_j else 0.03+0.015*(args.num_time-delta_t)/args.num_time)
+matrix_func['TM4']=lambda delta_t,label_i,label_j:(0.12 if label_i==label_j else 0.025+0.0225*(args.num_time-delta_t)/args.num_time)
+matrix_func['TM5']=lambda delta_t,label_i,label_j:(0.12 if label_i==label_j else 0.02+0.03*(args.num_time-delta_t)/args.num_time)
+matrix_func['TM6']=lambda delta_t,label_i,label_j:(0.12 if label_i==label_j else 0.015+0.0375*(args.num_time-delta_t)/args.num_time)
+matrix_func['TM7']=lambda delta_t,label_i,label_j:(0.12 if label_i==label_j else 0.01+0.045*(args.num_time-delta_t)/args.num_time)
+matrix_func['TM8']=lambda delta_t,label_i,label_j:(0.12 if label_i==label_j else 0.005+0.0525*(args.num_time-delta_t)/args.num_time)
+matrix_func['TM9']=lambda delta_t,label_i,label_j:(0.12 if label_i==label_j else 0.00+0.06*(args.num_time-delta_t)/args.num_time)
+
+matrix_func['TN1']=lambda delta_t,label_i,label_j:(0.04 if label_i==label_j else 0.05333+0.00*(args.num_time-delta_t)/args.num_time)
+matrix_func['TN2']=lambda delta_t,label_i,label_j:(0.04 if label_i==label_j else 0.046667+0.0025*(args.num_time-delta_t)/args.num_time)
+matrix_func['TN3']=lambda delta_t,label_i,label_j:(0.04 if label_i==label_j else 0.04000+0.005*(args.num_time-delta_t)/args.num_time)
+matrix_func['TN4']=lambda delta_t,label_i,label_j:(0.04 if label_i==label_j else 0.033333+0.0075*(args.num_time-delta_t)/args.num_time)
+matrix_func['TN5']=lambda delta_t,label_i,label_j:(0.04 if label_i==label_j else 0.02666+0.01*(args.num_time-delta_t)/args.num_time)
+matrix_func['TN6']=lambda delta_t,label_i,label_j:(0.04 if label_i==label_j else 0.020000+0.0125*(args.num_time-delta_t)/args.num_time)
+matrix_func['TN7']=lambda delta_t,label_i,label_j:(0.04 if label_i==label_j else 0.01333+0.015*(args.num_time-delta_t)/args.num_time)
+matrix_func['TN8']=lambda delta_t,label_i,label_j:(0.04 if label_i==label_j else 0.006667+0.0175*(args.num_time-delta_t)/args.num_time)
+matrix_func['TN9']=lambda delta_t,label_i,label_j:(0.04 if label_i==label_j else 0.00000+0.02*(args.num_time-delta_t)/args.num_time)
+
+matrix_func['TC1']=lambda delta_t,label_i,label_j:(0.12 if label_i==label_j else 0.04+0.00*(args.num_time-delta_t)/args.num_time)
+matrix_func['TC2']=lambda delta_t,label_i,label_j:(0.12 if label_i==label_j else 0.035+0.0075*(args.num_time-delta_t)/args.num_time)
+matrix_func['TC3']=lambda delta_t,label_i,label_j:(0.12 if label_i==label_j else 0.03+0.015*(args.num_time-delta_t)/args.num_time)
+matrix_func['TC4']=lambda delta_t,label_i,label_j:(0.12 if label_i==label_j else 0.025+0.0225*(args.num_time-delta_t)/args.num_time)
+matrix_func['TC5']=lambda delta_t,label_i,label_j:(0.12 if label_i==label_j else 0.02+0.03*(args.num_time-delta_t)/args.num_time)
+matrix_func['TC6']=lambda delta_t,label_i,label_j:(0.12 if label_i==label_j else 0.015+0.0375*(args.num_time-delta_t)/args.num_time)
+matrix_func['TC7']=lambda delta_t,label_i,label_j:(0.12 if label_i==label_j else 0.01+0.045*(args.num_time-delta_t)/args.num_time)
+matrix_func['TC8']=lambda delta_t,label_i,label_j:(0.12 if label_i==label_j else 0.005+0.0525*(args.num_time-delta_t)/args.num_time)
+matrix_func['TC9']=lambda delta_t,label_i,label_j:(0.12 if label_i==label_j else 0.00+0.06*(args.num_time-delta_t)/args.num_time)
+
+# matrix_func['TEST1']=lambda delta_t,label_i,label_j:(0.4 if label_i==label_j else 0.1333+0.0*(args.num_time-delta_t)/args.num_time)
+# matrix_func['TEST3']=lambda delta_t,label_i,label_j:(0.4 if label_i==label_j else 0.1000+0.05*(args.num_time-delta_t)/args.num_time)
+# matrix_func['TEST5']=lambda delta_t,label_i,label_j:(0.4 if label_i==label_j else 0.0666+0.1*(args.num_time-delta_t)/args.num_time)
+# matrix_func['TEST7']=lambda delta_t,label_i,label_j:(0.4 if label_i==label_j else 0.0333+0.15*(args.num_time-delta_t)/args.num_time)
+# matrix_func['TEST9']=lambda delta_t,label_i,label_j:(0.4 if label_i==label_j else 0.0000+0.2*(args.num_time-delta_t)/args.num_time)
+# matrix_func['TEST2']=lambda delta_t,label_i,label_j:(0.4 if label_i==label_j else 0.11667+0.025*(args.num_time-delta_t)/args.num_time)
+# matrix_func['TEST4']=lambda delta_t,label_i,label_j:(0.4 if label_i==label_j else 0.08333+0.075*(args.num_time-delta_t)/args.num_time)
+# matrix_func['TEST6']=lambda delta_t,label_i,label_j:(0.4 if label_i==label_j else 0.05000+0.125*(args.num_time-delta_t)/args.num_time)
+# matrix_func['TEST8']=lambda delta_t,label_i,label_j:(0.4 if label_i==label_j else 0.01667+0.175*(args.num_time-delta_t)/args.num_time)
 
 
 def task(idx):
     src=[]
     dst=[]
-    for i in range(idx,min(idx+chunk_size,num_node)):
-        for j in range(num_node):
+    for i in range(idx,min(idx+chunk_size,args.num_node)):
+        for j in range(args.num_node):
             delta=abs(times[i]-times[j])
             yi=label[i]
             yj=label[j]
@@ -98,11 +143,21 @@ def task(idx):
     return np.array([src, dst])
 
 
+def mono_task(idx):
+    addsrc=[]
+    adddst=[]
+    for i in range(idx,min(idx+sym_chunk_size,len_newsrc)):
+        if times[newsrc[i]]<times[newdst[i]]:
+            addsrc.append(newsrc[i])
+            adddst.append(newdst[i])
+    return np.array([addsrc, adddst])
+    
+
 def sym_task(idx):
     addsrc=[]
     adddst=[]
     for i in range(idx,min(idx+sym_chunk_size,len_newsrc)):
-        if abs(times[newsrc[i]]-times[newdst[i]])>min(num_time-1-times[newdst[i]],times[newdst[i]]-0):
+        if abs(times[newsrc[i]]-times[newdst[i]])>min(args.num_time-1-times[newdst[i]],times[newdst[i]]-0):
             addsrc.append(newsrc[i])
             adddst.append(newdst[i])
     return np.array([addsrc, adddst])
@@ -112,28 +167,83 @@ def sym_task(idx):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--graphnum", type=str, default='3')
-    parser.add_argument("--time_invar", action='store_true', default=False)
     parser.add_argument("--root",type=str, default='./data/')
     parser.add_argument("--sym", action='store_true', default=False)
+    parser.add_argument("--sym2", action='store_true', default=False)
+    parser.add_argument("--mono1", action='store_true', default=False)
+    parser.add_argument("--mono2", action='store_true', default=False)
     parser.add_argument("--feat_dim", type=int, default=5)
+    parser.add_argument("--num_label", type=int, default=10)
+    parser.add_argument("--num_node", type=int, default=3000)
+    parser.add_argument("--num_time", type=int, default=100)
     args = parser.parse_args()
 
-    graph_name=args.graphnum+("_tinvar" if args.time_invar else "")    
-    name=graph_name+("_sym" if args.sym else "")
-    name=name+"_feat"+str(args.feat_dim)
+    print(f"Number of cores... {core_num}")
 
-    
+    # Init names
+    graph_name=args.graphnum 
+    name=graph_name+("_sym" if args.sym else "")
+    name=name+("_sym2" if args.sym2 else "")
+    name=name+("_mono1" if args.mono1 else "")
+    name=name+("_mono2" if args.mono2 else "")
+    if(args.feat_dim!=5):
+        name=name+"_feat"+str(args.feat_dim)
+    if(args.num_node!=3000):
+        name=name+"_node"+str(args.num_node)
+    if(args.num_label!=10):
+        name=name+"_label"+str(args.num_label)
+    if(args.num_time!=100):
+        name=name+"_time"+str(args.num_time)
+    print(f"Your graph's name : {name}")
+
+
+    # Init nodes
+    label_rands=torch.randperm(args.num_node)
+    time_rands=torch.randperm(args.num_node)
+
+    label=[0]*args.num_node
+    times=[0]*args.num_node
+    train_mask=[0]*args.num_node
+    valid_mask=[0]*args.num_node
+    test_mask=[0]*args.num_node
+
+    for i in range(args.num_node):
+        label[i]=label_rands[i]%args.num_label
+        times[i]=time_rands[i]%args.num_time
+
+    for i in range(args.num_node):
+        train_mask[i]=(times[i]<55)
+        valid_mask[i]=(times[i]>=55 and times[i]<60)
+        test_mask[i]=(times[i]>=60)
+        
+    label=torch.Tensor(label).type(torch.long)
+    times=torch.Tensor(times).type(torch.long)
+    train_mask=torch.Tensor(train_mask).type(torch.bool)
+    valid_mask=torch.Tensor(valid_mask).type(torch.bool)
+    test_mask=torch.Tensor(test_mask).type(torch.bool)
+
+
     matrix=matrix_func[graph_name]
     with Pool(core_num) as p:
-        result = p.map(task, range(0,num_node,chunk_size))
+        result = p.map(task, range(0,args.num_node,chunk_size))
     src_dst = np.concatenate(result, axis=1)
     src, dst = src_dst
+    
     newsrc=np.concatenate((src,dst))
     newdst=np.concatenate((dst,src))
 
-    print(f"Directed edge generated : {time.time()-t0}")
+    # if(args.mono1 or args.mono2):
+    #     len_newsrc=len(newsrc)
+    #     with Pool(core_num) as p:
+    #         result = p.map(mono_task, range(0,len(newsrc),sym_chunk_size))
+    #     src_dst = np.concatenate(result, axis=1)
+    #     addsrc, adddst = src_dst
+    #     newsrc=addsrc
+    #     newdst=adddst
+    #     if(args.mono2):
+    #         newsrc,newdst = newdst,newsrc
 
-    if(args.sym):
+    if(args.sym or args.sym2):
         len_newsrc=len(newsrc)
         with Pool(core_num) as p:
             result = p.map(sym_task, range(0,len(newsrc),sym_chunk_size))
@@ -141,23 +251,26 @@ if __name__ == "__main__":
         addsrc, adddst = src_dst
         newsrc=np.concatenate((newsrc,addsrc))
         newdst=np.concatenate((newdst,adddst))
-        print(f"Symmetric edge generated : {time.time()-t0}")
+        if(args.sym2):
+            newsrc,newdst = newdst,newsrc
 
+    print(f"Total Number of edges : {newsrc.shape[0]}")
 
     new_edges={}
     num_nodes={}
     new_edges[('node','-','node')]=(newsrc,newdst) # undirected
-    num_nodes['node']=num_node
+    num_nodes['node']=args.num_node
     new_g = dgl.heterograph(new_edges,num_nodes_dict=num_nodes)
-
+    if(args.mono1 or args.mono2):
+        new_g=dgl.add_self_loop(new_g)
     
 
-    feat_center=torch.zeros([num_label,args.feat_dim])
-    for i in range(num_label):
+    feat_center=torch.zeros([args.num_label,args.feat_dim])
+    for i in range(args.num_label):
         feat_center[i]=torch.randn(args.feat_dim)
 
-    feature=torch.zeros([num_node,args.feat_dim])
-    for i in range(num_node):
+    feature=torch.zeros([args.num_node,args.feat_dim])
+    for i in range(args.num_node):
         cur_label = label[i]
         feature[i] = sample_func[args.graphnum](cur_label)
 
@@ -167,18 +280,9 @@ if __name__ == "__main__":
     new_g.nodes['node'].data["val_mask"]=valid_mask
     new_g.nodes['node'].data["test_mask"]=test_mask
 
-    print(f"graph created : {time.time()-t0}")
-    t0=time.time()
-
     name=args.root+name
     glabel={'label':label}
-    if not os.path.exists(name):
-        save_graphs(name,[new_g],glabel)
-    print(f"graph saved : {time.time()-t0}")
 
-'''
-Node number : 3000 (55 : 5 : 40)
-python3 SBM_graph.py --graphnum MUL2 --feat_dim 5
-python3 SBM_graph.py --graphnum MUL2 --sym --feat_dim 5
+    save_graphs(name,[new_g],glabel)
+    print(f"Successfully saved!... {time.time()-t0}sec")
 
-'''

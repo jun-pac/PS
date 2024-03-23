@@ -29,85 +29,16 @@ using t3=tuple<int,int,int>;
 #define N 300030
 #define MOD 998244353
 #define INF 1000000007 
-
-class node{
-public:
-    int val;
-    int ne, pr; // node¿« idx
-};
-
-//int datas[N];
-int cnt=0;
-node datas[400004];
-map<int,int> cur_pos;
+__attribute__((optimize("Ofast,unroll-loops"),target("avx,avx2,fma")))
 
 void Solve(){
-    int n,q;
-    cin>>n;  
-    int start=0;
-    rng(i,0,n-1){
-        cin>>datas[i].val;
-        cur_pos[datas[i].val]=i;
-        if(i!=0) datas[i].pr=i-1;
-        if(i!=n-1) datas[i].ne=i+1;
-    }
-    datas[0].pr=-1;
-    datas[n-1].ne=-1;
-    cnt=n;
 
-    cin>>q;
-    rng(i,0,q-1){
-        int a,x,y;
-        cin>>a;
-        if(a==1){
-            cin>>x>>y;
-            assert((cur_pos[y]==-1||cur_pos[y]==0) && cur_pos[x]!=-1);
-            cur_pos[y]=cnt++;
-            int idxy=cur_pos[y], idxx=cur_pos[x];
-            datas[idxy].val=y;
-            datas[idxy].ne=datas[idxx].ne;
-            datas[idxy].pr=idxx;
-            datas[idxx].ne=idxy;
-        }
-        else{
-            cin>>x;
-            int idxx=cur_pos[x];
-            assert(cur_pos[x]!=-1);
-            cur_pos[x]=-1;
-            if(start==idxx){
-                start=datas[idxx].ne;
-                if(start!=-1) datas[start].pr=-1;
-            }
-            else{
-                int preidx=datas[idxx].pr;
-                int nexidx=datas[idxx].ne;
-                assert(preidx!=-1);
-                datas[preidx].ne=nexidx;
-                if(nexidx!=-1) datas[nexidx].pr=preidx;
-            }
-        }
-
-        // cout<<"debug ";
-        // int cur=start;
-        // while(cur!=-1){
-        //     cout<<datas[cur].val<<' ';
-        //     cur=datas[cur].ne;
-        // }
-        // cout<<'\n';
-    }
-
-    int cur=start;
-    while(cur!=-1){
-        cout<<datas[cur].val<<' ';
-        cur=datas[cur].ne;
-    }
-    cout<<'\n';
 }
 
 int main(){
     ios_base::sync_with_stdio(false); cin.tie(NULL);
     int t=1;
-    //cin>>t;
+    cin>>t;
     while(t--){
         Solve();
     }

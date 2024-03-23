@@ -27,47 +27,18 @@ using pll=pair<ll,ll>;
 using t3=tuple<int,int,int>;
 
 #define N 300030
-#define MOD 1000000009
-#define MAX_DIGIT 32
-
-// Remember (ak)*(bk)^(-1) === a*b^(-1) === (ak%P)*(bk%P)^(-1) (mod P)
-long long ari_inv(long long num){
-    // Calculate num^(MOD-2)
-    long long res=1, mult=num;
-    for(int i=0; i<MAX_DIGIT; i++){
-        if((MOD-2)&(1LL<<i)){
-            res=(res*mult)%MOD;
-        }
-        mult=(mult*mult)%MOD;
-    }
-    return res;
-}
+#define MOD 998244353
+#define INF 1000000007 
+__attribute__((optimize("Ofast,unroll-loops"),target("avx,avx2,fma")))
 
 void Solve(){
-    ll m,k;
-    cin>>m>>k;
-    if(k==0) cout<<0<<'\n';
-    else if(k==1) cout<<m<<'\n';
-    else if(k==2) cout<<3*m<<'\n';
-    else{
-        ll lastx=3*m, lasty=5*m-2;
-        ll x,y,yy=1+(m-1)*2;
-        rng(i,3,k){
-            ll temp=ari_inv(yy);
-            y=(m-1+yy)*temp%MOD*lasty+m;
-            x=lastx+m*temp%MOD*lasty;
-            lastx=x%MOD;
-            lasty=y%MOD;
-            yy+=m-1;
-        }
-        cout<<((x%MOD)+MOD)%MOD<<'\n';
-    }
+
 }
 
 int main(){
     ios_base::sync_with_stdio(false); cin.tie(NULL);
     int t=1;
-    //cin>>t;
+    cin>>t;
     while(t--){
         Solve();
     }

@@ -25,6 +25,7 @@ using pil=pair<int,ll>;
 using pli=pair<ll,int>;
 using pll=pair<ll,ll>;
 using t3=tuple<int,int,int>;
+__attribute__((optimize("Ofast,unroll-loops"),target("avx,avx2,fma")))
 
 #define N 300030
 #define MOD 998244353

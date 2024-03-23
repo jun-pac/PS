@@ -57,10 +57,10 @@ def train(g, features, labels, masks, model):
         loss.backward()
         optimizer.step()
         acc = evaluate(g, features, labels, val_mask, model)
-        if(epoch%10==9):
-            print("Epoch {:05d} | Loss {:.4f} | Accuracy {:.4f} ".format(epoch, loss.item(), acc))
-            f_log.write("Epoch {:05d} | Loss {:.4f} | Accuracy {:.4f} \n".format(epoch, loss.item(), acc))
-            f_log.flush()
+        # if(epoch%500==499):
+        #     #print("Epoch {:05d} | Loss {:.4f} | Accuracy {:.4f} ".format(epoch, loss.item(), acc))
+        #     #f_log.write("Epoch {:05d} | Loss {:.4f} | Accuracy {:.4f} \n".format(epoch, loss.item(), acc))
+        #     #f_log.flush()
 
 
 if __name__ == "__main__":
@@ -71,7 +71,7 @@ if __name__ == "__main__":
     parser.add_argument("--epoch", type=int, default=200)
 
     args = parser.parse_args()
-    print(f"Training with DGL built-in GraphConv module.")
+    print(f"Training GCN ; {args.dataset}")    
     
     assert(os.path.exists(args.root+args.dataset))
     data = load_graphs(args.root+args.dataset)
@@ -106,39 +106,13 @@ if __name__ == "__main__":
     f_log=open('./txtlog/'+args.dataset+'.txt','a')
 
     # model training
-    print("Training...")
+    #print("Training...")
     train(g, features, labels, masks, model)
 
     # test the model
-    print("Testing...")
+    #print("Testing...")
     acc = evaluate(g, features, labels, masks[2], model)
     print("Test accuracy {:.4f}".format(acc))
-    f_log.write("Test accuracy {:.4f}".format(acc))
+    f_log.write("{:.4f}\n".format(acc))
     f_log.flush()
 
-'''
-[Valid, test]
-(Node 1000, 60:20:20)
-python3 SBM_train.py --dataset MUL2_feat5 --epoch 1000 
-0.6600 0.5700
-python3 SBM_train.py --dataset MUL2_sym_feat5 --epoch 1000 
-0.8000 0.8500
-
-(Node 3000, 55:5:40)
-python3 SBM_train.py --dataset MUL2_feat5 --epoch 1000 
-0.9733 0.9300
-python3 SBM_train.py --dataset MUL2_sym_feat5 --epoch 1000 
-0.9267 0.8850
-
-python3 SBM_train.py --dataset MUL1_feat5 --epoch 1000 
-0.1867 0.2467
-python3 SBM_train.py --dataset MUL1_sym_feat5 --epoch 1000 
-0.4400 0.4383
-
-python3 SBM_train.py --dataset MUL1_feat5 --epoch 2000 
-0.2067 0.2000
-python3 SBM_train.py --dataset MUL1_sym_feat5 --epoch 500
-0.3133 0.3535
-python3 SBM_train.py --dataset MUL1_sym_feat5 --epoch 500 
-0.4267 0.4733
-'''
