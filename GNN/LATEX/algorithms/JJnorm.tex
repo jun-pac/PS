@@ -1,0 +1,46 @@
+
+\begin{algorithm}
+    \caption{\name JJ normalization}
+    \label{alg:JJ-Norm}
+        \SetKwInOut{Input}{Input}\SetKwInOut{Output}{Output}
+        \Input{~Aggregated message $M_v, \forall v\in \bold{V}$, obtained from 1st moment alignment message passing; node time function $time:\bold{V}\rightarrow \bold{T}$; train, test split $\bold{V}^{tr}=\{v\mid v\in \bold{V}, time(v) < t_{\max}\}$ and $\bold{V}^{te}=\{v\mid v\in \bold{V}, time(v) = t_{\max}\}$; node label funtion $label:\bold{V}^{tr} \rightarrow \bold{Y}$.}
+        \BlankLine
+        \Output{~Modified aggregated message $M_v', \forall v\in \bold{V}$.}
+        \BlankLine
+        \BlankLine
+        Let $\bold{V}_{y,t} = \{u \in \bold{V} \mid label(u)=y, time(u)=t\}$\;
+        Let $\bold{V}_{\cdot,t} = \{u \in \bold{V} \mid time(u)=t\}$\;
+    
+        \BlankLine
+        \textbf{Estimate mean and variance for each community.}\\
+        \For{$t \in \bold{T}$}{
+            $\hat\mu_{M}(\cdot,t)\leftarrow \hat\mu_M(\cdot,t) ={1\over {\mid \bold{V}_{\cdot,t} \mid}}\sum_{v\in \bold{V}_{\cdot,t}}M_v $\;
+        }
+        \For{$y \in \bold{Y}$}{
+            \For{$t \in \{\dots,t_{\max}-1\}$}{
+                $\hat\nu_t^2\leftarrow {1\over \mid{\bold{V}_{\cdot,t}}\mid-1} \sum_{y\in \bold{Y}}\sum_{v\in \bold{V}_{y,t}}(\hat\mu_M(y,t) -\hat\mu_M(\cdot,t) )^2 $\;
+            }
+        }
+        \For{$y \in \bold{Y}$}{
+            \For{$t \in \{\dots,t_{\max}-1\}$}{
+                $\hat\mu_{M}(y,t)\leftarrow {1\over {\mid \bold{V}_{y,t} \mid}}\sum_{v\in \bold{V}_{y,t}}M_v $\;
+                $\hat\sigma_{y,t}^2\leftarrow {1\over \mid{\bold{V}_{\cdot,t}}\mid-1} \sum_{y\in\bold{Y}} \sum_{v\in \bold{V}_{y,t}}(M_v-\hat\mu_M(y,t))^2$\;
+            }
+        }
+    
+        $\hat\sigma_{t_{\max}}^2\leftarrow {1\over \mid{\bold{V}_{\cdot,t_{\max}}}\mid-1}\sum_{v\in \bold{V}_{\cdot,t_{\max}}}(M_v-\hat\mu_M(\cdot,t_{\max}))^2  -{1\over \mid{\bold{V}_{\cdot,t}}\mid-1} \sum_{y\in \bold{Y}}\sum_{v\in \bold{V}_{y,t}}(\hat\mu_M(y,t) -\hat\mu_M(\cdot,t) )^2$\;
+        
+        \BlankLine
+        \textbf{Estimate $\hat\alpha_t$ for $t<t_{\max}$.}\\
+        \For{$t \in \{\dots,t_{\max}-1\}$}{
+            $\hat\alpha_t^2 \leftarrow {\hat\sigma_{t_{\max}}^2 - \hat\nu_t^2 \over \hat\sigma_{y,t}^2}$\;
+        }
+        
+        \BlankLine
+        \textbf{Update aggregated message.}\\
+        \For{$v\in \bold{V}\setminus\bold{V}_{\cdot,t_{\max}}$}{
+            Let $y= label(i)$\;
+            Let $t= time(i)$\;
+            $M_v^{'} \leftarrow \hat\mu_M(y,t) +\hat{\alpha}_{t} (M_v - \hat\mu_M(y,t)),\ \forall v\in \bold{V}\setminus\bold{V}_{\cdot,t_{\max}}$\;
+        }
+    \end{algorithm}

@@ -1,0 +1,15 @@
+
+\begin{algorithm}
+    \caption{\name Persistent Message Passing as graph reconstruction}
+    \label{alg:recon}
+        \SetKwInOut{Input}{Input}\SetKwInOut{Output}{Output}
+        \Input{~Undirected graph $\mathcal{G}(\bold{V},\bold{E})$; adjacency matrix $A^{\mathcal{G}} \in \mathbb{R}^{N\times N}$; node time function $time:\bold{V}\rightarrow \mathbb{R}$; maximum time value $t_{\max}$; minimum time value $t_{\min}$}
+        \Output{~New directed graph  $\mathcal{G'}(\bold{V},\bold{E'})$; new adjacency matrix $A^{\mathcal{G'}}$}
+        \BlankLine
+        $A^{\mathcal{G'}}\leftarrow A^{\mathcal{G}}$ \;
+        \For{$(u,v) \in \bold{V}^2$}{
+            \uIf{$|time(u)-time(v)|>\min(t_{\max}-time(v),time(v)-t_{\min})$}{
+                $A^{\mathcal{G'}}_{uv} \leftarrow  2A^{\mathcal{G'}}_{uv}$ \;
+            }
+        }
+    \end{algorithm}

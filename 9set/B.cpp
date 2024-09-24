@@ -29,16 +29,34 @@ using t3=tuple<int,int,int>;
 #define N 300030
 #define MOD 998244353
 #define INF 1000000007 
-__attribute__((optimize("Ofast,unroll-loops"),target("avx,avx2,fma")))
+random_device rd; 
+mt19937 gen(rd());
+uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist(gen)
+
 
 void Solve(){
-
+    int m;
+    cin>>m;
+    vc<int> ans;
+    while(m!=0){
+        int t=1;
+        int cnt=0;
+        while(t*3<=m){
+            cnt++;
+            t*=3;
+        }
+        ans.pb(cnt);
+        m-=t;
+    }
+    cout<<ans.size()<<'\n';
+    rng(i,0,(int)ans.size()-1) cout<<ans[i]<<' ';
+    cout<<'\n';
 }
 
 int main(){
     ios_base::sync_with_stdio(false); cin.tie(NULL);
     int t=1;
-    cin>>t;
+    //cin>>t;
     while(t--){
         Solve();
     }

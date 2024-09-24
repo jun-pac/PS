@@ -1,0 +1,225 @@
+\documentclass{article}
+%\usepackage{graphicx} % Required for inserting images
+\usepackage[linesnumbered,ruled]{algorithm2e}
+\usepackage[utf8]{inputenc} % allow utf-8 input
+\usepackage[T1]{fontenc}    % use 8-bit T1 fonts
+\usepackage{hyperref}       % hyperlinks
+\usepackage{booktabs}       % professional-quality tables
+\usepackage{amsfonts}       % blackboard math symbols
+%\usepackage{nicefrac}       % compact symbols for 1/2, etc.
+\usepackage{microtype}      % microtypography
+\usepackage{xcolor}
+\usepackage{url}
+\usepackage{verbatim} % allows multiline comments
+\usepackage{graphicx}
+\usepackage{caption} 
+\usepackage{subcaption} % for the subfloat in the figs
+\usepackage{multirow}
+%\usepackage{algorithm}
+%\usepackage[noend]{algorithmic}
+%\usepackage{xspace}
+%\usepackage{epsfig}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+%\usepackage{times}
+%\usepackage{xr}
+
+
+
+\title{Algorithm}
+\author{Sejun Park}
+\date{March 2024}
+
+\begin{document}
+
+
+
+\begin{algorithm}
+\caption{\name Persistent Message Passing as neighbor aggregation}
+\label{alg:agg}
+    \SetKwInOut{Input}{Input}\SetKwInOut{Output}{Output}
+    \Input{~Undirected graph $\mathcal{G}(\bold{V},\bold{E})$; input features $\bold{x}_v, \forall v\in \bold{V}$; number of layers $K$; node time function $time:\bold{V}\rightarrow \mathrm{R}$; maximum time value $t_{\max}$; minimum time value $t_{\min}$; aggregate functions $\textsc{agg}$; combine functions $\textsc{combine}$; multisets of neighborhood $\mathcal{N}_v, \forall v \in \bold{V}$}
+    \BlankLine
+    \Output{~Final embeddings $\bold{z}_v, \forall v \in \bold{V}$}
+    \BlankLine
+    \BlankLine
+    $\mb{h}^0_v \leftarrow \mb{x}_v, \forall v \in \bold{V}$\;
+    \For{$k=0...K-1$}{
+        \For{$v \in \bold{V}$}{
+            $\mathcal{N'}(v) \leftarrow \mathcal{N}(v)$\;
+            \uIf{$|time(u)-time(v)|>\min(t_{\max}-time(v),time(v)-t_{\min})$}{
+                $\mathcal{N'}(v).\text{insert}(u)$ \;
+            }
+            $\mb{M}^{(k+1)}_{v} \leftarrow \textsc{agg}(\{\mb{h}_u^{(k)}, \forall u \in \mathcal{N'}(v)\})$\;
+            $\mb{X}^{(k+1)}_{v} \leftarrow \textsc{combine}(\{\mb{X}^{(k)}_v, \mb{M}^{(k+1)}_{v}\})$\;
+        }
+    }
+    $\mb{z}_v\leftarrow \mb{X}^{K}_v, \forall v \in \bold{V}$ \;
+\end{algorithm}
+
+
+
+\begin{algorithm}
+\caption{\name Persistent Message Passing as graph reconstruction}
+\label{alg:recon}
+    \SetKwInOut{Input}{Input}\SetKwInOut{Output}{Output}
+    \Input{~Undirected graph $\mathcal{G}(\bold{V},\bold{E})$; adjacency matrix $A^{\mathcal{G}} \in \mathbb{R}^{N\times N}$; node time function $time:\bold{V}\rightarrow \mathbb{R}$; maximum time value $t_{\max}$; minimum time value $t_{\min}$}
+    \Output{~New directed graph  $\mathcal{G'}(\bold{V},\bold{E'})$; new adjacency matrix $A^{\mathcal{G'}}$}
+    \BlankLine
+    $A^{\mathcal{G'}}\leftarrow A^{\mathcal{G}}$ \;
+    \For{$(u,v) \in \bold{V}^2$}{
+        \uIf{$|time(u)-time(v)|>\min(t_{\max}-time(v),time(v)-t_{\min})$}{
+            $A^{\mathcal{G'}}_{uv} \leftarrow  2A^{\mathcal{G'}}_{uv}$ \;
+        }
+    }
+\end{algorithm}
+
+
+
+
+\begin{algorithm}
+\caption{\name JJ normalization}
+\label{alg:JJ-Norm}
+	\SetKwInOut{Input}{Input}\SetKwInOut{Output}{Output}
+    \Input{~Aggregated message $M_v, \forall v\in \bold{V}$, obtained from 1st moment alignment message passing; node time function $time:\bold{V}\rightarrow \bold{T}$; train, test split $\bold{V}^{tr}=\{v\mid v\in \bold{V}, time(v) < t_{\max}\}$ and $\bold{V}^{te}=\{v\mid v\in \bold{V}, time(v) = t_{\max}\}$; node label funtion $label:\bold{V}^{tr} \rightarrow \bold{Y}$.}
+    \BlankLine
+    \Output{~Modified aggregated message $M_v', \forall v\in \bold{V}$.}
+    \BlankLine
+    \BlankLine
+    Let $\bold{V}_{y,t} = \{u \in \bold{V} \mid label(u)=y, time(u)=t\}$\;
+    Let $\bold{V}_{\cdot,t} = \{u \in \bold{V} \mid time(u)=t\}$\;
+
+    \BlankLine
+    \textbf{Estimate mean and variance for each community.}\\
+    \For{$t \in \bold{T}$}{
+        $\hat\mu_{M}(\cdot,t)\leftarrow \hat\mu_M(\cdot,t) ={1\over {\mid \bold{V}_{\cdot,t} \mid}}\sum_{i\in \bold{V}_{\cdot,t}}M_i $\;
+    }
+    \For{$y \in \bold{Y}$}{
+        \For{$t \in \{\dots,t_{\max}-1\}$}{
+            $\hat\nu_t^2\leftarrow {1\over \mid{\bold{V}_{\cdot,t}}\mid-1} \sum_{y\in \bold{Y}}\sum_{i \in \bold{V}_{y,t}}(\hat\mu_M(y,t) -\hat\mu_M(\cdot,t) )^2 $\;
+        }
+    }
+    \For{$y \in \bold{Y}$}{
+        \For{$t \in \{\dots,t_{\max}-1\}$}{
+            $\hat\mu_{M}(y,t)\leftarrow {1\over {\mid \bold{V}_{y,t} \mid}}\sum_{i\in \bold{V}_{y,t}}M_i $\;
+            $\hat\sigma_{y,t}^2\leftarrow {1\over \mid{\bold{V}_{\cdot,t}}\mid-1} \sum_{y\in\bold{Y}} \sum_{i \in \bold{V}_{y,t}}(M_i-\hat\mu_M(y,t))^2$\;
+        }
+    }
+
+    $\hat\sigma_{t_{\max}}^2\leftarrow {1\over \mid{\bold{V}_{\cdot,t_{\max}}}\mid-1}\sum_{i\in \bold{V}_{\cdot,t_{\max}}}(M_i-\hat\mu_M(\cdot,t_{\max}))^2  -{1\over \mid{\bold{V}_{\cdot,t}}\mid-1} \sum_{y\in \bold{Y}}\sum_{i \in \bold{V}_{y,t}}(\hat\mu_M(y,t) -\hat\mu_M(\cdot,t) )^2$\;
+    
+    \BlankLine
+    \textbf{Estimate $\hat\alpha_t$ for $t<t_{\max}$.}\\
+    \For{$t \in \{\dots,t_{\max}-1\}$}{
+        $\hat\alpha_t \leftarrow {\hat\sigma_{t_{\max}}^2 - \hat\nu_t^2 \over \hat\sigma_{y,t}^2}$\;
+    }
+    
+    \BlankLine
+    \textbf{Update aggregated message.}\\
+    \For{$i \in \bold{V}\setminus\bold{V}_{\cdot,t_{\max}}$}{
+        Let $y= label(i)$\;
+        Let $t= time(i)$\;
+        $M_i^{'} \leftarrow (\hat\mu_M(y,t) -\hat\mu_M(\cdot,t) )+\hat{\alpha}_{t} (M_i - \hat\mu_M(y,t)),\ \forall i \in \bold{V}\setminus\bold{V}_{\cdot,t_{\max}}$\;
+    }
+\end{algorithm}
+
+
+\begin{algorithm}
+\caption{\name Estimation of relative connectivity.}
+\label{alg:rel_con}
+        \SetKwInOut{Input}{Input}\SetKwInOut{Output}{Output}
+    \Input{~ Neighboring node sets $\mathcal{N}_{u},\ \forall u \in \bold{V}$; node time function $time:V\rightarrow \bold{T}$; train, test split $V^{tr}=\{v\mid v\in \bold{V}, time(v) < t_{\max}\}$ and $V^{te}=\{v\mid v\in V, time(v) = t_{\max}\}$; node label function $label:\bold{V}^{tr} \rightarrow \bold{Y}$.}
+    \BlankLine
+    \Output{~Estimated relative connectivity $\hat{\mathcal{P}}_{y_i, t_i}(y_j ,t_j)$, $\forall y_i, y_j\in \bold{Y},\ t_i, t_j \in \bold{T}$.}
+
+    \BlankLine
+    \BlankLine
+    \textbf{Estimate $\hat{\mathcal{P}}_{y_i, t_i} (y_j ,t_j)$ when $t_i \neq t_{\max}$ and $t_j \neq t_{\max}$.}\\
+    \For{$t_i \in \bold{T}\setminus\{t_{\max}\}$}{
+        \For{$t_j \in \bold{T}\setminus\{t_{\max}\}$}{
+            $\hat{\mathcal{P}}_{y_i, t_i} (y_j ,t_j)\leftarrow{\sum_{u\in \{v\in \bold{V} | y_v=y_i, t_v=t_i\}}|\{v\in \mathcal{N}_u | y_v=y_j, t_v=t_j\}|\over \sum _{u\in \{v\in \bold{V} | y_v=y_i, t_v=t_i\}}|\mathcal{N}_u|}$\;
+        }
+    }
+    
+    \BlankLine
+    \textbf{Estimate $g$ function.}\\
+    \For{$y_i \in \bold{Y}$}{
+        \For{$y_j \in \bold{Y}$}{
+            \For{$\Delta \in \{|t_2 -t_1 | \mid t_1, t_2\in \bold{T}\}$}{
+                $\hat{g}(y_i, y_j, \Delta)\leftarrow {\sum_{t_< t_{\max}-\Delta}\hat{\mathcal{P}}_{y_i,t_i}(y_j, t_i+\Delta)+\sum_{t_i<t_{\max}} \hat{\mathcal{P}}_{y_i,t_i}(y_j, t_i-\Delta)\over \sum_{t_< t_{\max}-\Delta}\sum_{y\in\bold Y}\hat{\mathcal{P}}_{y_i,t_i}(y, t_i)+\sum_{t_i<t_{\max}}\sum_{y\in\bold Y}\hat{\mathcal{P}}_{y_i,t_i}(y, t_i)}$\;
+            }
+        }
+    }
+
+    \BlankLine
+    \textbf{Estimate $\hat{\mathcal{P}}_{y_i, t_i} (y_j ,t_j)$ when $t_i = t_{\max}$ or $t_j = t_{\max}$.}\\
+    \For{$y_i \in \bold{Y}$}{
+        \For{$y_j \in \bold{Y}$}{
+            \For{$t_i \in \bold{T}$}{
+                $\hat{\mathcal P}_{y_i, t_i}(y_j, t_{\max})\leftarrow{\hat{g}(y_i, y_j, |t_{\max}-t_i|)\over \sum_{y\in \bold{Y}}\sum_{t\in\bold{T}}\hat{g}(y_i, y, |t-t_i|)}$\;
+            }
+        }
+    }
+    \For{$y_i \in \bold{Y}$}{
+        \For{$y_j \in \bold{Y}$}{
+            \For{$t_j \in \bold{T}$}{
+                $\hat{\mathcal P}_{y_i, t_{\max}}(y_j, t_j)\leftarrow{\hat{g}(y_i, y_j, |t_j-t_{\max}|)\over \sum_{y\in \bold{Y}}\sum_{t\in\bold{T}}\hat{g}(y_i, y, |t-t_{\max}|)}$\;
+            }
+        }
+    }
+    
+\end{algorithm}
+
+
+
+
+\begin{algorithm}
+\caption{\name PNY transformation}
+\label{alg:PNY}
+        \SetKwInOut{Input}{Input}\SetKwInOut{Output}{Output}
+    \Input{~Previous layer's representation $X_v, \forall v\in \bold{V}$; Aggregated message $M_v, \forall v\in \bold{V}$, obtained from 1st moment alignment message passing; node time function $time:\bold{V}\rightarrow \bold{T}$; train, test split $\bold{V}^{tr}=\{v\mid v\in \bold{V}, time(v) < t_{\max}\}$ and $\bold{V}^{te}=\{v\mid v\in \bold{V}, time(v) = t_{\max}\}$; node label funtion $label:\bold{V}^{tr} \rightarrow \bold{Y}$; Estimated relative connectivity $\hat{\mathcal{P}}_{y_i, t_i}(y_j ,t_j)$, $\forall y_i, y_j\in \bold{Y},\ t_i, t_j \in \bold{T}$.}
+    \BlankLine
+    \Output{~Modified aggregated message $M_v', \forall v\in \bold{V}$}
+    \BlankLine
+    \BlankLine
+    
+    Let $\bold{V}_{y,t} = \{u \in \bold{V} \mid label(u)=y, time(u)=t\}$\;
+    Let $\bold{V}_{\cdot,t} = \{u \in \bold{V} \mid time(u)=t\}$\;
+    Let $\bold{T}_{\tau}^{\text{si}}= \{t \in \bold{T}\ \big |\  t =\tau \text{ or }t<2\tau-t_{\max}\}$\;
+    Let $\bold{T}_{\tau}^{\text{do}}= \{t \in \bold{T}\ \big | \ |t- \tau| \le|t_{\max}-\tau|, t\neq \tau\}$\;
+    
+    \BlankLine
+    \textbf{Estimate covariance matrices of previous layer's representation.}\\
+    \For{$t \in \bold{T}$}{
+        $\hat\mu_{X}(\cdot,t)\leftarrow \hat\mu_M(\cdot,t) ={1\over {\mid \bold{V}_{\cdot,t} \mid}}\sum_{i\in \bold{V}_{\cdot,t}}X_i$\;
+        $\hat\Sigma_{XX}(y)\leftarrow {1\over |\bold{V}_{\cdot,t}|-1}\sum_{i \in \bold{V}_{\cdot,t}} (X-\hat\mu_{X}(\cdot,t))(X-\hat\mu_{X}(\cdot,t))^{\top}$\;
+    }
+    
+    \BlankLine
+    \textbf{Estimate covariance matrices of aggregated message.}\\
+    \For{$y \in \bold{Y}$}{
+        \For{$t \in \bold{T}$}{
+            $\hat{\Sigma}_{MM}(y,t) \leftarrow {\sum_{y'\in \bold{Y}}\left(\sum_{t'\in\bold{T}_{t}^{\text{si}}}4\hat{\mathcal{P}}_{y, t}(y', t')+\sum_{t'\in\bold{T}_{t}^{\text{do}}}\hat{\mathcal{P}}_{y, t}(y', t')\right)\hat\Sigma_{XX}(y')\over\left(\sum_{y'\in \bold{Y}}\sum_{t'\in\bold{T}_{t}^{\text{si}}}2\hat{\mathcal{P}}_{y, t}(y', t')+\sum_{y'\in \bold{Y}}\sum_{t'\in\bold{T}_{t}^{\text{do}}}\hat{\mathcal{P}}_{y, t}(y', t')\right)^2}$\;
+        }
+    }
+
+    \BlankLine
+    \textbf{Orthogonal diagonalization.}\\
+    \For{$y \in \bold{Y}$}{
+        \For{$t \in \bold{T}$}{
+            Find $\hat P_{y, t},\ \hat D_{y,t}$ s.t. $\hat\Sigma_{MM}(y,t)=\hat P_{y, t}\hat D_{y,t} \hat P_{y, t}^{-1}$ and $\hat P_{y, t}^{-1}=\hat P_{y, t}^{\top}$\;
+        }
+    }
+    
+    \BlankLine
+    \textbf{Update aggregated message.}\\
+    \For{$i \in \bold{V}\setminus\bold{V}_{\cdot,t_{\max}}$}{
+        Let $y= label(i)$\;
+        Let $t= time(i)$\;
+        $M_i^{'} \leftarrow  \hat P_{y, t_{\max}}\hat D_{y, t_{\max}}^{1/2}\hat D_{y, t}^{-1/2}\hat P_{y, t}^{\top}(M_i-\hat\mu_{M}(y))+\hat \mu_{M}(y)$\;
+    }
+\end{algorithm}
+
+
+\end{document}

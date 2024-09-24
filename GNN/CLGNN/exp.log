@@ -1,0 +1,18 @@
+Time : 2010, nums : 73553.0, ratio : 0.09988334774971008
+Time : 2011, nums : 78313.0, ratio : 0.10634732246398926
+Time : 2012, nums : 82673.0, ratio : 0.1122681051492691
+Time : 2013, nums : 84890.0, ratio : 0.11527874320745468
+Time : 2014, nums : 83169.0, ratio : 0.1129416674375534
+Time : 2015, nums : 79659.0, ratio : 0.10817516595125198
+Time : 2016, nums : 77116.0, ratio : 0.10472182184457779
+Time : 2017, nums : 70198.0, ratio : 0.09532733261585236
+Time : 2018, nums : 64879.0, ratio : 0.088104248046875
+Time : 2019, nums : 41939.0, ratio : 0.056952234357595444
+
+Train num : (629571,)
+Valid num : (64879,)
+Test num : (41939,)
+
+Train year min, max : 2010, 2017
+Valid year min, max : 2018, 2018
+Test year min, max : 2019, 2019

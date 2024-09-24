@@ -1,0 +1,114 @@
+
+\begin{table}[t!]
+    \small
+    \center
+    \begin{tabular}{ccc}
+    \hline
+    Methods                      & Valid                                  & Test                                   \\ \hline
+    {MLP}   & {0.2626 ¡¾ 0.0016} & {0.2692 ¡¾ 0.0026} \\ 
+    {SeHGNN+ComplEx}    & {0.5917 ¡¾ 0.0009} & {0.5719   ¡¾ 0.0012} \\ 
+    {RpHGNN+LP+CR+LINE} & {0.5973 ¡¾ 0.0008} & {0.5773 ¡¾ 0.0012}   \\
+    {CLGNN} & {0.8021 ¡¾ 0.0020} & {0.7956 ¡¾ 0.0047} \\ \hline
+    CLGNN+MMP\textdagger                   & {0.7603 ¡¾ 0.0397} & {0.7601 ¡¾ 0.0389} \\
+    CLGNN+MMP                    & {0.3056 ¡¾ 0.3920} & {0.3047 ¡¾ 0.3926} \\ 
+    CLGNN+PMP                    & {0.8537 ¡¾ 0.0049} & {0.8497 ¡¾ 0.0048} \\ 
+    \textbf{CLGNN+PMP+JJnorm}             & \textbf{0.8608 ¡¾ 0.0049} & \textbf{0.8569 ¡¾ 0.0059} \\ \hline
+    \end{tabular}
+    \caption{The results on the ogbn-mag dataset are as follows: Using CLGNN as the baseline, models trained with invariant message passing were evaluated by averaging the results from nine different seeds. The symbol \textdagger denotes statistics obtained after excluding training results that failed to converge.}
+    \label{table:ogbn-mag}
+\end{table}
+
+
+\begin{table}[t!]
+    \small
+    \center
+    \begin{tabular}{cccc}
+    \hline
+    {Source   type} & {Edges type}     & \multicolumn{1}{c|}{Destination   type} & \#Edges   \\ \hline
+    {Author} & {affiliated with} & \multicolumn{1}{c|}{Institution} & 1,043,998 \\ 
+    {Author} & {writes}          & \multicolumn{1}{c|}{Paper}       & 7,145,660 \\ 
+    Paper         & cites*         & \multicolumn{1}{c|}{Paper}              & 5,416,271 \\ 
+    Paper         & has a topic of & \multicolumn{1}{c|}{Fields of study}    & 7,505,078 \\ \hline
+    \end{tabular}
+    \caption{Type and number of edges in obgn-mag.}
+    \label{table:edge}
+
+\end{table}
+
+\begin{table}[t!]
+    \small
+    \center
+    \begin{tabular}{lll}
+    \hline
+    Split                                & wo/time emb                            & w/time emb                             \\ \hline
+    {Chronological} & {0.5682 ¡¾ 0.001}  & {0.5580 ¡¾ 0.0009} \\ \hline
+    {Random}        & {0.6302 ¡¾ 0.0011} & {0.6387 ¡¾ 0.0011} \\ \hline
+    \end{tabular}
+    \caption{Prediction accuracy of SeHGNN on ogbn-mag when datasets split chronologically and randomly. Chronological split includes data up to 2017 in the training set, data from 2018 in the validation set, and data thereafter in the test set. Time encoding utilized a 20-bit sinusoidal positional encoding.}
+    \label{table:toy}
+\end{table}
+
+
+
+\begin{table}[t!]
+    \small
+    \center
+
+    \begin{tabular}{llll}
+    \hline
+    \multicolumn{1}{l|}{Node   type}                        & \#Nodes in train                 & \#Nodes in   validation  & \#Nodes in test \\ \hline
+    \multicolumn{1}{l|}{Paper*}         & {59,965} & {64,879} & 41,939 \\ \hline
+    \multicolumn{1}{l|}{Author}      & {1,134,649} & {0} & 0               \\ \hline
+    \multicolumn{1}{l|}{Institution} & {8,740}     & {0} & 0               \\ \hline
+    \multicolumn{1}{l|}{Field of study} & {59,965} & {0}      & 0      \\ \hline
+    \end{tabular}
+    \caption{Type and number of nodes in obgn-mag.}
+    \label{table:node}
+\end{table}
+
+\begin{table}[]
+    \small
+    \small
+
+    \center
+    \begin{tabular}{lllll}
+    \hline
+     &
+      \multicolumn{2}{l}{{ Decoupled GNN}} &
+      \multicolumn{2}{l}{{ General spatial GNN}} \\ \cline{2-5} 
+    \multirow{-2}{*}{Method} &
+      { Graph.} &
+      { Message passing} &
+      { Graph.} &
+      { Message passing} \\ \hline
+    \MMP &
+      { $\mathcal{O}(|E|)$} &
+      { $\mathcal{O}(|E|fK)$} &
+      { $\mathcal{O}(|E|)$} &
+      { $\mathcal{O}(R|E|fK)$} \\ \hline
+    \PMP &
+      { $\mathcal{O}(|E|)$} &
+      { $\mathcal{O}(|E|fK)$} &
+      { $\mathcal{O}(|E|)$} &
+      { $\mathcal{O}(R|E|fK)$} \\ \hline
+    \PNY &
+      { -} &
+      { $\mathcal{O}(Kf^2(N_cf+N_c^2+N))$} &
+      { -} &
+      { $\mathcal{O}(RKf^2(N_cf+N_c^2+N))$} \\ \hline
+    \JJnorm &
+      { -} &
+      { $\mathcal{O}(NfK)$} &
+      { -} &
+      { $\mathcal{O}(RNfK)$} \\
+    \JJnorm\textdagger &
+      { -} &
+      { $\mathcal{O}(Nf)$} &
+      { -} &
+      { $\mathcal{O}(RNf)$} \\ \hline
+    \end{tabular}
+
+    \vspace{1}
+    \caption{Scalability of invariant message passing methods. Graph reconstruction is only available when applying \PMP or \MMP. Here, $N_c=|\bold{Y}||\bold{T}|$ is the number of communities, $R$ is the number of training epochs and $f$ is the dimension of representations. \JJnorm\textdagger indicates Lazy operation of \JJnorm, which is only applicable when nodewise symantic aggregation is linear.}
+    \label{table:scalability}
+\end{table}

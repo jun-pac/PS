@@ -1,0 +1,60 @@
+%\subsection{Assumptions}
+Here are 3 assumptions introduced in this study. Let $\bold{Y}$ denote the set of labels, and $\bold{T}=\{\dots, t_{c}-1, t_{c}\}$ denote the set of temporal information.
+
+\vspace{-20pt}
+
+\begin{flalign}\label{assumption}
+    &\textit{Assumption 1}: P_{e^{te}}(Y) = P_e(Y), \ \forall e \in \epsilon^{tr}\\
+    &\textit{Assumption 2}: P_{e^{te}}(X\mid Y) = P_e(X\mid Y), \ \forall e \in \epsilon^{tr}\\
+    &\textit{Assumption 3}: \mathcal{P}_{y_1 t_1} (y_2 ,t_2) = f(y_1, t_1) g(y_1, y_2, \mid t_2-t_1\mid), \ \forall t_1, t_2 \in \bold{T}, y_1, y_2\in \bold{Y}
+\end{flalign}
+
+\vspace{-5pt}
+
+\begin{wrapfigure}{R}{0.42\textwidth}
+    \vspace{-15pt}
+    \centering
+    \includegraphics[width=0.42\textwidth]{figs/scale_factor_f.png}
+    \caption{Graphical representation of functions $f$ and $g$. The shaded bars denote relative connectivity. Target node has label $y_i$, and only consider cases neighboring nodes with a labels $y_j$. The function $g(y_i,y_j,|t_j-t_i|)$ determines extent to which relative connectivity varies, and its scale is adjusted by the function $f(y_i, t_i)$.}
+    \label{fig:scale_factor_f}
+    \vspace{-15pt}
+\end{wrapfigure}
+ Here, $\mathcal{P}_{y_1 t_1} (y_2 ,t_2)$ denotes the probability distribution of label and time pairs of neighboring nodes, where the target node's label is $y_1$ and the time is $t_1$. Since it is a probability distribution, it satisfies $\sum_{y_2 \in \bold{Y}}\sum_{t_2 \in \bold{T}} \mathcal{P}_{y_1 t_1}(y_2, t_2)=1$. This does not signify the actual probability of connection but rather represents the relative proportions of attributes among neighboring nodes. Additionally, the functions $f(y_1,t_1)$ and $g(y_1, y_2, \mid t_1- t_2\mid)$ indicate separability functions rather than probability density functions.
+%The set $\bold{T}$ consists of discrete time elements, ranging from infinitely past times to the most recent time, with uniform intervals. 
+
+
+Assumptions 1 and 2 posit that the features and labels allocated to each node originate from the same distribution. Incorporating Assumptions 1 and 2 yields $P_e(X, Y) = P(X, Y)$; however, interpreting this as the absence of distribution shift would be erroneous. Even if the joint distribution of the initial feature $X^{(0)}$ and label remain identical, the topological information within ego-graphs varies with the target node's temporal context. Failure to adequately address such shifts results in the aggregated message distribution shifting with each GNN aggregation layer.
+
+Assumption 3 assumes separability in the distribution of neighboring nodes. It is based on the observation that the proportion of nodes at time $t_2$ within the set of neighboring nodes of the target node at time $t_1$ decreases as the time difference $|t_2 - t_1|$ between them increases. $g(y_1,y_2,|t_2 - t_1|)$ is the function representing the proportion of neighboring nodes as a function that decays relative to the time difference $|t_2 - t_1|$. However, distribution of relative time differences among neighboring nodes varies depending on the target node's time $t_1$. To ensure that $\mathcal{P}_{y_1 t_1}(y_2, t_2)$ becomes a probability density function, The function $f(y_1 ,t_1)$ adjust relative proportion value $g(y_1, y_2, |t_2 - t_1|)$.
+
+% Assumption 3 is based on the observation that the proportion of nodes at time $t_2$ within the set of neighboring nodes of the target node at time $t_1$ decreases as the time difference $|t_2 - t_1|$ between them increases. $g(y_1,y_2,|t_2 - t_1|)$ is the function representing the proportion of neighboring nodes as a function that decays relative to the time difference $|t_2 - t_1|$. However, assuming $g(y1, y2, |t_2-t_1|)$ directly as a joint distribution is unrealistic. This is because the distribution of relative time differences among neighboring nodes varies depending on the target node's time $t_1$. For instance, if $t_1=1$, neighboring nodes can have relative times of $0,1,\dots,t_{c}-1$, while if $t_1=\lfloor t_{c}/2\rfloor$, the possible relative times of neighboring nodes become $0,1,\dots,\lfloor(t_{c}+1)/2\rfloor$. Therefore, to ensure that $\mathcal{P}_{y_1 t_1}(y_2, t_2)$ becomes a probability density function, the relative proportion value $g(y_1, y_2, |t_2 - t_1|)$ needs to be adjusted. The function $f(y_1 ,t_1)$ plays the role of converting these relative proportion values into probability density function values.
+
+
+
+
+These assumptions are rooted in properties observable in real-world graphs. The motivation and analysis based on visualization of real-world temporal graphs are provided in Appendix \ref{apdx:assumptions}.
+
+
+
+% These assumptions are rooted in properties observable in real-world graphs. For instance, in the academic paper citation graph utilized in this study, labels represent the categories of papers, while features comprise vector embeddings of paper abstracts. While the joint distribution of paper categories and abstracts may remain stable with minor temporal changes, the probability of two papers being linked via citation decreases significantly with the temporal gap between them. Hence, in citation graphs, the probability distribution of connections between nodes evolves much more sensitively to time than to features or labels.
+
+
+
+
+\subsection{Invariant Message Passing for Chronological-split Temporal graph, \IMPaCT}
+
+Based on these three assumptions, we introduce methods for aligning the first and second moments of the aggregated message to ensure invariance. The 1st moment alignment methods, \MMP and \PMP, corrects the aggregated message's first moment to be invariant if the first moment of the previous layer's representation is invariant. Similarly, the 2nd moment alignment method, \PNY and \JJnorm, preserve the invariancy of second moment.
+
+To be more specific, let $K$ denote the number of layers in a spatial GNN, and consider any $k<K$. Proposed invariant message passing function ensures the aggregated message $M_{i}^{(k+1)}$ approximately satisfies $P_e(M_i^{(k+1)}\mid Y) =P_{e^{te}}(M_i^{(k+1)}\mid Y),\ \forall e\in \epsilon^{tr}$ when the representations $X_i^{(k)},\forall i\in \bold{V}$ at the $k$-th layer satisfies $P_e(X_i^{(k)}\mid Y) =P_{e^{te}}(X_i^{(k)}\mid Y),\ \forall e\in \epsilon^{tr}$. Given Assumption 2, where $P_e(Y)=P(Y),\ \forall e\in \epsilon^{tr}$, it follows that invariant message passing function ensures the aggregated message to be approximately invariant when the previous layer¡¯s representations are invariant.
+
+Furthermore, we demonstrated final representations remain approximately invariant when applying invariant message passing methods to decoupled GNNs composed of multiple layers featuring nonlinear semantic aggregation at each layer. Which means, even if representations $X_{i}^{(k+1)}= \sigma(M_{i}^{(k+1)})$ obtained through a nodewise semantic aggregation function, $\sigma:\R^{f^{(k+1)}} \rightarrow \R^{h^{(k+1)}}$, $P_e(X_i^{(k+1)}, Y) =P_{e^{te}}(X_i^{(k+1)}, Y),\ \forall e\in \epsilon^{tr}$ holds under certain bounds.  Since the final representation obtained during the aggregation of topological information represents $\Phi(C_g(i))$, it follows that $P_e(\Phi(C_g(i)), Y) = P_{e^{te}}(\Phi(C_g(i)), Y),\ \forall e\in \epsilon^{tr}, i\in \bold{V}$. Therefore, using \IMPaCT, we can obtain approximately invariant information $\Phi(C_g(i))$.
+As the joint distribution of inputs and outputs of the downstream function $f:\mathbb{R}^h\rightarrow\bold{Y}$ remains consistent across environments, the model trained on the training data inherently generalizes to the test dataset.
+
+\vspace{-15pt}
+\begin{align}
+    f^*={\arg\min}_{f} {1\over \mid \bold{V^{tr}}\mid} \sum _{i\in \bold{V^{tr}}} \mathcal{L}\big(f(\Phi(C_g(i))),Y_i\big)
+\end{align}
+\vspace{-5pt}
+
+
+To model the chronological split, we designate the set of nodes with time information $t_{c}$ as the test set. In alternative terms, within the set of environments $\epsilon=\{\dots,t_{c}\}$, the test environment comprises $e^{te} = {t_{c}}$, while the train environment consists of $e^{tr} = \{\dots,t_{c}-1\}$. Therefore, in subsequent discussions, we presume that the labels of nodes with time $t_{c}$ are unknown during the training process.

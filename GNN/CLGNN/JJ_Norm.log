@@ -1,0 +1,77 @@
+Processing 1th features...
+1th feature mean calculation done...! 48.5629
+1th feature variance calculation done...! 106.3075
+t : 2010, msq : 0.2016, rsq : 3.7649, test_var : 3.8361, alpha_sq : 0.9654
+t : 2011, msq : 0.2046, rsq : 3.7896, test_var : 3.8361, alpha_sq : 0.9583
+t : 2012, msq : 0.1961, rsq : 3.8121, test_var : 3.8361, alpha_sq : 0.9549
+t : 2013, msq : 0.2035, rsq : 3.8340, test_var : 3.8361, alpha_sq : 0.9475
+t : 2014, msq : 0.1976, rsq : 3.8950, test_var : 3.8361, alpha_sq : 0.9341
+t : 2015, msq : 0.2055, rsq : 3.9397, test_var : 3.8361, alpha_sq : 0.9215
+t : 2016, msq : 0.2068, rsq : 3.9011, test_var : 3.8361, alpha_sq : 0.9303
+t : 2017, msq : 0.2108, rsq : 3.8579, test_var : 3.8361, alpha_sq : 0.9397
+1th feature adjustment done...! 147.1574
+
+Processing 2th features...
+2th feature mean calculation done...! 194.5007
+2th feature variance calculation done...! 250.5486
+t : 2010, msq : 1.0645, rsq : 3.5240, test_var : 4.4682, alpha_sq : 0.9659
+t : 2011, msq : 1.0676, rsq : 3.4902, test_var : 4.4682, alpha_sq : 0.9743
+t : 2012, msq : 1.0556, rsq : 3.4702, test_var : 4.4682, alpha_sq : 0.9834
+t : 2013, msq : 1.0737, rsq : 3.4426, test_var : 4.4682, alpha_sq : 0.9860
+t : 2014, msq : 1.0566, rsq : 3.4567, test_var : 4.4682, alpha_sq : 0.9870
+t : 2015, msq : 1.0861, rsq : 3.4212, test_var : 4.4682, alpha_sq : 0.9886
+t : 2016, msq : 1.0957, rsq : 3.3932, test_var : 4.4682, alpha_sq : 0.9939
+t : 2017, msq : 1.1206, rsq : 3.3768, test_var : 4.4682, alpha_sq : 0.9914
+2th feature adjustment done...! 288.6930
+
+Processing 3th features...
+3th feature mean calculation done...! 336.1053
+3th feature variance calculation done...! 391.8393
+t : 2010, msq : 0.7706, rsq : 2.2362, test_var : 2.2778, alpha_sq : 0.6740
+t : 2011, msq : 0.7751, rsq : 2.1164, test_var : 2.2778, alpha_sq : 0.7101
+t : 2012, msq : 0.7660, rsq : 1.9768, test_var : 2.2778, alpha_sq : 0.7648
+t : 2013, msq : 0.7822, rsq : 1.8712, test_var : 2.2778, alpha_sq : 0.7993
+t : 2014, msq : 0.7716, rsq : 1.8317, test_var : 2.2778, alpha_sq : 0.8224
+t : 2015, msq : 0.7955, rsq : 1.7670, test_var : 2.2778, alpha_sq : 0.8389
+t : 2016, msq : 0.8019, rsq : 1.7445, test_var : 2.2778, alpha_sq : 0.8460
+t : 2017, msq : 0.8170, rsq : 1.6657, test_var : 2.2778, alpha_sq : 0.8770
+3th feature adjustment done...! 429.6138
+
+Processing 4th features...
+4th feature mean calculation done...! 477.2453
+4th feature variance calculation done...! 533.3811
+t : 2010, msq : 1.0550, rsq : 2.5926, test_var : 3.2231, alpha_sq : 0.8363
+t : 2011, msq : 1.0594, rsq : 2.5323, test_var : 3.2231, alpha_sq : 0.8544
+t : 2012, msq : 1.0473, rsq : 2.4834, test_var : 3.2231, alpha_sq : 0.8761
+t : 2013, msq : 1.0648, rsq : 2.4131, test_var : 3.2231, alpha_sq : 0.8944
+t : 2014, msq : 1.0443, rsq : 2.4059, test_var : 3.2231, alpha_sq : 0.9056
+t : 2015, msq : 1.0729, rsq : 2.3468, test_var : 3.2231, alpha_sq : 0.9162
+t : 2016, msq : 1.0800, rsq : 2.3081, test_var : 3.2231, alpha_sq : 0.9285
+t : 2017, msq : 1.1005, rsq : 2.2371, test_var : 3.2231, alpha_sq : 0.9488
+4th feature adjustment done...! 571.9862
+
+Processing 5th features...
+5th feature mean calculation done...! 620.0663
+5th feature variance calculation done...! 677.5096
+t : 2010, msq : 0.1652, rsq : 0.2114, test_var : 0.3711, alpha_sq : 0.9742
+t : 2011, msq : 0.1637, rsq : 0.2126, test_var : 0.3711, alpha_sq : 0.9757
+t : 2012, msq : 0.1610, rsq : 0.2137, test_var : 0.3711, alpha_sq : 0.9833
+t : 2013, msq : 0.1627, rsq : 0.2120, test_var : 0.3711, alpha_sq : 0.9831
+t : 2014, msq : 0.1609, rsq : 0.2137, test_var : 0.3711, alpha_sq : 0.9841
+t : 2015, msq : 0.1652, rsq : 0.2120, test_var : 0.3711, alpha_sq : 0.9713
+t : 2016, msq : 0.1645, rsq : 0.2126, test_var : 0.3711, alpha_sq : 0.9720
+t : 2017, msq : 0.1677, rsq : 0.2117, test_var : 0.3711, alpha_sq : 0.9607
+5th feature adjustment done...! 718.1170
+
+Processing 6th features...
+6th feature mean calculation done...! 765.2320
+6th feature variance calculation done...! 821.0212
+t : 2010, msq : 0.6255, rsq : 1.5438, test_var : 2.0633, alpha_sq : 0.9313
+t : 2011, msq : 0.6199, rsq : 1.5267, test_var : 2.0633, alpha_sq : 0.9454
+t : 2012, msq : 0.6118, rsq : 1.5221, test_var : 2.0633, alpha_sq : 0.9536
+t : 2013, msq : 0.6174, rsq : 1.4998, test_var : 2.0633, alpha_sq : 0.9640
+t : 2014, msq : 0.6070, rsq : 1.5051, test_var : 2.0633, alpha_sq : 0.9676
+t : 2015, msq : 0.6221, rsq : 1.4883, test_var : 2.0633, alpha_sq : 0.9683
+t : 2016, msq : 0.6227, rsq : 1.4753, test_var : 2.0633, alpha_sq : 0.9764
+t : 2017, msq : 0.6317, rsq : 1.4497, test_var : 2.0633, alpha_sq : 0.9875
+6th feature adjustment done...! 859.6104

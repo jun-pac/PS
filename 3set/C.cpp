@@ -29,16 +29,33 @@ using t3=tuple<int,int,int>;
 #define N 300030
 #define MOD 998244353
 #define INF 1000000007 
-__attribute__((optimize("Ofast,unroll-loops"),target("avx,avx2,fma")))
+random_device rd; 
+mt19937 gen(rd());
+uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist(gen)
+
+
+ll datas[N];
 
 void Solve(){
-
+    int n;
+    cin>>n;
+    rng(i,0,n-1) cin>>datas[i];
+    ll t=0;
+    // 0 이면 1,1,3순서로
+    rng(i,0,n-1){
+        ll q=datas[i]/5;
+        ll r=datas[i]%5;
+        if(t%3==0) t+=3*q+(r>2?3:r);
+        else if(t%3==1) t+=3*q+(r>1?2:r);
+        else t+=3*q+(r==0?0:(r>3?2:1));
+    }
+    cout<<t<<'\n';
 }
 
 int main(){
     ios_base::sync_with_stdio(false); cin.tie(NULL);
     int t=1;
-    cin>>t;
+    //cin>>t;
     while(t--){
         Solve();
     }

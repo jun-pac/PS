@@ -1,0 +1,1 @@
+\mathbb{E}_{e^{tr}}\left[(M-\mu_{\cdot,t}^{tr})^2\mid T=t\right] =\sum_{y\in \bold{Y}}P^{tr}(y)\Big(\mathbb{E}_{e^{tr}}\left[ (M - \mu_{y,t}^{tr})^2 \mid Y=y\right] +\mathbb{E}_{e^{tr}}\left[(\mu_{y,t}^{tr}-\mu_{\cdot,t}^{tr})^2 \mid Y=y\right] \Big)

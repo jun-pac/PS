@@ -1,0 +1,1180 @@
+WARNING:root:The OGB package is out of date. Your version is 1.3.5, while the latest version is 1.3.6.
+Namespace(act='sigmoid', alpha=0.5, att_drop=0.0, batch_size=5000, bns=True, dataset='ogbn-papers100M', dropout=0.5, eval_every=1, gama=0.5, gpu=0, hidden=1024, input_drop=0.0, label_drop=0.0, label_num_hops=9, lr=0.001, method='R_GAMLP_RLU', n_layers_1=4, n_layers_2=6, n_layers_3=4, node_emb_path='./ogbn-papers100M.node-emb', num_hops=6, num_runs=3, patience=300, pre_dropout=False, pre_process=True, residual=False, root='./dataset', seed=0, stages=[100, 150, 150, 150], temp=0.001, threshold=0.0, train_num_epochs=[0, 0, 0, 0], use_rlu=True, weight_decay=0)
+Run 0 start training
+# Nodes: 111059956
+# Edges: 1615685872
+# Train: 1207179
+# Val: 125265
+# Test: 214338
+# Classes: 172
+
+172
+111059956
+Compute neighbor-averaged labels
+Compute neighbor-averaged labels
+Compute neighbor-averaged labels
+Compute neighbor-averaged labels
+Compute neighbor-averaged labels
+Compute neighbor-averaged labels
+Compute neighbor-averaged labels
+Compute neighbor-averaged labels
+Compute neighbor-averaged labels
+use rlu
+R_GAMLP_RLU(
+  (prelu): PReLU(num_parameters=1)
+  (lr_att): Linear(in_features=2048, out_features=1, bias=True)
+  (lr_output): FeedForwardNetII(
+    (layers): ModuleList(
+      (0): Dense(
+        (bias): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      )
+      (1): GraphConvolution(
+        (bias): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      )
+      (2): GraphConvolution(
+        (bias): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      )
+      (3): GraphConvolution(
+        (bias): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      )
+      (4): GraphConvolution(
+        (bias): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      )
+      (5): Dense(
+        (bias): BatchNorm1d(172, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      )
+    )
+    (prelu): PReLU(num_parameters=1)
+    (dropout): Dropout(p=0.5, inplace=False)
+  )
+  (process): ModuleList(
+    (0): FeedForwardNet(
+      (layers): ModuleList(
+        (0): Linear(in_features=128, out_features=1024, bias=True)
+        (1): Linear(in_features=1024, out_features=1024, bias=True)
+      )
+      (bns): ModuleList(
+        (0): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      )
+      (prelu): PReLU(num_parameters=1)
+      (dropout): Dropout(p=0.5, inplace=False)
+    )
+    (1): FeedForwardNet(
+      (layers): ModuleList(
+        (0): Linear(in_features=128, out_features=1024, bias=True)
+        (1): Linear(in_features=1024, out_features=1024, bias=True)
+      )
+      (bns): ModuleList(
+        (0): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      )
+      (prelu): PReLU(num_parameters=1)
+      (dropout): Dropout(p=0.5, inplace=False)
+    )
+    (2): FeedForwardNet(
+      (layers): ModuleList(
+        (0): Linear(in_features=128, out_features=1024, bias=True)
+        (1): Linear(in_features=1024, out_features=1024, bias=True)
+      )
+      (bns): ModuleList(
+        (0): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      )
+      (prelu): PReLU(num_parameters=1)
+      (dropout): Dropout(p=0.5, inplace=False)
+    )
+    (3): FeedForwardNet(
+      (layers): ModuleList(
+        (0): Linear(in_features=128, out_features=1024, bias=True)
+        (1): Linear(in_features=1024, out_features=1024, bias=True)
+      )
+      (bns): ModuleList(
+        (0): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      )
+      (prelu): PReLU(num_parameters=1)
+      (dropout): Dropout(p=0.5, inplace=False)
+    )
+    (4): FeedForwardNet(
+      (layers): ModuleList(
+        (0): Linear(in_features=128, out_features=1024, bias=True)
+        (1): Linear(in_features=1024, out_features=1024, bias=True)
+      )
+      (bns): ModuleList(
+        (0): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      )
+      (prelu): PReLU(num_parameters=1)
+      (dropout): Dropout(p=0.5, inplace=False)
+    )
+    (5): FeedForwardNet(
+      (layers): ModuleList(
+        (0): Linear(in_features=128, out_features=1024, bias=True)
+        (1): Linear(in_features=1024, out_features=1024, bias=True)
+      )
+      (bns): ModuleList(
+        (0): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      )
+      (prelu): PReLU(num_parameters=1)
+      (dropout): Dropout(p=0.5, inplace=False)
+    )
+    (6): FeedForwardNet(
+      (layers): ModuleList(
+        (0): Linear(in_features=128, out_features=1024, bias=True)
+        (1): Linear(in_features=1024, out_features=1024, bias=True)
+      )
+      (bns): ModuleList(
+        (0): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      )
+      (prelu): PReLU(num_parameters=1)
+      (dropout): Dropout(p=0.5, inplace=False)
+    )
+  )
+  (dropout): Dropout(p=0.5, inplace=False)
+  (input_drop): Dropout(p=0.0, inplace=False)
+  (att_drop): Dropout(p=0.0, inplace=False)
+  (res_fc): Linear(in_features=128, out_features=1024, bias=True)
+  (label_drop): Dropout(p=0.0, inplace=False)
+  (label_fc): FeedForwardNet(
+    (layers): ModuleList(
+      (0): Linear(in_features=172, out_features=1024, bias=True)
+      (1): Linear(in_features=1024, out_features=1024, bias=True)
+      (2): Linear(in_features=1024, out_features=1024, bias=True)
+      (3): Linear(in_features=1024, out_features=172, bias=True)
+    )
+    (bns): ModuleList(
+      (0): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (1): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (2): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+    (prelu): PReLU(num_parameters=1)
+    (dropout): Dropout(p=0.5, inplace=False)
+  )
+  (act): Sigmoid()
+)
+# Params: 16308751
+Epoch 0, Time(s): 24.3026,Train loss: 0.0050, Train acc: 59.7459 
+Epoch 1, Time(s): 23.4975,Train loss: 0.0043, Train acc: 66.2246 Epoch 1, Time(s): 24.2631, Val 0.6720, Best Epoch 1,Val 0.6720, Test 0.6476
+Epoch 2, Time(s): 16.2022,Train loss: 0.0041, Train acc: 67.5157 Epoch 2, Time(s): 17.0477, Val 0.6743, Best Epoch 2,Val 0.6743, Test 0.6459
+Epoch 3, Time(s): 16.9681,Train loss: 0.0040, Train acc: 68.1648 Epoch 3, Time(s): 17.8851, Val 0.6769, Best Epoch 3,Val 0.6769, Test 0.6480
+Epoch 4, Time(s): 16.4277,Train loss: 0.0041, Train acc: 68.6021 Epoch 4, Time(s): 17.3137, Val 0.6845, Best Epoch 4,Val 0.6845, Test 0.6559
+Epoch 5, Time(s): 15.8067,Train loss: 0.0040, Train acc: 68.9814 Epoch 5, Time(s): 16.6357, Val 0.6863, Best Epoch 5,Val 0.6863, Test 0.6596
+Epoch 6, Time(s): 21.1345,Train loss: 0.0037, Train acc: 69.1927 Epoch 6, Time(s): 21.8758, Val 0.6910, Best Epoch 6,Val 0.6910, Test 0.6606
+Epoch 7, Time(s): 16.3529,Train loss: 0.0039, Train acc: 69.4713 Epoch 7, Time(s): 17.3743, Val 0.6912, Best Epoch 7,Val 0.6912, Test 0.6650
+Epoch 8, Time(s): 15.8234,Train loss: 0.0038, Train acc: 69.6284 Epoch 8, Time(s): 16.6789, Val 0.6911, Best Epoch 7,Val 0.6912, Test 0.6650
+Epoch 9, Time(s): 15.7794,Train loss: 0.0038, Train acc: 69.8956 Epoch 9, Time(s): 16.9049, Val 0.6981, Best Epoch 9,Val 0.6981, Test 0.6659
+Epoch 10, Time(s): 17.0177,Train loss: 0.0039, Train acc: 70.0258 Epoch 10, Time(s): 18.1554, Val 0.6832, Best Epoch 9,Val 0.6981, Test 0.6659
+Epoch 11, Time(s): 17.4435,Train loss: 0.0037, Train acc: 70.1848 Epoch 11, Time(s): 18.5012, Val 0.6854, Best Epoch 9,Val 0.6981, Test 0.6659
+Epoch 12, Time(s): 18.3916,Train loss: 0.0039, Train acc: 70.3196 Epoch 12, Time(s): 19.5554, Val 0.6984, Best Epoch 12,Val 0.6984, Test 0.6695
+Epoch 13, Time(s): 16.5561,Train loss: 0.0037, Train acc: 70.4463 Epoch 13, Time(s): 17.5732, Val 0.6905, Best Epoch 12,Val 0.6984, Test 0.6695
+Epoch 14, Time(s): 20.0135,Train loss: 0.0036, Train acc: 70.5798 Epoch 14, Time(s): 20.8282, Val 0.7010, Best Epoch 14,Val 0.7010, Test 0.6709
+Epoch 15, Time(s): 19.0003,Train loss: 0.0037, Train acc: 70.6573 Epoch 15, Time(s): 20.0058, Val 0.7003, Best Epoch 14,Val 0.7010, Test 0.6709
+Epoch 16, Time(s): 16.2197,Train loss: 0.0035, Train acc: 70.7826 Epoch 16, Time(s): 17.1688, Val 0.6986, Best Epoch 14,Val 0.7010, Test 0.6709
+Epoch 17, Time(s): 16.0233,Train loss: 0.0036, Train acc: 70.8337 Epoch 17, Time(s): 16.8849, Val 0.6973, Best Epoch 14,Val 0.7010, Test 0.6709
+Epoch 18, Time(s): 17.0713,Train loss: 0.0036, Train acc: 70.9284 Epoch 18, Time(s): 17.9388, Val 0.6971, Best Epoch 14,Val 0.7010, Test 0.6709
+Epoch 19, Time(s): 17.5975,Train loss: 0.0038, Train acc: 71.0277 Epoch 19, Time(s): 18.8266, Val 0.6930, Best Epoch 14,Val 0.7010, Test 0.6709
+Epoch 20, Time(s): 18.6519,Train loss: 0.0037, Train acc: 71.1211 Epoch 20, Time(s): 19.5753, Val 0.6920, Best Epoch 14,Val 0.7010, Test 0.6709
+Epoch 21, Time(s): 18.0759,Train loss: 0.0036, Train acc: 71.1730 Epoch 21, Time(s): 19.0528, Val 0.7054, Best Epoch 21,Val 0.7054, Test 0.6722
+Epoch 22, Time(s): 16.9497,Train loss: 0.0037, Train acc: 71.2320 Epoch 22, Time(s): 18.2572, Val 0.7005, Best Epoch 21,Val 0.7054, Test 0.6722
+Epoch 23, Time(s): 18.2937,Train loss: 0.0036, Train acc: 71.3460 Epoch 23, Time(s): 19.3137, Val 0.6970, Best Epoch 21,Val 0.7054, Test 0.6722
+Epoch 24, Time(s): 17.6197,Train loss: 0.0036, Train acc: 71.3808 Epoch 24, Time(s): 18.6990, Val 0.7046, Best Epoch 21,Val 0.7054, Test 0.6722
+Epoch 25, Time(s): 17.4215,Train loss: 0.0036, Train acc: 71.4491 Epoch 25, Time(s): 18.2121, Val 0.6987, Best Epoch 21,Val 0.7054, Test 0.6722
+Epoch 26, Time(s): 18.2263,Train loss: 0.0036, Train acc: 71.5217 Epoch 26, Time(s): 19.1263, Val 0.7043, Best Epoch 21,Val 0.7054, Test 0.6722
+Epoch 27, Time(s): 18.8558,Train loss: 0.0036, Train acc: 71.6156 Epoch 27, Time(s): 19.9812, Val 0.7039, Best Epoch 21,Val 0.7054, Test 0.6722
+Epoch 28, Time(s): 17.8566,Train loss: 0.0036, Train acc: 71.6694 Epoch 28, Time(s): 19.0948, Val 0.7037, Best Epoch 21,Val 0.7054, Test 0.6722
+Epoch 29, Time(s): 19.1975,Train loss: 0.0035, Train acc: 71.7214 Epoch 29, Time(s): 20.4300, Val 0.7004, Best Epoch 21,Val 0.7054, Test 0.6722
+Epoch 30, Time(s): 17.9444,Train loss: 0.0036, Train acc: 71.8122 Epoch 30, Time(s): 19.1643, Val 0.6991, Best Epoch 21,Val 0.7054, Test 0.6722
+Epoch 31, Time(s): 19.0099,Train loss: 0.0034, Train acc: 71.7799 Epoch 31, Time(s): 19.9057, Val 0.7045, Best Epoch 21,Val 0.7054, Test 0.6722
+Epoch 32, Time(s): 17.4626,Train loss: 0.0032, Train acc: 71.9170 Epoch 32, Time(s): 18.6229, Val 0.6983, Best Epoch 21,Val 0.7054, Test 0.6722
+Epoch 33, Time(s): 19.3089,Train loss: 0.0035, Train acc: 71.9265 Epoch 33, Time(s): 20.5161, Val 0.7044, Best Epoch 21,Val 0.7054, Test 0.6722
+Epoch 34, Time(s): 20.2991,Train loss: 0.0034, Train acc: 72.0030 Epoch 34, Time(s): 21.2220, Val 0.6917, Best Epoch 21,Val 0.7054, Test 0.6722
+Epoch 35, Time(s): 16.1321,Train loss: 0.0033, Train acc: 72.0418 Epoch 35, Time(s): 16.9736, Val 0.6912, Best Epoch 21,Val 0.7054, Test 0.6722
+Epoch 36, Time(s): 15.7956,Train loss: 0.0033, Train acc: 72.1050 Epoch 36, Time(s): 16.7589, Val 0.6997, Best Epoch 21,Val 0.7054, Test 0.6722
+Epoch 37, Time(s): 19.4374,Train loss: 0.0035, Train acc: 72.1583 Epoch 37, Time(s): 20.3106, Val 0.7049, Best Epoch 21,Val 0.7054, Test 0.6722
+Epoch 38, Time(s): 17.5636,Train loss: 0.0035, Train acc: 72.1994 Epoch 38, Time(s): 18.6835, Val 0.7029, Best Epoch 21,Val 0.7054, Test 0.6722
+Epoch 39, Time(s): 17.3259,Train loss: 0.0036, Train acc: 72.2389 Epoch 39, Time(s): 18.2243, Val 0.7021, Best Epoch 21,Val 0.7054, Test 0.6722
+Epoch 40, Time(s): 16.0213,Train loss: 0.0034, Train acc: 72.3285 Epoch 40, Time(s): 17.0117, Val 0.7082, Best Epoch 40,Val 0.7082, Test 0.6744
+Epoch 41, Time(s): 17.8395,Train loss: 0.0035, Train acc: 72.3326 Epoch 41, Time(s): 18.8436, Val 0.7045, Best Epoch 40,Val 0.7082, Test 0.6744
+Epoch 42, Time(s): 16.4493,Train loss: 0.0034, Train acc: 72.4324 Epoch 42, Time(s): 17.7354, Val 0.7015, Best Epoch 40,Val 0.7082, Test 0.6744
+Epoch 43, Time(s): 17.6154,Train loss: 0.0036, Train acc: 72.4939 Epoch 43, Time(s): 18.4193, Val 0.7035, Best Epoch 40,Val 0.7082, Test 0.6744
+Epoch 44, Time(s): 18.6489,Train loss: 0.0034, Train acc: 72.5045 Epoch 44, Time(s): 19.7059, Val 0.7082, Best Epoch 40,Val 0.7082, Test 0.6744
+Epoch 45, Time(s): 19.0193,Train loss: 0.0032, Train acc: 72.5573 Epoch 45, Time(s): 20.1391, Val 0.7069, Best Epoch 40,Val 0.7082, Test 0.6744
+Epoch 46, Time(s): 17.7120,Train loss: 0.0035, Train acc: 72.6056 Epoch 46, Time(s): 18.8182, Val 0.7019, Best Epoch 40,Val 0.7082, Test 0.6744
+Epoch 47, Time(s): 17.6156,Train loss: 0.0034, Train acc: 72.6595 Epoch 47, Time(s): 18.6260, Val 0.7038, Best Epoch 40,Val 0.7082, Test 0.6744
+Epoch 48, Time(s): 17.6074,Train loss: 0.0034, Train acc: 72.7357 Epoch 48, Time(s): 18.6944, Val 0.7009, Best Epoch 40,Val 0.7082, Test 0.6744
+Epoch 49, Time(s): 19.6879,Train loss: 0.0034, Train acc: 72.7403 Epoch 49, Time(s): 20.9937, Val 0.7064, Best Epoch 40,Val 0.7082, Test 0.6744
+Epoch 50, Time(s): 20.3689,Train loss: 0.0035, Train acc: 72.7753 Epoch 50, Time(s): 21.7435, Val 0.7050, Best Epoch 40,Val 0.7082, Test 0.6744
+Epoch 51, Time(s): 20.9706,Train loss: 0.0035, Train acc: 72.8229 Epoch 51, Time(s): 22.1387, Val 0.7081, Best Epoch 40,Val 0.7082, Test 0.6744
+Epoch 52, Time(s): 19.0698,Train loss: 0.0033, Train acc: 72.8346 Epoch 52, Time(s): 20.3408, Val 0.7056, Best Epoch 40,Val 0.7082, Test 0.6744
+Epoch 53, Time(s): 18.8123,Train loss: 0.0033, Train acc: 72.9001 Epoch 53, Time(s): 19.7589, Val 0.7091, Best Epoch 53,Val 0.7091, Test 0.6765
+Epoch 54, Time(s): 15.9861,Train loss: 0.0033, Train acc: 72.9449 Epoch 54, Time(s): 16.8176, Val 0.6959, Best Epoch 53,Val 0.7091, Test 0.6765
+Epoch 55, Time(s): 19.4468,Train loss: 0.0034, Train acc: 72.9948 Epoch 55, Time(s): 20.3195, Val 0.6984, Best Epoch 53,Val 0.7091, Test 0.6765
+Epoch 56, Time(s): 17.4769,Train loss: 0.0034, Train acc: 72.9951 Epoch 56, Time(s): 18.5576, Val 0.7091, Best Epoch 53,Val 0.7091, Test 0.6765
+Epoch 57, Time(s): 17.8901,Train loss: 0.0032, Train acc: 73.0509 Epoch 57, Time(s): 19.0038, Val 0.7104, Best Epoch 57,Val 0.7104, Test 0.6770
+Epoch 58, Time(s): 17.7572,Train loss: 0.0033, Train acc: 73.0970 Epoch 58, Time(s): 18.6734, Val 0.7067, Best Epoch 57,Val 0.7104, Test 0.6770
+Epoch 59, Time(s): 15.9403,Train loss: 0.0033, Train acc: 73.1504 Epoch 59, Time(s): 17.0241, Val 0.7057, Best Epoch 57,Val 0.7104, Test 0.6770
+Epoch 60, Time(s): 16.5571,Train loss: 0.0032, Train acc: 73.2093 Epoch 60, Time(s): 17.7455, Val 0.7033, Best Epoch 57,Val 0.7104, Test 0.6770
+Epoch 61, Time(s): 19.2135,Train loss: 0.0034, Train acc: 73.2157 Epoch 61, Time(s): 20.1777, Val 0.7068, Best Epoch 57,Val 0.7104, Test 0.6770
+Epoch 62, Time(s): 20.4124,Train loss: 0.0031, Train acc: 73.2584 Epoch 62, Time(s): 21.5598, Val 0.7081, Best Epoch 57,Val 0.7104, Test 0.6770
+Epoch 63, Time(s): 20.5855,Train loss: 0.0032, Train acc: 73.3454 Epoch 63, Time(s): 21.5809, Val 0.7082, Best Epoch 57,Val 0.7104, Test 0.6770
+Epoch 64, Time(s): 20.8405,Train loss: 0.0033, Train acc: 73.2839 Epoch 64, Time(s): 21.6066, Val 0.7007, Best Epoch 57,Val 0.7104, Test 0.6770
+Epoch 65, Time(s): 19.3408,Train loss: 0.0036, Train acc: 73.3963 Epoch 65, Time(s): 20.0630, Val 0.7062, Best Epoch 57,Val 0.7104, Test 0.6770
+Epoch 66, Time(s): 16.9743,Train loss: 0.0032, Train acc: 73.4385 Epoch 66, Time(s): 17.7810, Val 0.7065, Best Epoch 57,Val 0.7104, Test 0.6770
+Epoch 67, Time(s): 17.5154,Train loss: 0.0033, Train acc: 73.5196 Epoch 67, Time(s): 18.5024, Val 0.7075, Best Epoch 57,Val 0.7104, Test 0.6770
+Epoch 68, Time(s): 18.7049,Train loss: 0.0033, Train acc: 73.5537 Epoch 68, Time(s): 19.6240, Val 0.7020, Best Epoch 57,Val 0.7104, Test 0.6770
+Epoch 69, Time(s): 16.6118,Train loss: 0.0031, Train acc: 73.5598 Epoch 69, Time(s): 17.5723, Val 0.7070, Best Epoch 57,Val 0.7104, Test 0.6770
+Epoch 70, Time(s): 16.3160,Train loss: 0.0032, Train acc: 73.6301 Epoch 70, Time(s): 17.3173, Val 0.7112, Best Epoch 70,Val 0.7112, Test 0.6758
+Epoch 71, Time(s): 19.0987,Train loss: 0.0035, Train acc: 73.6485 Epoch 71, Time(s): 20.0962, Val 0.7037, Best Epoch 70,Val 0.7112, Test 0.6758
+Epoch 72, Time(s): 17.7997,Train loss: 0.0033, Train acc: 73.6663 Epoch 72, Time(s): 18.5510, Val 0.7109, Best Epoch 70,Val 0.7112, Test 0.6758
+Epoch 73, Time(s): 18.8027,Train loss: 0.0031, Train acc: 73.7143 Epoch 73, Time(s): 19.6541, Val 0.7101, Best Epoch 70,Val 0.7112, Test 0.6758
+Epoch 74, Time(s): 18.6341,Train loss: 0.0032, Train acc: 73.7077 Epoch 74, Time(s): 19.4688, Val 0.7083, Best Epoch 70,Val 0.7112, Test 0.6758
+Epoch 75, Time(s): 19.5779,Train loss: 0.0033, Train acc: 73.7726 Epoch 75, Time(s): 20.4988, Val 0.7091, Best Epoch 70,Val 0.7112, Test 0.6758
+Epoch 76, Time(s): 16.6003,Train loss: 0.0035, Train acc: 73.8168 Epoch 76, Time(s): 17.7106, Val 0.7067, Best Epoch 70,Val 0.7112, Test 0.6758
+Epoch 77, Time(s): 16.2100,Train loss: 0.0032, Train acc: 73.9038 Epoch 77, Time(s): 17.0736, Val 0.7063, Best Epoch 70,Val 0.7112, Test 0.6758
+Epoch 78, Time(s): 17.0891,Train loss: 0.0032, Train acc: 73.9537 Epoch 78, Time(s): 18.2409, Val 0.7092, Best Epoch 70,Val 0.7112, Test 0.6758
+Epoch 79, Time(s): 15.8330,Train loss: 0.0032, Train acc: 73.9526 Epoch 79, Time(s): 16.8205, Val 0.7066, Best Epoch 70,Val 0.7112, Test 0.6758
+Epoch 80, Time(s): 16.6781,Train loss: 0.0033, Train acc: 73.9947 Epoch 80, Time(s): 17.6220, Val 0.7093, Best Epoch 70,Val 0.7112, Test 0.6758
+Epoch 81, Time(s): 17.2041,Train loss: 0.0031, Train acc: 74.0288 Epoch 81, Time(s): 18.2795, Val 0.7101, Best Epoch 70,Val 0.7112, Test 0.6758
+Epoch 82, Time(s): 16.3924,Train loss: 0.0034, Train acc: 74.0524 Epoch 82, Time(s): 17.3367, Val 0.7033, Best Epoch 70,Val 0.7112, Test 0.6758
+Epoch 83, Time(s): 16.4627,Train loss: 0.0033, Train acc: 74.0867 Epoch 83, Time(s): 17.4669, Val 0.7086, Best Epoch 70,Val 0.7112, Test 0.6758
+Epoch 84, Time(s): 36.6581,Train loss: 0.0032, Train acc: 74.1322 Epoch 84, Time(s): 37.7252, Val 0.7011, Best Epoch 70,Val 0.7112, Test 0.6758
+Epoch 85, Time(s): 42.8360,Train loss: 0.0030, Train acc: 74.1954 Epoch 85, Time(s): 45.3103, Val 0.7043, Best Epoch 70,Val 0.7112, Test 0.6758
+Epoch 86, Time(s): 25.5937,Train loss: 0.0031, Train acc: 74.1639 Epoch 86, Time(s): 26.3086, Val 0.7079, Best Epoch 70,Val 0.7112, Test 0.6758
+Epoch 87, Time(s): 25.4742,Train loss: 0.0030, Train acc: 74.2691 Epoch 87, Time(s): 28.7148, Val 0.7099, Best Epoch 70,Val 0.7112, Test 0.6758
+Epoch 88, Time(s): 36.3322,Train loss: 0.0030, Train acc: 74.3115 Epoch 88, Time(s): 38.3610, Val 0.7039, Best Epoch 70,Val 0.7112, Test 0.6758
+Epoch 89, Time(s): 19.1629,Train loss: 0.0032, Train acc: 74.3258 Epoch 89, Time(s): 19.9892, Val 0.7051, Best Epoch 70,Val 0.7112, Test 0.6758
+Epoch 90, Time(s): 41.0482,Train loss: 0.0030, Train acc: 74.3357 Epoch 90, Time(s): 43.8699, Val 0.7075, Best Epoch 70,Val 0.7112, Test 0.6758
+Epoch 91, Time(s): 21.9897,Train loss: 0.0031, Train acc: 74.3570 Epoch 91, Time(s): 22.9326, Val 0.7079, Best Epoch 70,Val 0.7112, Test 0.6758
+Epoch 92, Time(s): 31.2307,Train loss: 0.0029, Train acc: 74.4460 Epoch 92, Time(s): 34.8489, Val 0.7035, Best Epoch 70,Val 0.7112, Test 0.6758
+Epoch 93, Time(s): 31.3857,Train loss: 0.0032, Train acc: 74.4728 Epoch 93, Time(s): 32.5458, Val 0.7048, Best Epoch 70,Val 0.7112, Test 0.6758
+Epoch 94, Time(s): 24.3440,Train loss: 0.0031, Train acc: 74.4880 Epoch 94, Time(s): 27.7651, Val 0.7105, Best Epoch 70,Val 0.7112, Test 0.6758
+Epoch 95, Time(s): 35.6366,Train loss: 0.0030, Train acc: 74.4977 Epoch 95, Time(s): 37.5866, Val 0.7086, Best Epoch 70,Val 0.7112, Test 0.6758
+Epoch 96, Time(s): 17.3940,Train loss: 0.0032, Train acc: 74.5147 Epoch 96, Time(s): 18.1228, Val 0.7080, Best Epoch 70,Val 0.7112, Test 0.6758
+Epoch 97, Time(s): 37.5390,Train loss: 0.0031, Train acc: 74.6135 Epoch 97, Time(s): 40.9622, Val 0.7065, Best Epoch 70,Val 0.7112, Test 0.6758
+Epoch 98, Time(s): 27.9810,Train loss: 0.0030, Train acc: 74.5678 Epoch 98, Time(s): 28.9079, Val 0.7082, Best Epoch 70,Val 0.7112, Test 0.6758
+Epoch 99, Time(s): 28.8448,Train loss: 0.0031, Train acc: 74.6632 Epoch 99, Time(s): 31.6429, Val 0.7097, Best Epoch 70,Val 0.7112, Test 0.6758
+Best Epoch 70, Val 0.7112, Test 0.6758
+This history model Train ACC is 0.7543222670374484
+This history model Valid ACC is 0.7111723146928511
+This history model Test ACC is 0.6758437607890342
+Stage: 1, confident nodes: 339603
+# Nodes: 111059956
+# Edges: 1615685872
+# Train: 1207179
+# Val: 125265
+# Test: 214338
+# Classes: 172
+
+172
+111059956
+use teacher label
+Compute neighbor-averaged labels
+Compute neighbor-averaged labels
+Compute neighbor-averaged labels
+Compute neighbor-averaged labels
+Compute neighbor-averaged labels
+Compute neighbor-averaged labels
+Compute neighbor-averaged labels
+Compute neighbor-averaged labels
+Compute neighbor-averaged labels
+use rlu
+R_GAMLP_RLU(
+  (prelu): PReLU(num_parameters=1)
+  (lr_att): Linear(in_features=2048, out_features=1, bias=True)
+  (lr_output): FeedForwardNetII(
+    (layers): ModuleList(
+      (0): Dense(
+        (bias): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      )
+      (1): GraphConvolution(
+        (bias): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      )
+      (2): GraphConvolution(
+        (bias): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      )
+      (3): GraphConvolution(
+        (bias): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      )
+      (4): GraphConvolution(
+        (bias): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      )
+      (5): Dense(
+        (bias): BatchNorm1d(172, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      )
+    )
+    (prelu): PReLU(num_parameters=1)
+    (dropout): Dropout(p=0.5, inplace=False)
+  )
+  (process): ModuleList(
+    (0): FeedForwardNet(
+      (layers): ModuleList(
+        (0): Linear(in_features=128, out_features=1024, bias=True)
+        (1): Linear(in_features=1024, out_features=1024, bias=True)
+      )
+      (bns): ModuleList(
+        (0): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      )
+      (prelu): PReLU(num_parameters=1)
+      (dropout): Dropout(p=0.5, inplace=False)
+    )
+    (1): FeedForwardNet(
+      (layers): ModuleList(
+        (0): Linear(in_features=128, out_features=1024, bias=True)
+        (1): Linear(in_features=1024, out_features=1024, bias=True)
+      )
+      (bns): ModuleList(
+        (0): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      )
+      (prelu): PReLU(num_parameters=1)
+      (dropout): Dropout(p=0.5, inplace=False)
+    )
+    (2): FeedForwardNet(
+      (layers): ModuleList(
+        (0): Linear(in_features=128, out_features=1024, bias=True)
+        (1): Linear(in_features=1024, out_features=1024, bias=True)
+      )
+      (bns): ModuleList(
+        (0): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      )
+      (prelu): PReLU(num_parameters=1)
+      (dropout): Dropout(p=0.5, inplace=False)
+    )
+    (3): FeedForwardNet(
+      (layers): ModuleList(
+        (0): Linear(in_features=128, out_features=1024, bias=True)
+        (1): Linear(in_features=1024, out_features=1024, bias=True)
+      )
+      (bns): ModuleList(
+        (0): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      )
+      (prelu): PReLU(num_parameters=1)
+      (dropout): Dropout(p=0.5, inplace=False)
+    )
+    (4): FeedForwardNet(
+      (layers): ModuleList(
+        (0): Linear(in_features=128, out_features=1024, bias=True)
+        (1): Linear(in_features=1024, out_features=1024, bias=True)
+      )
+      (bns): ModuleList(
+        (0): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      )
+      (prelu): PReLU(num_parameters=1)
+      (dropout): Dropout(p=0.5, inplace=False)
+    )
+    (5): FeedForwardNet(
+      (layers): ModuleList(
+        (0): Linear(in_features=128, out_features=1024, bias=True)
+        (1): Linear(in_features=1024, out_features=1024, bias=True)
+      )
+      (bns): ModuleList(
+        (0): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      )
+      (prelu): PReLU(num_parameters=1)
+      (dropout): Dropout(p=0.5, inplace=False)
+    )
+    (6): FeedForwardNet(
+      (layers): ModuleList(
+        (0): Linear(in_features=128, out_features=1024, bias=True)
+        (1): Linear(in_features=1024, out_features=1024, bias=True)
+      )
+      (bns): ModuleList(
+        (0): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      )
+      (prelu): PReLU(num_parameters=1)
+      (dropout): Dropout(p=0.5, inplace=False)
+    )
+  )
+  (dropout): Dropout(p=0.5, inplace=False)
+  (input_drop): Dropout(p=0.0, inplace=False)
+  (att_drop): Dropout(p=0.0, inplace=False)
+  (res_fc): Linear(in_features=128, out_features=1024, bias=True)
+  (label_drop): Dropout(p=0.0, inplace=False)
+  (label_fc): FeedForwardNet(
+    (layers): ModuleList(
+      (0): Linear(in_features=172, out_features=1024, bias=True)
+      (1): Linear(in_features=1024, out_features=1024, bias=True)
+      (2): Linear(in_features=1024, out_features=1024, bias=True)
+      (3): Linear(in_features=1024, out_features=172, bias=True)
+    )
+    (bns): ModuleList(
+      (0): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (1): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (2): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+    (prelu): PReLU(num_parameters=1)
+    (dropout): Dropout(p=0.5, inplace=False)
+  )
+  (act): Sigmoid()
+)
+# Params: 16308751
+Epoch 0, Time(s): 38.3324,Train loss: 1.2158, Train acc: 61.3065 
+Epoch 1, Time(s): 36.9149,Train loss: 0.9013, Train acc: 66.8624 Epoch 1, Time(s): 38.1180, Val 0.6865, Best Epoch 1,Val 0.6865, Test 0.6604
+Epoch 2, Time(s): 44.1422,Train loss: 0.8521, Train acc: 68.0612 Epoch 2, Time(s): 46.1120, Val 0.6834, Best Epoch 1,Val 0.6865, Test 0.6604
+Epoch 3, Time(s): 43.0203,Train loss: 0.8259, Train acc: 68.6610 Epoch 3, Time(s): 44.6848, Val 0.6983, Best Epoch 3,Val 0.6983, Test 0.6663
+Epoch 4, Time(s): 42.6284,Train loss: 0.8082, Train acc: 69.1376 Epoch 4, Time(s): 44.6223, Val 0.7007, Best Epoch 4,Val 0.7007, Test 0.6694
+Epoch 5, Time(s): 38.5115,Train loss: 0.7952, Train acc: 69.4526 Epoch 5, Time(s): 40.0917, Val 0.6962, Best Epoch 4,Val 0.7007, Test 0.6694
+Epoch 6, Time(s): 36.8792,Train loss: 0.7848, Train acc: 69.6853 Epoch 6, Time(s): 38.2253, Val 0.6966, Best Epoch 4,Val 0.7007, Test 0.6694
+Epoch 7, Time(s): 36.8572,Train loss: 0.7762, Train acc: 69.9351 Epoch 7, Time(s): 38.8299, Val 0.7000, Best Epoch 4,Val 0.7007, Test 0.6694
+Epoch 8, Time(s): 37.0845,Train loss: 0.7689, Train acc: 70.1073 Epoch 8, Time(s): 38.6164, Val 0.6999, Best Epoch 4,Val 0.7007, Test 0.6694
+Epoch 9, Time(s): 38.3702,Train loss: 0.7623, Train acc: 70.2934 Epoch 9, Time(s): 40.7166, Val 0.7006, Best Epoch 4,Val 0.7007, Test 0.6694
+Epoch 10, Time(s): 37.9967,Train loss: 0.7583, Train acc: 70.4141 Epoch 10, Time(s): 39.4374, Val 0.7049, Best Epoch 10,Val 0.7049, Test 0.6720
+Epoch 11, Time(s): 42.8407,Train loss: 0.7528, Train acc: 70.5668 Epoch 11, Time(s): 44.9420, Val 0.6954, Best Epoch 10,Val 0.7049, Test 0.6720
+Epoch 12, Time(s): 45.3982,Train loss: 0.7483, Train acc: 70.6609 Epoch 12, Time(s): 47.2731, Val 0.7083, Best Epoch 12,Val 0.7083, Test 0.6753
+Epoch 13, Time(s): 41.6661,Train loss: 0.7437, Train acc: 70.8212 Epoch 13, Time(s): 42.9792, Val 0.7058, Best Epoch 12,Val 0.7083, Test 0.6753
+Epoch 14, Time(s): 41.0145,Train loss: 0.7400, Train acc: 70.9101 Epoch 14, Time(s): 42.8706, Val 0.6930, Best Epoch 12,Val 0.7083, Test 0.6753
+Epoch 15, Time(s): 43.0841,Train loss: 0.7361, Train acc: 71.0283 Epoch 15, Time(s): 44.9723, Val 0.7021, Best Epoch 12,Val 0.7083, Test 0.6753
+Epoch 16, Time(s): 46.8653,Train loss: 0.7331, Train acc: 71.1297 Epoch 16, Time(s): 48.4758, Val 0.7078, Best Epoch 12,Val 0.7083, Test 0.6753
+Epoch 17, Time(s): 34.5064,Train loss: 0.7300, Train acc: 71.2031 Epoch 17, Time(s): 35.4843, Val 0.7073, Best Epoch 12,Val 0.7083, Test 0.6753
+Epoch 18, Time(s): 31.9747,Train loss: 0.7270, Train acc: 71.2752 Epoch 18, Time(s): 33.0312, Val 0.7025, Best Epoch 12,Val 0.7083, Test 0.6753
+Epoch 19, Time(s): 29.8387,Train loss: 0.7239, Train acc: 71.3478 Epoch 19, Time(s): 31.0800, Val 0.7085, Best Epoch 19,Val 0.7085, Test 0.6754
+Epoch 20, Time(s): 36.6560,Train loss: 0.7213, Train acc: 71.4694 Epoch 20, Time(s): 38.7682, Val 0.7060, Best Epoch 19,Val 0.7085, Test 0.6754
+Epoch 21, Time(s): 43.3277,Train loss: 0.7187, Train acc: 71.5224 Epoch 21, Time(s): 45.1825, Val 0.7019, Best Epoch 19,Val 0.7085, Test 0.6754
+Epoch 22, Time(s): 41.8375,Train loss: 0.7156, Train acc: 71.6217 Epoch 22, Time(s): 43.7680, Val 0.7085, Best Epoch 19,Val 0.7085, Test 0.6754
+Epoch 23, Time(s): 40.4597,Train loss: 0.7136, Train acc: 71.6763 Epoch 23, Time(s): 42.1420, Val 0.6985, Best Epoch 19,Val 0.7085, Test 0.6754
+Epoch 24, Time(s): 44.7597,Train loss: 0.7121, Train acc: 71.7332 Epoch 24, Time(s): 45.9791, Val 0.7054, Best Epoch 19,Val 0.7085, Test 0.6754
+Epoch 25, Time(s): 39.8655,Train loss: 0.7090, Train acc: 71.8084 Epoch 25, Time(s): 41.7605, Val 0.7076, Best Epoch 19,Val 0.7085, Test 0.6754
+Epoch 26, Time(s): 37.7086,Train loss: 0.7066, Train acc: 71.8454 Epoch 26, Time(s): 39.1909, Val 0.7053, Best Epoch 19,Val 0.7085, Test 0.6754
+Epoch 27, Time(s): 40.3525,Train loss: 0.7046, Train acc: 71.9318 Epoch 27, Time(s): 42.6171, Val 0.7053, Best Epoch 19,Val 0.7085, Test 0.6754
+Epoch 28, Time(s): 42.8196,Train loss: 0.7023, Train acc: 72.0405 Epoch 28, Time(s): 44.4584, Val 0.7025, Best Epoch 19,Val 0.7085, Test 0.6754
+Epoch 29, Time(s): 33.8850,Train loss: 0.7001, Train acc: 72.0981 Epoch 29, Time(s): 35.8788, Val 0.7107, Best Epoch 29,Val 0.7107, Test 0.6757
+Epoch 30, Time(s): 46.2724,Train loss: 0.6991, Train acc: 72.1005 Epoch 30, Time(s): 48.1291, Val 0.7080, Best Epoch 29,Val 0.7107, Test 0.6757
+Epoch 31, Time(s): 40.4705,Train loss: 0.6967, Train acc: 72.1562 Epoch 31, Time(s): 41.5802, Val 0.7102, Best Epoch 29,Val 0.7107, Test 0.6757
+Epoch 32, Time(s): 37.1998,Train loss: 0.6948, Train acc: 72.2311 Epoch 32, Time(s): 39.1816, Val 0.7039, Best Epoch 29,Val 0.7107, Test 0.6757
+Epoch 33, Time(s): 38.2040,Train loss: 0.6931, Train acc: 72.2883 Epoch 33, Time(s): 39.4048, Val 0.7052, Best Epoch 29,Val 0.7107, Test 0.6757
+Epoch 34, Time(s): 39.7589,Train loss: 0.6911, Train acc: 72.3741 Epoch 34, Time(s): 41.9843, Val 0.7047, Best Epoch 29,Val 0.7107, Test 0.6757
+Epoch 35, Time(s): 39.0904,Train loss: 0.6898, Train acc: 72.3340 Epoch 35, Time(s): 40.7901, Val 0.7050, Best Epoch 29,Val 0.7107, Test 0.6757
+Epoch 36, Time(s): 39.1892,Train loss: 0.6878, Train acc: 72.4767 Epoch 36, Time(s): 40.6743, Val 0.7099, Best Epoch 29,Val 0.7107, Test 0.6757
+Epoch 37, Time(s): 40.0578,Train loss: 0.6863, Train acc: 72.4987 Epoch 37, Time(s): 41.3831, Val 0.6960, Best Epoch 29,Val 0.7107, Test 0.6757
+Epoch 38, Time(s): 41.5563,Train loss: 0.6842, Train acc: 72.5414 Epoch 38, Time(s): 42.6048, Val 0.7053, Best Epoch 29,Val 0.7107, Test 0.6757
+Epoch 39, Time(s): 35.5948,Train loss: 0.6819, Train acc: 72.6027 Epoch 39, Time(s): 37.4752, Val 0.7098, Best Epoch 29,Val 0.7107, Test 0.6757
+Epoch 40, Time(s): 38.1840,Train loss: 0.6805, Train acc: 72.6900 Epoch 40, Time(s): 39.3072, Val 0.7083, Best Epoch 29,Val 0.7107, Test 0.6757
+Epoch 41, Time(s): 39.1612,Train loss: 0.6794, Train acc: 72.7289 Epoch 41, Time(s): 40.7684, Val 0.7044, Best Epoch 29,Val 0.7107, Test 0.6757
+Epoch 42, Time(s): 37.7433,Train loss: 0.6774, Train acc: 72.7900 Epoch 42, Time(s): 39.6575, Val 0.7052, Best Epoch 29,Val 0.7107, Test 0.6757
+Epoch 43, Time(s): 35.6238,Train loss: 0.6761, Train acc: 72.8037 Epoch 43, Time(s): 36.7726, Val 0.7048, Best Epoch 29,Val 0.7107, Test 0.6757
+Epoch 44, Time(s): 35.5142,Train loss: 0.6748, Train acc: 72.8392 Epoch 44, Time(s): 37.0351, Val 0.7067, Best Epoch 29,Val 0.7107, Test 0.6757
+Epoch 45, Time(s): 38.2065,Train loss: 0.6736, Train acc: 72.8901 Epoch 45, Time(s): 40.2539, Val 0.7065, Best Epoch 29,Val 0.7107, Test 0.6757
+Epoch 46, Time(s): 36.4251,Train loss: 0.6713, Train acc: 72.9787 Epoch 46, Time(s): 37.6812, Val 0.7119, Best Epoch 46,Val 0.7119, Test 0.6775
+Epoch 47, Time(s): 41.6479,Train loss: 0.6701, Train acc: 72.9795 Epoch 47, Time(s): 43.1639, Val 0.7061, Best Epoch 46,Val 0.7119, Test 0.6775
+Epoch 48, Time(s): 41.0833,Train loss: 0.6687, Train acc: 73.0203 Epoch 48, Time(s): 43.1325, Val 0.7069, Best Epoch 46,Val 0.7119, Test 0.6775
+Epoch 49, Time(s): 36.6465,Train loss: 0.6669, Train acc: 73.0660 Epoch 49, Time(s): 38.7299, Val 0.7124, Best Epoch 49,Val 0.7124, Test 0.6792
+Epoch 50, Time(s): 40.4560,Train loss: 0.6654, Train acc: 73.1502 Epoch 50, Time(s): 42.1463, Val 0.7111, Best Epoch 49,Val 0.7124, Test 0.6792
+Epoch 51, Time(s): 32.7789,Train loss: 0.6651, Train acc: 73.1605 Epoch 51, Time(s): 34.0489, Val 0.7070, Best Epoch 49,Val 0.7124, Test 0.6792
+Epoch 52, Time(s): 36.4552,Train loss: 0.6637, Train acc: 73.2118 Epoch 52, Time(s): 37.7328, Val 0.7129, Best Epoch 52,Val 0.7129, Test 0.6781
+Epoch 53, Time(s): 34.7189,Train loss: 0.6622, Train acc: 73.2469 Epoch 53, Time(s): 36.5343, Val 0.7096, Best Epoch 52,Val 0.7129, Test 0.6781
+Epoch 54, Time(s): 37.7411,Train loss: 0.6601, Train acc: 73.3008 Epoch 54, Time(s): 38.8901, Val 0.7073, Best Epoch 52,Val 0.7129, Test 0.6781
+Epoch 55, Time(s): 37.5033,Train loss: 0.6587, Train acc: 73.3319 Epoch 55, Time(s): 39.0919, Val 0.7121, Best Epoch 52,Val 0.7129, Test 0.6781
+Epoch 56, Time(s): 41.7180,Train loss: 0.6574, Train acc: 73.4099 Epoch 56, Time(s): 43.7094, Val 0.7109, Best Epoch 52,Val 0.7129, Test 0.6781
+Epoch 57, Time(s): 37.2683,Train loss: 0.6564, Train acc: 73.4787 Epoch 57, Time(s): 38.3397, Val 0.7069, Best Epoch 52,Val 0.7129, Test 0.6781
+Epoch 58, Time(s): 23.2780,Train loss: 0.6554, Train acc: 73.4673 Epoch 58, Time(s): 24.1708, Val 0.7125, Best Epoch 52,Val 0.7129, Test 0.6781
+Epoch 59, Time(s): 22.9710,Train loss: 0.6534, Train acc: 73.5266 Epoch 59, Time(s): 23.8609, Val 0.7091, Best Epoch 52,Val 0.7129, Test 0.6781
+Epoch 60, Time(s): 21.2335,Train loss: 0.6524, Train acc: 73.5586 Epoch 60, Time(s): 22.0806, Val 0.7085, Best Epoch 52,Val 0.7129, Test 0.6781
+Epoch 61, Time(s): 21.3910,Train loss: 0.6503, Train acc: 73.6073 Epoch 61, Time(s): 22.2758, Val 0.7116, Best Epoch 52,Val 0.7129, Test 0.6781
+Epoch 62, Time(s): 23.4973,Train loss: 0.6491, Train acc: 73.6773 Epoch 62, Time(s): 24.3155, Val 0.7117, Best Epoch 52,Val 0.7129, Test 0.6781
+Epoch 63, Time(s): 20.4254,Train loss: 0.6485, Train acc: 73.6896 Epoch 63, Time(s): 21.5784, Val 0.7083, Best Epoch 52,Val 0.7129, Test 0.6781
+Epoch 64, Time(s): 20.6310,Train loss: 0.6470, Train acc: 73.7239 Epoch 64, Time(s): 21.4327, Val 0.7092, Best Epoch 52,Val 0.7129, Test 0.6781
+Epoch 65, Time(s): 20.5871,Train loss: 0.6462, Train acc: 73.7494 Epoch 65, Time(s): 21.3979, Val 0.7103, Best Epoch 52,Val 0.7129, Test 0.6781
+Epoch 66, Time(s): 21.7525,Train loss: 0.6448, Train acc: 73.7981 Epoch 66, Time(s): 22.5742, Val 0.7027, Best Epoch 52,Val 0.7129, Test 0.6781
+Epoch 67, Time(s): 20.7165,Train loss: 0.6429, Train acc: 73.8712 Epoch 67, Time(s): 21.5018, Val 0.7096, Best Epoch 52,Val 0.7129, Test 0.6781
+Epoch 68, Time(s): 40.0032,Train loss: 0.6427, Train acc: 73.8713 Epoch 68, Time(s): 42.7316, Val 0.7103, Best Epoch 52,Val 0.7129, Test 0.6781
+Epoch 69, Time(s): 31.6869,Train loss: 0.6415, Train acc: 73.9447 Epoch 69, Time(s): 32.4863, Val 0.7079, Best Epoch 52,Val 0.7129, Test 0.6781
+Epoch 70, Time(s): 32.6547,Train loss: 0.6407, Train acc: 73.9443 Epoch 70, Time(s): 35.6973, Val 0.7082, Best Epoch 52,Val 0.7129, Test 0.6781
+Epoch 71, Time(s): 30.9281,Train loss: 0.6400, Train acc: 73.9573 Epoch 71, Time(s): 31.6885, Val 0.7126, Best Epoch 52,Val 0.7129, Test 0.6781
+Epoch 72, Time(s): 36.0911,Train loss: 0.6374, Train acc: 74.0436 Epoch 72, Time(s): 39.2505, Val 0.7091, Best Epoch 52,Val 0.7129, Test 0.6781
+Epoch 73, Time(s): 28.8321,Train loss: 0.6360, Train acc: 74.1205 Epoch 73, Time(s): 30.6966, Val 0.7086, Best Epoch 52,Val 0.7129, Test 0.6781
+Epoch 74, Time(s): 44.1409,Train loss: 0.6355, Train acc: 74.1202 Epoch 74, Time(s): 46.1529, Val 0.7088, Best Epoch 52,Val 0.7129, Test 0.6781
+Epoch 75, Time(s): 22.7541,Train loss: 0.6343, Train acc: 74.1702 Epoch 75, Time(s): 23.8577, Val 0.7123, Best Epoch 52,Val 0.7129, Test 0.6781
+Epoch 76, Time(s): 40.3783,Train loss: 0.6328, Train acc: 74.1658 Epoch 76, Time(s): 42.5734, Val 0.7121, Best Epoch 52,Val 0.7129, Test 0.6781
+Epoch 77, Time(s): 25.1006,Train loss: 0.6315, Train acc: 74.2650 Epoch 77, Time(s): 27.9002, Val 0.7097, Best Epoch 52,Val 0.7129, Test 0.6781
+Epoch 78, Time(s): 37.3971,Train loss: 0.6305, Train acc: 74.3021 Epoch 78, Time(s): 38.3127, Val 0.7051, Best Epoch 52,Val 0.7129, Test 0.6781
+Epoch 79, Time(s): 20.7395,Train loss: 0.6302, Train acc: 74.2677 Epoch 79, Time(s): 21.4835, Val 0.7112, Best Epoch 52,Val 0.7129, Test 0.6781
+Epoch 80, Time(s): 39.5938,Train loss: 0.6281, Train acc: 74.3768 Epoch 80, Time(s): 42.3537, Val 0.7104, Best Epoch 52,Val 0.7129, Test 0.6781
+Epoch 81, Time(s): 27.9585,Train loss: 0.6271, Train acc: 74.3765 Epoch 81, Time(s): 29.6370, Val 0.7128, Best Epoch 52,Val 0.7129, Test 0.6781
+Epoch 82, Time(s): 43.3817,Train loss: 0.6261, Train acc: 74.4614 Epoch 82, Time(s): 44.7927, Val 0.7114, Best Epoch 52,Val 0.7129, Test 0.6781
+Epoch 83, Time(s): 25.4880,Train loss: 0.6260, Train acc: 74.4267 Epoch 83, Time(s): 29.0463, Val 0.7073, Best Epoch 52,Val 0.7129, Test 0.6781
+Epoch 84, Time(s): 39.9058,Train loss: 0.6241, Train acc: 74.4514 Epoch 84, Time(s): 41.9151, Val 0.7092, Best Epoch 52,Val 0.7129, Test 0.6781
+Epoch 85, Time(s): 23.1303,Train loss: 0.6232, Train acc: 74.5360 Epoch 85, Time(s): 24.0336, Val 0.7081, Best Epoch 52,Val 0.7129, Test 0.6781
+Epoch 86, Time(s): 22.8161,Train loss: 0.6229, Train acc: 74.5290 Epoch 86, Time(s): 24.5325, Val 0.7110, Best Epoch 52,Val 0.7129, Test 0.6781
+Epoch 87, Time(s): 40.5069,Train loss: 0.6209, Train acc: 74.6149 Epoch 87, Time(s): 41.7490, Val 0.7074, Best Epoch 52,Val 0.7129, Test 0.6781
+Epoch 88, Time(s): 43.0128,Train loss: 0.6210, Train acc: 74.5877 Epoch 88, Time(s): 44.1072, Val 0.7101, Best Epoch 52,Val 0.7129, Test 0.6781
+Epoch 89, Time(s): 35.7127,Train loss: 0.6195, Train acc: 74.6429 Epoch 89, Time(s): 36.9300, Val 0.7115, Best Epoch 52,Val 0.7129, Test 0.6781
+Epoch 90, Time(s): 43.2870,Train loss: 0.6188, Train acc: 74.6693 Epoch 90, Time(s): 44.5249, Val 0.7132, Best Epoch 90,Val 0.7132, Test 0.6792
+Epoch 91, Time(s): 41.5357,Train loss: 0.6183, Train acc: 74.6773 Epoch 91, Time(s): 43.5656, Val 0.7102, Best Epoch 90,Val 0.7132, Test 0.6792
+Epoch 92, Time(s): 47.6343,Train loss: 0.6168, Train acc: 74.7099 Epoch 92, Time(s): 49.5487, Val 0.7091, Best Epoch 90,Val 0.7132, Test 0.6792
+Epoch 93, Time(s): 37.5741,Train loss: 0.6141, Train acc: 74.8035 Epoch 93, Time(s): 39.4146, Val 0.7072, Best Epoch 90,Val 0.7132, Test 0.6792
+Epoch 94, Time(s): 34.1148,Train loss: 0.6138, Train acc: 74.7945 Epoch 94, Time(s): 35.4651, Val 0.7119, Best Epoch 90,Val 0.7132, Test 0.6792
+Epoch 95, Time(s): 35.9961,Train loss: 0.6122, Train acc: 74.8976 Epoch 95, Time(s): 38.0175, Val 0.7098, Best Epoch 90,Val 0.7132, Test 0.6792
+Epoch 96, Time(s): 39.7141,Train loss: 0.6120, Train acc: 74.9149 Epoch 96, Time(s): 40.9994, Val 0.7075, Best Epoch 90,Val 0.7132, Test 0.6792
+Epoch 97, Time(s): 40.4482,Train loss: 0.6120, Train acc: 74.9301 Epoch 97, Time(s): 42.0569, Val 0.7064, Best Epoch 90,Val 0.7132, Test 0.6792
+Epoch 98, Time(s): 35.3826,Train loss: 0.6091, Train acc: 74.9432 Epoch 98, Time(s): 36.4972, Val 0.7126, Best Epoch 90,Val 0.7132, Test 0.6792
+Epoch 99, Time(s): 35.4803,Train loss: 0.6086, Train acc: 74.9984 Epoch 99, Time(s): 37.2466, Val 0.7113, Best Epoch 90,Val 0.7132, Test 0.6792
+Epoch 100, Time(s): 39.4133,Train loss: 0.6074, Train acc: 75.0532 Epoch 100, Time(s): 41.1376, Val 0.7062, Best Epoch 90,Val 0.7132, Test 0.6792
+Epoch 101, Time(s): 39.0306,Train loss: 0.6079, Train acc: 75.0199 Epoch 101, Time(s): 41.1169, Val 0.7125, Best Epoch 90,Val 0.7132, Test 0.6792
+Epoch 102, Time(s): 37.5896,Train loss: 0.6064, Train acc: 75.1122 Epoch 102, Time(s): 38.8827, Val 0.7112, Best Epoch 90,Val 0.7132, Test 0.6792
+Epoch 103, Time(s): 35.4738,Train loss: 0.6056, Train acc: 75.1177 Epoch 103, Time(s): 36.9591, Val 0.7127, Best Epoch 90,Val 0.7132, Test 0.6792
+Epoch 104, Time(s): 38.4248,Train loss: 0.6060, Train acc: 75.0984 Epoch 104, Time(s): 40.0963, Val 0.7099, Best Epoch 90,Val 0.7132, Test 0.6792
+Epoch 105, Time(s): 40.8313,Train loss: 0.6039, Train acc: 75.1674 Epoch 105, Time(s): 42.7319, Val 0.7136, Best Epoch 105,Val 0.7136, Test 0.6790
+Epoch 106, Time(s): 45.7136,Train loss: 0.6025, Train acc: 75.1879 Epoch 106, Time(s): 46.6980, Val 0.7115, Best Epoch 105,Val 0.7136, Test 0.6790
+Epoch 107, Time(s): 34.4381,Train loss: 0.6029, Train acc: 75.2286 Epoch 107, Time(s): 35.9390, Val 0.7111, Best Epoch 105,Val 0.7136, Test 0.6790
+Epoch 108, Time(s): 40.3880,Train loss: 0.6006, Train acc: 75.2637 Epoch 108, Time(s): 42.1021, Val 0.7095, Best Epoch 105,Val 0.7136, Test 0.6790
+Epoch 109, Time(s): 35.5926,Train loss: 0.5994, Train acc: 75.3411 Epoch 109, Time(s): 37.3898, Val 0.7109, Best Epoch 105,Val 0.7136, Test 0.6790
+Epoch 110, Time(s): 36.3541,Train loss: 0.5990, Train acc: 75.3434 Epoch 110, Time(s): 37.5979, Val 0.7113, Best Epoch 105,Val 0.7136, Test 0.6790
+Epoch 111, Time(s): 37.3598,Train loss: 0.5980, Train acc: 75.3751 Epoch 111, Time(s): 38.7321, Val 0.7096, Best Epoch 105,Val 0.7136, Test 0.6790
+Epoch 112, Time(s): 37.6161,Train loss: 0.5976, Train acc: 75.3498 Epoch 112, Time(s): 39.1923, Val 0.7100, Best Epoch 105,Val 0.7136, Test 0.6790
+Epoch 113, Time(s): 38.3252,Train loss: 0.5960, Train acc: 75.4213 Epoch 113, Time(s): 40.0228, Val 0.7091, Best Epoch 105,Val 0.7136, Test 0.6790
+Epoch 114, Time(s): 38.0119,Train loss: 0.5952, Train acc: 75.4724 Epoch 114, Time(s): 40.3494, Val 0.7102, Best Epoch 105,Val 0.7136, Test 0.6790
+Epoch 115, Time(s): 48.8680,Train loss: 0.5946, Train acc: 75.4489 Epoch 115, Time(s): 50.1990, Val 0.7107, Best Epoch 105,Val 0.7136, Test 0.6790
+Epoch 116, Time(s): 36.0256,Train loss: 0.5936, Train acc: 75.5029 Epoch 116, Time(s): 37.8973, Val 0.7091, Best Epoch 105,Val 0.7136, Test 0.6790
+Epoch 117, Time(s): 40.6885,Train loss: 0.5926, Train acc: 75.5373 Epoch 117, Time(s): 42.2884, Val 0.7097, Best Epoch 105,Val 0.7136, Test 0.6790
+Epoch 118, Time(s): 38.7531,Train loss: 0.5918, Train acc: 75.5845 Epoch 118, Time(s): 40.7402, Val 0.7123, Best Epoch 105,Val 0.7136, Test 0.6790
+Epoch 119, Time(s): 36.7663,Train loss: 0.5905, Train acc: 75.6371 Epoch 119, Time(s): 38.8287, Val 0.7112, Best Epoch 105,Val 0.7136, Test 0.6790
+Epoch 120, Time(s): 37.4580,Train loss: 0.5905, Train acc: 75.6332 Epoch 120, Time(s): 39.0421, Val 0.7123, Best Epoch 105,Val 0.7136, Test 0.6790
+Epoch 121, Time(s): 40.2851,Train loss: 0.5895, Train acc: 75.6622 Epoch 121, Time(s): 41.7082, Val 0.7116, Best Epoch 105,Val 0.7136, Test 0.6790
+Epoch 122, Time(s): 38.8430,Train loss: 0.5882, Train acc: 75.6719 Epoch 122, Time(s): 40.6526, Val 0.7102, Best Epoch 105,Val 0.7136, Test 0.6790
+Epoch 123, Time(s): 45.3937,Train loss: 0.5882, Train acc: 75.7135 Epoch 123, Time(s): 47.1325, Val 0.7066, Best Epoch 105,Val 0.7136, Test 0.6790
+Epoch 124, Time(s): 42.9106,Train loss: 0.5863, Train acc: 75.7467 Epoch 124, Time(s): 44.4475, Val 0.7074, Best Epoch 105,Val 0.7136, Test 0.6790
+Epoch 125, Time(s): 36.7020,Train loss: 0.5856, Train acc: 75.7868 Epoch 125, Time(s): 38.4118, Val 0.7095, Best Epoch 105,Val 0.7136, Test 0.6790
+Epoch 126, Time(s): 37.3770,Train loss: 0.5871, Train acc: 75.7290 Epoch 126, Time(s): 38.9527, Val 0.7080, Best Epoch 105,Val 0.7136, Test 0.6790
+Epoch 127, Time(s): 37.4403,Train loss: 0.5852, Train acc: 75.8173 Epoch 127, Time(s): 39.0495, Val 0.7110, Best Epoch 105,Val 0.7136, Test 0.6790
+Epoch 128, Time(s): 41.0205,Train loss: 0.5861, Train acc: 75.7781 Epoch 128, Time(s): 42.8565, Val 0.7076, Best Epoch 105,Val 0.7136, Test 0.6790
+Epoch 129, Time(s): 36.3918,Train loss: 0.5856, Train acc: 75.7680 Epoch 129, Time(s): 37.8878, Val 0.7105, Best Epoch 105,Val 0.7136, Test 0.6790
+Epoch 130, Time(s): 39.8171,Train loss: 0.5830, Train acc: 75.8813 Epoch 130, Time(s): 41.4160, Val 0.7107, Best Epoch 105,Val 0.7136, Test 0.6790
+Epoch 131, Time(s): 43.4920,Train loss: 0.5813, Train acc: 75.9485 Epoch 131, Time(s): 45.8865, Val 0.7117, Best Epoch 105,Val 0.7136, Test 0.6790
+Epoch 132, Time(s): 40.9338,Train loss: 0.5812, Train acc: 75.9207 Epoch 132, Time(s): 42.2006, Val 0.7137, Best Epoch 132,Val 0.7137, Test 0.6794
+Epoch 133, Time(s): 39.0901,Train loss: 0.5802, Train acc: 75.9740 Epoch 133, Time(s): 40.7268, Val 0.7128, Best Epoch 132,Val 0.7137, Test 0.6794
+Epoch 134, Time(s): 37.8739,Train loss: 0.5782, Train acc: 76.0682 Epoch 134, Time(s): 39.3557, Val 0.7133, Best Epoch 132,Val 0.7137, Test 0.6794
+Epoch 135, Time(s): 36.1577,Train loss: 0.5784, Train acc: 76.0418 Epoch 135, Time(s): 37.5752, Val 0.7094, Best Epoch 132,Val 0.7137, Test 0.6794
+Epoch 136, Time(s): 37.2420,Train loss: 0.5777, Train acc: 76.0865 Epoch 136, Time(s): 38.7503, Val 0.7108, Best Epoch 132,Val 0.7137, Test 0.6794
+Epoch 137, Time(s): 43.5904,Train loss: 0.5772, Train acc: 76.0900 Epoch 137, Time(s): 44.9470, Val 0.7070, Best Epoch 132,Val 0.7137, Test 0.6794
+Epoch 138, Time(s): 40.8504,Train loss: 0.5763, Train acc: 76.0882 Epoch 138, Time(s): 43.2893, Val 0.7105, Best Epoch 132,Val 0.7137, Test 0.6794
+Epoch 139, Time(s): 40.6052,Train loss: 0.5750, Train acc: 76.1470 Epoch 139, Time(s): 42.2430, Val 0.7117, Best Epoch 132,Val 0.7137, Test 0.6794
+Epoch 140, Time(s): 35.6796,Train loss: 0.5753, Train acc: 76.1612 Epoch 140, Time(s): 37.1511, Val 0.7114, Best Epoch 132,Val 0.7137, Test 0.6794
+Epoch 141, Time(s): 34.8839,Train loss: 0.5743, Train acc: 76.1795 Epoch 141, Time(s): 35.9966, Val 0.7125, Best Epoch 132,Val 0.7137, Test 0.6794
+Epoch 142, Time(s): 34.7246,Train loss: 0.5734, Train acc: 76.2040 Epoch 142, Time(s): 35.9686, Val 0.7091, Best Epoch 132,Val 0.7137, Test 0.6794
+Epoch 143, Time(s): 46.0096,Train loss: 0.5724, Train acc: 76.2582 Epoch 143, Time(s): 47.8154, Val 0.7107, Best Epoch 132,Val 0.7137, Test 0.6794
+Epoch 144, Time(s): 38.4560,Train loss: 0.5720, Train acc: 76.2599 Epoch 144, Time(s): 40.5060, Val 0.7102, Best Epoch 132,Val 0.7137, Test 0.6794
+Epoch 145, Time(s): 35.8407,Train loss: 0.5715, Train acc: 76.2660 Epoch 145, Time(s): 36.8843, Val 0.7124, Best Epoch 132,Val 0.7137, Test 0.6794
+Epoch 146, Time(s): 34.7816,Train loss: 0.5703, Train acc: 76.3197 Epoch 146, Time(s): 35.9044, Val 0.7121, Best Epoch 132,Val 0.7137, Test 0.6794
+Epoch 147, Time(s): 32.8540,Train loss: 0.5740, Train acc: 76.2182 Epoch 147, Time(s): 34.0599, Val 0.7123, Best Epoch 132,Val 0.7137, Test 0.6794
+Epoch 148, Time(s): 36.6374,Train loss: 0.5704, Train acc: 76.2761 Epoch 148, Time(s): 37.7826, Val 0.7104, Best Epoch 132,Val 0.7137, Test 0.6794
+Epoch 149, Time(s): 45.8718,Train loss: 0.5689, Train acc: 76.3152 Epoch 149, Time(s): 47.5605, Val 0.7131, Best Epoch 132,Val 0.7137, Test 0.6794
+Best Epoch 132, Val 0.7137, Test 0.6794
+This history model Train ACC is 0.7921120231548097
+This history model Valid ACC is 0.7136869835947791
+This history model Test ACC is 0.6793988933366926
+Stage: 2, confident nodes: 339603
+# Nodes: 111059956
+# Edges: 1615685872
+# Train: 1207179
+# Val: 125265
+# Test: 214338
+# Classes: 172
+
+172
+111059956
+use teacher label
+Compute neighbor-averaged labels
+Compute neighbor-averaged labels
+Compute neighbor-averaged labels
+Compute neighbor-averaged labels
+Compute neighbor-averaged labels
+Compute neighbor-averaged labels
+Compute neighbor-averaged labels
+Compute neighbor-averaged labels
+Compute neighbor-averaged labels
+use rlu
+R_GAMLP_RLU(
+  (prelu): PReLU(num_parameters=1)
+  (lr_att): Linear(in_features=2048, out_features=1, bias=True)
+  (lr_output): FeedForwardNetII(
+    (layers): ModuleList(
+      (0): Dense(
+        (bias): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      )
+      (1): GraphConvolution(
+        (bias): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      )
+      (2): GraphConvolution(
+        (bias): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      )
+      (3): GraphConvolution(
+        (bias): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      )
+      (4): GraphConvolution(
+        (bias): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      )
+      (5): Dense(
+        (bias): BatchNorm1d(172, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      )
+    )
+    (prelu): PReLU(num_parameters=1)
+    (dropout): Dropout(p=0.5, inplace=False)
+  )
+  (process): ModuleList(
+    (0): FeedForwardNet(
+      (layers): ModuleList(
+        (0): Linear(in_features=128, out_features=1024, bias=True)
+        (1): Linear(in_features=1024, out_features=1024, bias=True)
+      )
+      (bns): ModuleList(
+        (0): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      )
+      (prelu): PReLU(num_parameters=1)
+      (dropout): Dropout(p=0.5, inplace=False)
+    )
+    (1): FeedForwardNet(
+      (layers): ModuleList(
+        (0): Linear(in_features=128, out_features=1024, bias=True)
+        (1): Linear(in_features=1024, out_features=1024, bias=True)
+      )
+      (bns): ModuleList(
+        (0): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      )
+      (prelu): PReLU(num_parameters=1)
+      (dropout): Dropout(p=0.5, inplace=False)
+    )
+    (2): FeedForwardNet(
+      (layers): ModuleList(
+        (0): Linear(in_features=128, out_features=1024, bias=True)
+        (1): Linear(in_features=1024, out_features=1024, bias=True)
+      )
+      (bns): ModuleList(
+        (0): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      )
+      (prelu): PReLU(num_parameters=1)
+      (dropout): Dropout(p=0.5, inplace=False)
+    )
+    (3): FeedForwardNet(
+      (layers): ModuleList(
+        (0): Linear(in_features=128, out_features=1024, bias=True)
+        (1): Linear(in_features=1024, out_features=1024, bias=True)
+      )
+      (bns): ModuleList(
+        (0): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      )
+      (prelu): PReLU(num_parameters=1)
+      (dropout): Dropout(p=0.5, inplace=False)
+    )
+    (4): FeedForwardNet(
+      (layers): ModuleList(
+        (0): Linear(in_features=128, out_features=1024, bias=True)
+        (1): Linear(in_features=1024, out_features=1024, bias=True)
+      )
+      (bns): ModuleList(
+        (0): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      )
+      (prelu): PReLU(num_parameters=1)
+      (dropout): Dropout(p=0.5, inplace=False)
+    )
+    (5): FeedForwardNet(
+      (layers): ModuleList(
+        (0): Linear(in_features=128, out_features=1024, bias=True)
+        (1): Linear(in_features=1024, out_features=1024, bias=True)
+      )
+      (bns): ModuleList(
+        (0): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      )
+      (prelu): PReLU(num_parameters=1)
+      (dropout): Dropout(p=0.5, inplace=False)
+    )
+    (6): FeedForwardNet(
+      (layers): ModuleList(
+        (0): Linear(in_features=128, out_features=1024, bias=True)
+        (1): Linear(in_features=1024, out_features=1024, bias=True)
+      )
+      (bns): ModuleList(
+        (0): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      )
+      (prelu): PReLU(num_parameters=1)
+      (dropout): Dropout(p=0.5, inplace=False)
+    )
+  )
+  (dropout): Dropout(p=0.5, inplace=False)
+  (input_drop): Dropout(p=0.0, inplace=False)
+  (att_drop): Dropout(p=0.0, inplace=False)
+  (res_fc): Linear(in_features=128, out_features=1024, bias=True)
+  (label_drop): Dropout(p=0.0, inplace=False)
+  (label_fc): FeedForwardNet(
+    (layers): ModuleList(
+      (0): Linear(in_features=172, out_features=1024, bias=True)
+      (1): Linear(in_features=1024, out_features=1024, bias=True)
+      (2): Linear(in_features=1024, out_features=1024, bias=True)
+      (3): Linear(in_features=1024, out_features=172, bias=True)
+    )
+    (bns): ModuleList(
+      (0): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (1): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (2): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+    (prelu): PReLU(num_parameters=1)
+    (dropout): Dropout(p=0.5, inplace=False)
+  )
+  (act): Sigmoid()
+)
+# Params: 16308751
+Epoch 0, Time(s): 42.3892,Train loss: 1.2169, Train acc: 61.2742 
+Epoch 1, Time(s): 38.3123,Train loss: 0.9026, Train acc: 66.9414 Epoch 1, Time(s): 39.9472, Val 0.6870, Best Epoch 1,Val 0.6870, Test 0.6600
+Epoch 2, Time(s): 41.8628,Train loss: 0.8548, Train acc: 68.0035 Epoch 2, Time(s): 43.2713, Val 0.6805, Best Epoch 1,Val 0.6870, Test 0.6600
+Epoch 3, Time(s): 46.7940,Train loss: 0.8286, Train acc: 68.5859 Epoch 3, Time(s): 48.7682, Val 0.6896, Best Epoch 3,Val 0.6896, Test 0.6614
+Epoch 4, Time(s): 39.0565,Train loss: 0.8096, Train acc: 69.0921 Epoch 4, Time(s): 40.8230, Val 0.6955, Best Epoch 4,Val 0.6955, Test 0.6677
+Epoch 5, Time(s): 39.1903,Train loss: 0.7973, Train acc: 69.3888 Epoch 5, Time(s): 40.9599, Val 0.6935, Best Epoch 4,Val 0.6955, Test 0.6677
+Epoch 6, Time(s): 32.2270,Train loss: 0.7868, Train acc: 69.6653 Epoch 6, Time(s): 33.5070, Val 0.6966, Best Epoch 6,Val 0.6966, Test 0.6685
+Epoch 7, Time(s): 41.9875,Train loss: 0.7780, Train acc: 69.8283 Epoch 7, Time(s): 43.6741, Val 0.6967, Best Epoch 7,Val 0.6967, Test 0.6685
+Epoch 8, Time(s): 36.4250,Train loss: 0.7717, Train acc: 70.0271 Epoch 8, Time(s): 38.0168, Val 0.6958, Best Epoch 7,Val 0.6967, Test 0.6685
+Epoch 9, Time(s): 38.7427,Train loss: 0.7652, Train acc: 70.2001 Epoch 9, Time(s): 40.2554, Val 0.6984, Best Epoch 9,Val 0.6984, Test 0.6689
+Epoch 10, Time(s): 38.6718,Train loss: 0.7591, Train acc: 70.3603 Epoch 10, Time(s): 40.9397, Val 0.6974, Best Epoch 9,Val 0.6984, Test 0.6689
+Epoch 11, Time(s): 36.7265,Train loss: 0.7550, Train acc: 70.4471 Epoch 11, Time(s): 37.7510, Val 0.6984, Best Epoch 11,Val 0.6984, Test 0.6690
+Epoch 12, Time(s): 36.2741,Train loss: 0.7507, Train acc: 70.6121 Epoch 12, Time(s): 37.4335, Val 0.7031, Best Epoch 12,Val 0.7031, Test 0.6730
+Epoch 13, Time(s): 31.2777,Train loss: 0.7458, Train acc: 70.7354 Epoch 13, Time(s): 32.5264, Val 0.6967, Best Epoch 12,Val 0.7031, Test 0.6730
+Epoch 14, Time(s): 36.0840,Train loss: 0.7433, Train acc: 70.7936 Epoch 14, Time(s): 37.6356, Val 0.7073, Best Epoch 14,Val 0.7073, Test 0.6759
+Epoch 15, Time(s): 38.2142,Train loss: 0.7393, Train acc: 70.8875 Epoch 15, Time(s): 39.6346, Val 0.7036, Best Epoch 14,Val 0.7073, Test 0.6759
+Epoch 16, Time(s): 37.7757,Train loss: 0.7363, Train acc: 70.9780 Epoch 16, Time(s): 39.8640, Val 0.7002, Best Epoch 14,Val 0.7073, Test 0.6759
+Epoch 17, Time(s): 41.0901,Train loss: 0.7338, Train acc: 71.0655 Epoch 17, Time(s): 42.4595, Val 0.6970, Best Epoch 14,Val 0.7073, Test 0.6759
+Epoch 18, Time(s): 38.5564,Train loss: 0.7304, Train acc: 71.1474 Epoch 18, Time(s): 40.2711, Val 0.6983, Best Epoch 14,Val 0.7073, Test 0.6759
+Epoch 19, Time(s): 39.1546,Train loss: 0.7278, Train acc: 71.2523 Epoch 19, Time(s): 40.4734, Val 0.6964, Best Epoch 14,Val 0.7073, Test 0.6759
+Epoch 20, Time(s): 40.5156,Train loss: 0.7243, Train acc: 71.3192 Epoch 20, Time(s): 41.9780, Val 0.7071, Best Epoch 14,Val 0.7073, Test 0.6759
+Epoch 21, Time(s): 38.0523,Train loss: 0.7218, Train acc: 71.3810 Epoch 21, Time(s): 39.6606, Val 0.7085, Best Epoch 21,Val 0.7085, Test 0.6765
+Epoch 22, Time(s): 36.8274,Train loss: 0.7192, Train acc: 71.4713 Epoch 22, Time(s): 38.3345, Val 0.7034, Best Epoch 21,Val 0.7085, Test 0.6765
+Epoch 23, Time(s): 34.2646,Train loss: 0.7181, Train acc: 71.4767 Epoch 23, Time(s): 35.4759, Val 0.7091, Best Epoch 23,Val 0.7091, Test 0.6771
+Epoch 24, Time(s): 32.1232,Train loss: 0.7156, Train acc: 71.5810 Epoch 24, Time(s): 33.2661, Val 0.7075, Best Epoch 23,Val 0.7091, Test 0.6771
+Epoch 25, Time(s): 32.3844,Train loss: 0.7129, Train acc: 71.6784 Epoch 25, Time(s): 33.5657, Val 0.7068, Best Epoch 23,Val 0.7091, Test 0.6771
+Epoch 26, Time(s): 32.8128,Train loss: 0.7103, Train acc: 71.7333 Epoch 26, Time(s): 34.0409, Val 0.7076, Best Epoch 23,Val 0.7091, Test 0.6771
+Epoch 27, Time(s): 36.5724,Train loss: 0.7093, Train acc: 71.7464 Epoch 27, Time(s): 37.9467, Val 0.7057, Best Epoch 23,Val 0.7091, Test 0.6771
+Epoch 28, Time(s): 33.1515,Train loss: 0.7080, Train acc: 71.7760 Epoch 28, Time(s): 34.7148, Val 0.7014, Best Epoch 23,Val 0.7091, Test 0.6771
+Epoch 29, Time(s): 40.1918,Train loss: 0.7063, Train acc: 71.8223 Epoch 29, Time(s): 41.6747, Val 0.7099, Best Epoch 29,Val 0.7099, Test 0.6781
+Epoch 30, Time(s): 39.4283,Train loss: 0.7033, Train acc: 71.9446 Epoch 30, Time(s): 41.3300, Val 0.7005, Best Epoch 29,Val 0.7099, Test 0.6781
+Epoch 31, Time(s): 35.5306,Train loss: 0.7006, Train acc: 71.9970 Epoch 31, Time(s): 37.3683, Val 0.7081, Best Epoch 29,Val 0.7099, Test 0.6781
+Epoch 32, Time(s): 38.3121,Train loss: 0.6994, Train acc: 72.0423 Epoch 32, Time(s): 39.6899, Val 0.7089, Best Epoch 29,Val 0.7099, Test 0.6781
+Epoch 33, Time(s): 36.0754,Train loss: 0.6979, Train acc: 72.1258 Epoch 33, Time(s): 37.7924, Val 0.7028, Best Epoch 29,Val 0.7099, Test 0.6781
+Epoch 34, Time(s): 37.7020,Train loss: 0.6960, Train acc: 72.1625 Epoch 34, Time(s): 38.9303, Val 0.7078, Best Epoch 29,Val 0.7099, Test 0.6781
+Epoch 35, Time(s): 35.7575,Train loss: 0.6935, Train acc: 72.2281 Epoch 35, Time(s): 37.1602, Val 0.7104, Best Epoch 35,Val 0.7104, Test 0.6786
+Epoch 36, Time(s): 36.7325,Train loss: 0.6920, Train acc: 72.2333 Epoch 36, Time(s): 37.9578, Val 0.7035, Best Epoch 35,Val 0.7104, Test 0.6786
+Epoch 37, Time(s): 37.9926,Train loss: 0.6907, Train acc: 72.3259 Epoch 37, Time(s): 39.5554, Val 0.7116, Best Epoch 37,Val 0.7116, Test 0.6790
+Epoch 38, Time(s): 36.4988,Train loss: 0.6892, Train acc: 72.3836 Epoch 38, Time(s): 37.9371, Val 0.7108, Best Epoch 37,Val 0.7116, Test 0.6790
+Epoch 39, Time(s): 37.4150,Train loss: 0.6883, Train acc: 72.4288 Epoch 39, Time(s): 39.1585, Val 0.7069, Best Epoch 37,Val 0.7116, Test 0.6790
+Epoch 40, Time(s): 40.5399,Train loss: 0.6869, Train acc: 72.4269 Epoch 40, Time(s): 42.0611, Val 0.7079, Best Epoch 37,Val 0.7116, Test 0.6790
+Epoch 41, Time(s): 33.2643,Train loss: 0.6848, Train acc: 72.4661 Epoch 41, Time(s): 34.3276, Val 0.7053, Best Epoch 37,Val 0.7116, Test 0.6790
+Epoch 42, Time(s): 31.9226,Train loss: 0.6835, Train acc: 72.5330 Epoch 42, Time(s): 33.1529, Val 0.7115, Best Epoch 37,Val 0.7116, Test 0.6790
+Epoch 43, Time(s): 31.2835,Train loss: 0.6816, Train acc: 72.5752 Epoch 43, Time(s): 32.3787, Val 0.7047, Best Epoch 37,Val 0.7116, Test 0.6790
+Epoch 44, Time(s): 32.3228,Train loss: 0.6806, Train acc: 72.6338 Epoch 44, Time(s): 33.4616, Val 0.6983, Best Epoch 37,Val 0.7116, Test 0.6790
+Epoch 45, Time(s): 32.9085,Train loss: 0.6788, Train acc: 72.6809 Epoch 45, Time(s): 34.3083, Val 0.7124, Best Epoch 45,Val 0.7124, Test 0.6808
+Epoch 46, Time(s): 33.6848,Train loss: 0.6777, Train acc: 72.7279 Epoch 46, Time(s): 34.9739, Val 0.7033, Best Epoch 45,Val 0.7124, Test 0.6808
+Epoch 47, Time(s): 24.8035,Train loss: 0.6759, Train acc: 72.7372 Epoch 47, Time(s): 25.6136, Val 0.7076, Best Epoch 45,Val 0.7124, Test 0.6808
+Epoch 48, Time(s): 28.4058,Train loss: 0.6751, Train acc: 72.8141 Epoch 48, Time(s): 30.2430, Val 0.7101, Best Epoch 45,Val 0.7124, Test 0.6808
+Epoch 49, Time(s): 29.0636,Train loss: 0.6740, Train acc: 72.7948 Epoch 49, Time(s): 31.5330, Val 0.7029, Best Epoch 45,Val 0.7124, Test 0.6808
+Epoch 50, Time(s): 30.1429,Train loss: 0.6715, Train acc: 72.9384 Epoch 50, Time(s): 30.9225, Val 0.7048, Best Epoch 45,Val 0.7124, Test 0.6808
+Epoch 51, Time(s): 20.9562,Train loss: 0.6708, Train acc: 72.9191 Epoch 51, Time(s): 21.8088, Val 0.7058, Best Epoch 45,Val 0.7124, Test 0.6808
+Epoch 52, Time(s): 25.3924,Train loss: 0.6705, Train acc: 72.9489 Epoch 52, Time(s): 28.1637, Val 0.7087, Best Epoch 45,Val 0.7124, Test 0.6808
+Epoch 53, Time(s): 33.2978,Train loss: 0.6687, Train acc: 73.0173 Epoch 53, Time(s): 34.5369, Val 0.7144, Best Epoch 53,Val 0.7144, Test 0.6802
+Epoch 54, Time(s): 20.7503,Train loss: 0.6672, Train acc: 73.0275 Epoch 54, Time(s): 21.5641, Val 0.7097, Best Epoch 53,Val 0.7144, Test 0.6802
+Epoch 55, Time(s): 37.8161,Train loss: 0.6657, Train acc: 73.0818 Epoch 55, Time(s): 40.2535, Val 0.7046, Best Epoch 53,Val 0.7144, Test 0.6802
+Epoch 56, Time(s): 31.6377,Train loss: 0.6648, Train acc: 73.0735 Epoch 56, Time(s): 33.2318, Val 0.7141, Best Epoch 53,Val 0.7144, Test 0.6802
+Epoch 57, Time(s): 29.5872,Train loss: 0.6633, Train acc: 73.1402 Epoch 57, Time(s): 33.9861, Val 0.7118, Best Epoch 53,Val 0.7144, Test 0.6802
+Epoch 58, Time(s): 42.2880,Train loss: 0.6624, Train acc: 73.1444 Epoch 58, Time(s): 43.7011, Val 0.7130, Best Epoch 53,Val 0.7144, Test 0.6802
+Epoch 59, Time(s): 23.1119,Train loss: 0.6606, Train acc: 73.2537 Epoch 59, Time(s): 24.5250, Val 0.7084, Best Epoch 53,Val 0.7144, Test 0.6802
+Epoch 60, Time(s): 39.6131,Train loss: 0.6625, Train acc: 73.1653 Epoch 60, Time(s): 42.6561, Val 0.7135, Best Epoch 53,Val 0.7144, Test 0.6802
+Epoch 61, Time(s): 27.8515,Train loss: 0.6592, Train acc: 73.3005 Epoch 61, Time(s): 28.9877, Val 0.7119, Best Epoch 53,Val 0.7144, Test 0.6802
+Epoch 62, Time(s): 27.1639,Train loss: 0.6585, Train acc: 73.3139 Epoch 62, Time(s): 31.3943, Val 0.7107, Best Epoch 53,Val 0.7144, Test 0.6802
+Epoch 63, Time(s): 45.9109,Train loss: 0.6558, Train acc: 73.4074 Epoch 63, Time(s): 47.2088, Val 0.7089, Best Epoch 53,Val 0.7144, Test 0.6802
+Epoch 64, Time(s): 23.6992,Train loss: 0.6559, Train acc: 73.3990 Epoch 64, Time(s): 24.5901, Val 0.7146, Best Epoch 64,Val 0.7146, Test 0.6808
+Epoch 65, Time(s): 44.6892,Train loss: 0.6554, Train acc: 73.4051 Epoch 65, Time(s): 46.6861, Val 0.7101, Best Epoch 64,Val 0.7146, Test 0.6808
+Epoch 66, Time(s): 28.1426,Train loss: 0.6544, Train acc: 73.4482 Epoch 66, Time(s): 29.3256, Val 0.7090, Best Epoch 64,Val 0.7146, Test 0.6808
+Epoch 67, Time(s): 35.8343,Train loss: 0.6530, Train acc: 73.4622 Epoch 67, Time(s): 38.7110, Val 0.7086, Best Epoch 64,Val 0.7146, Test 0.6808
+Epoch 68, Time(s): 36.2084,Train loss: 0.6517, Train acc: 73.5111 Epoch 68, Time(s): 37.9350, Val 0.7068, Best Epoch 64,Val 0.7146, Test 0.6808
+Epoch 69, Time(s): 23.4478,Train loss: 0.6505, Train acc: 73.5561 Epoch 69, Time(s): 25.6658, Val 0.7070, Best Epoch 64,Val 0.7146, Test 0.6808
+Epoch 70, Time(s): 42.9831,Train loss: 0.6486, Train acc: 73.6458 Epoch 70, Time(s): 45.0959, Val 0.7154, Best Epoch 70,Val 0.7154, Test 0.6818
+Epoch 71, Time(s): 20.8292,Train loss: 0.6484, Train acc: 73.6250 Epoch 71, Time(s): 22.1855, Val 0.7089, Best Epoch 70,Val 0.7154, Test 0.6818
+Epoch 72, Time(s): 25.1419,Train loss: 0.6461, Train acc: 73.6898 Epoch 72, Time(s): 26.4520, Val 0.7119, Best Epoch 70,Val 0.7154, Test 0.6818
+Epoch 73, Time(s): 34.0725,Train loss: 0.6446, Train acc: 73.7611 Epoch 73, Time(s): 35.6664, Val 0.7126, Best Epoch 70,Val 0.7154, Test 0.6818
+Epoch 74, Time(s): 36.8857,Train loss: 0.6451, Train acc: 73.7624 Epoch 74, Time(s): 38.2937, Val 0.7092, Best Epoch 70,Val 0.7154, Test 0.6818
+Epoch 75, Time(s): 37.0706,Train loss: 0.6433, Train acc: 73.8052 Epoch 75, Time(s): 38.3268, Val 0.7115, Best Epoch 70,Val 0.7154, Test 0.6818
+Epoch 76, Time(s): 39.3080,Train loss: 0.6428, Train acc: 73.8176 Epoch 76, Time(s): 40.3849, Val 0.7107, Best Epoch 70,Val 0.7154, Test 0.6818
+Epoch 77, Time(s): 34.5535,Train loss: 0.6422, Train acc: 73.8311 Epoch 77, Time(s): 35.7941, Val 0.7083, Best Epoch 70,Val 0.7154, Test 0.6818
+Epoch 78, Time(s): 34.9281,Train loss: 0.6410, Train acc: 73.8733 Epoch 78, Time(s): 36.7088, Val 0.7098, Best Epoch 70,Val 0.7154, Test 0.6818
+Epoch 79, Time(s): 37.4754,Train loss: 0.6399, Train acc: 73.9088 Epoch 79, Time(s): 39.2592, Val 0.7119, Best Epoch 70,Val 0.7154, Test 0.6818
+Epoch 80, Time(s): 35.6796,Train loss: 0.6377, Train acc: 73.9691 Epoch 80, Time(s): 36.9728, Val 0.7121, Best Epoch 70,Val 0.7154, Test 0.6818
+Epoch 81, Time(s): 39.5759,Train loss: 0.6363, Train acc: 74.0299 Epoch 81, Time(s): 41.4228, Val 0.7109, Best Epoch 70,Val 0.7154, Test 0.6818
+Epoch 82, Time(s): 41.9902,Train loss: 0.6359, Train acc: 74.0077 Epoch 82, Time(s): 43.1975, Val 0.7074, Best Epoch 70,Val 0.7154, Test 0.6818
+Epoch 83, Time(s): 37.5024,Train loss: 0.6352, Train acc: 74.0619 Epoch 83, Time(s): 39.2450, Val 0.7133, Best Epoch 70,Val 0.7154, Test 0.6818
+Epoch 84, Time(s): 39.4092,Train loss: 0.6341, Train acc: 74.1293 Epoch 84, Time(s): 40.9806, Val 0.7120, Best Epoch 70,Val 0.7154, Test 0.6818
+Epoch 85, Time(s): 39.3387,Train loss: 0.6331, Train acc: 74.1598 Epoch 85, Time(s): 41.1142, Val 0.7136, Best Epoch 70,Val 0.7154, Test 0.6818
+Epoch 86, Time(s): 37.9846,Train loss: 0.6317, Train acc: 74.1776 Epoch 86, Time(s): 39.1879, Val 0.7124, Best Epoch 70,Val 0.7154, Test 0.6818
+Epoch 87, Time(s): 35.5050,Train loss: 0.6316, Train acc: 74.2112 Epoch 87, Time(s): 36.9604, Val 0.7080, Best Epoch 70,Val 0.7154, Test 0.6818
+Epoch 88, Time(s): 39.4347,Train loss: 0.6299, Train acc: 74.2641 Epoch 88, Time(s): 41.0291, Val 0.7107, Best Epoch 70,Val 0.7154, Test 0.6818
+Epoch 89, Time(s): 36.6745,Train loss: 0.6293, Train acc: 74.2450 Epoch 89, Time(s): 38.1931, Val 0.7125, Best Epoch 70,Val 0.7154, Test 0.6818
+Epoch 90, Time(s): 35.6525,Train loss: 0.6281, Train acc: 74.3249 Epoch 90, Time(s): 37.5416, Val 0.7111, Best Epoch 70,Val 0.7154, Test 0.6818
+Epoch 91, Time(s): 32.9521,Train loss: 0.6270, Train acc: 74.3124 Epoch 91, Time(s): 34.0211, Val 0.7106, Best Epoch 70,Val 0.7154, Test 0.6818
+Epoch 92, Time(s): 34.6407,Train loss: 0.6256, Train acc: 74.3675 Epoch 92, Time(s): 35.9763, Val 0.7104, Best Epoch 70,Val 0.7154, Test 0.6818
+Epoch 93, Time(s): 35.8878,Train loss: 0.6246, Train acc: 74.4209 Epoch 93, Time(s): 37.8293, Val 0.7105, Best Epoch 70,Val 0.7154, Test 0.6818
+Epoch 94, Time(s): 38.9149,Train loss: 0.6241, Train acc: 74.4270 Epoch 94, Time(s): 40.2228, Val 0.7125, Best Epoch 70,Val 0.7154, Test 0.6818
+Epoch 95, Time(s): 34.2227,Train loss: 0.6235, Train acc: 74.4786 Epoch 95, Time(s): 35.7967, Val 0.7133, Best Epoch 70,Val 0.7154, Test 0.6818
+Epoch 96, Time(s): 36.5473,Train loss: 0.6221, Train acc: 74.5190 Epoch 96, Time(s): 38.1741, Val 0.7149, Best Epoch 70,Val 0.7154, Test 0.6818
+Epoch 97, Time(s): 33.1993,Train loss: 0.6213, Train acc: 74.5086 Epoch 97, Time(s): 34.5983, Val 0.7126, Best Epoch 70,Val 0.7154, Test 0.6818
+Epoch 98, Time(s): 39.0147,Train loss: 0.6231, Train acc: 74.4509 Epoch 98, Time(s): 40.7080, Val 0.7110, Best Epoch 70,Val 0.7154, Test 0.6818
+Epoch 99, Time(s): 34.0685,Train loss: 0.6209, Train acc: 74.5380 Epoch 99, Time(s): 35.2263, Val 0.7125, Best Epoch 70,Val 0.7154, Test 0.6818
+Epoch 100, Time(s): 31.3681,Train loss: 0.6198, Train acc: 74.5845 Epoch 100, Time(s): 33.2660, Val 0.7108, Best Epoch 70,Val 0.7154, Test 0.6818
+Epoch 101, Time(s): 32.5941,Train loss: 0.6199, Train acc: 74.5863 Epoch 101, Time(s): 33.6931, Val 0.7096, Best Epoch 70,Val 0.7154, Test 0.6818
+Epoch 102, Time(s): 35.0229,Train loss: 0.6177, Train acc: 74.6463 Epoch 102, Time(s): 36.7946, Val 0.7091, Best Epoch 70,Val 0.7154, Test 0.6818
+Epoch 103, Time(s): 35.8941,Train loss: 0.6156, Train acc: 74.7258 Epoch 103, Time(s): 37.7855, Val 0.7124, Best Epoch 70,Val 0.7154, Test 0.6818
+Epoch 104, Time(s): 39.0130,Train loss: 0.6143, Train acc: 74.7347 Epoch 104, Time(s): 40.9757, Val 0.7123, Best Epoch 70,Val 0.7154, Test 0.6818
+Epoch 105, Time(s): 39.4092,Train loss: 0.6151, Train acc: 74.7234 Epoch 105, Time(s): 41.3868, Val 0.7120, Best Epoch 70,Val 0.7154, Test 0.6818
+Epoch 106, Time(s): 39.3470,Train loss: 0.6139, Train acc: 74.7552 Epoch 106, Time(s): 40.8158, Val 0.7042, Best Epoch 70,Val 0.7154, Test 0.6818
+Epoch 107, Time(s): 34.4236,Train loss: 0.6125, Train acc: 74.7981 Epoch 107, Time(s): 36.4170, Val 0.7084, Best Epoch 70,Val 0.7154, Test 0.6818
+Epoch 108, Time(s): 39.9893,Train loss: 0.6110, Train acc: 74.8907 Epoch 108, Time(s): 41.5371, Val 0.7131, Best Epoch 70,Val 0.7154, Test 0.6818
+Epoch 109, Time(s): 46.1405,Train loss: 0.6098, Train acc: 74.9359 Epoch 109, Time(s): 48.0015, Val 0.7112, Best Epoch 70,Val 0.7154, Test 0.6818
+Epoch 110, Time(s): 41.9610,Train loss: 0.6092, Train acc: 74.9176 Epoch 110, Time(s): 43.6492, Val 0.7071, Best Epoch 70,Val 0.7154, Test 0.6818
+Epoch 111, Time(s): 33.8863,Train loss: 0.6082, Train acc: 74.9767 Epoch 111, Time(s): 35.1702, Val 0.7132, Best Epoch 70,Val 0.7154, Test 0.6818
+Epoch 112, Time(s): 33.1293,Train loss: 0.6078, Train acc: 74.9683 Epoch 112, Time(s): 34.2515, Val 0.7069, Best Epoch 70,Val 0.7154, Test 0.6818
+Epoch 113, Time(s): 32.9967,Train loss: 0.6067, Train acc: 74.9812 Epoch 113, Time(s): 33.9518, Val 0.7147, Best Epoch 70,Val 0.7154, Test 0.6818
+Epoch 114, Time(s): 33.0770,Train loss: 0.6059, Train acc: 75.0340 Epoch 114, Time(s): 34.2184, Val 0.7136, Best Epoch 70,Val 0.7154, Test 0.6818
+Epoch 115, Time(s): 35.3899,Train loss: 0.6056, Train acc: 75.0278 Epoch 115, Time(s): 37.2170, Val 0.7136, Best Epoch 70,Val 0.7154, Test 0.6818
+Epoch 116, Time(s): 41.4689,Train loss: 0.6063, Train acc: 75.0276 Epoch 116, Time(s): 42.8339, Val 0.7132, Best Epoch 70,Val 0.7154, Test 0.6818
+Epoch 117, Time(s): 37.5491,Train loss: 0.6037, Train acc: 75.0944 Epoch 117, Time(s): 39.1031, Val 0.7139, Best Epoch 70,Val 0.7154, Test 0.6818
+Epoch 118, Time(s): 39.5436,Train loss: 0.6024, Train acc: 75.1922 Epoch 118, Time(s): 40.7740, Val 0.7111, Best Epoch 70,Val 0.7154, Test 0.6818
+Epoch 119, Time(s): 33.2341,Train loss: 0.6015, Train acc: 75.1715 Epoch 119, Time(s): 34.3423, Val 0.7081, Best Epoch 70,Val 0.7154, Test 0.6818
+Epoch 120, Time(s): 34.9480,Train loss: 0.6009, Train acc: 75.2260 Epoch 120, Time(s): 36.8902, Val 0.7106, Best Epoch 70,Val 0.7154, Test 0.6818
+Epoch 121, Time(s): 38.9400,Train loss: 0.6017, Train acc: 75.1505 Epoch 121, Time(s): 40.1350, Val 0.7135, Best Epoch 70,Val 0.7154, Test 0.6818
+Epoch 122, Time(s): 37.5204,Train loss: 0.5997, Train acc: 75.1806 Epoch 122, Time(s): 38.7448, Val 0.7092, Best Epoch 70,Val 0.7154, Test 0.6818
+Epoch 123, Time(s): 39.4966,Train loss: 0.5975, Train acc: 75.3175 Epoch 123, Time(s): 40.6901, Val 0.7124, Best Epoch 70,Val 0.7154, Test 0.6818
+Epoch 124, Time(s): 39.4961,Train loss: 0.5975, Train acc: 75.3064 Epoch 124, Time(s): 41.1214, Val 0.7135, Best Epoch 70,Val 0.7154, Test 0.6818
+Epoch 125, Time(s): 37.0881,Train loss: 0.5963, Train acc: 75.3727 Epoch 125, Time(s): 38.5963, Val 0.7119, Best Epoch 70,Val 0.7154, Test 0.6818
+Epoch 126, Time(s): 35.8983,Train loss: 0.5955, Train acc: 75.3504 Epoch 126, Time(s): 36.9566, Val 0.7143, Best Epoch 70,Val 0.7154, Test 0.6818
+Epoch 127, Time(s): 36.2920,Train loss: 0.5952, Train acc: 75.3694 Epoch 127, Time(s): 38.2270, Val 0.7132, Best Epoch 70,Val 0.7154, Test 0.6818
+Epoch 128, Time(s): 45.2722,Train loss: 0.5946, Train acc: 75.4017 Epoch 128, Time(s): 46.3819, Val 0.7132, Best Epoch 70,Val 0.7154, Test 0.6818
+Epoch 129, Time(s): 35.0391,Train loss: 0.5931, Train acc: 75.4863 Epoch 129, Time(s): 36.8412, Val 0.7130, Best Epoch 70,Val 0.7154, Test 0.6818
+Epoch 130, Time(s): 36.2998,Train loss: 0.5921, Train acc: 75.4996 Epoch 130, Time(s): 37.6313, Val 0.7134, Best Epoch 70,Val 0.7154, Test 0.6818
+Epoch 131, Time(s): 33.7275,Train loss: 0.5916, Train acc: 75.5256 Epoch 131, Time(s): 34.9459, Val 0.7120, Best Epoch 70,Val 0.7154, Test 0.6818
+Epoch 132, Time(s): 32.9034,Train loss: 0.5912, Train acc: 75.5043 Epoch 132, Time(s): 33.9625, Val 0.7136, Best Epoch 70,Val 0.7154, Test 0.6818
+Epoch 133, Time(s): 34.7059,Train loss: 0.5909, Train acc: 75.5540 Epoch 133, Time(s): 35.8766, Val 0.7132, Best Epoch 70,Val 0.7154, Test 0.6818
+Epoch 134, Time(s): 31.1979,Train loss: 0.5896, Train acc: 75.6020 Epoch 134, Time(s): 32.1612, Val 0.7126, Best Epoch 70,Val 0.7154, Test 0.6818
+Epoch 135, Time(s): 31.6343,Train loss: 0.5907, Train acc: 75.5721 Epoch 135, Time(s): 32.7192, Val 0.7129, Best Epoch 70,Val 0.7154, Test 0.6818
+Epoch 136, Time(s): 30.9673,Train loss: 0.5895, Train acc: 75.5955 Epoch 136, Time(s): 32.0883, Val 0.7125, Best Epoch 70,Val 0.7154, Test 0.6818
+Epoch 137, Time(s): 32.3802,Train loss: 0.5883, Train acc: 75.6457 Epoch 137, Time(s): 33.6798, Val 0.7125, Best Epoch 70,Val 0.7154, Test 0.6818
+Epoch 138, Time(s): 31.4889,Train loss: 0.5874, Train acc: 75.6441 Epoch 138, Time(s): 32.5516, Val 0.7142, Best Epoch 70,Val 0.7154, Test 0.6818
+Epoch 139, Time(s): 32.8299,Train loss: 0.5869, Train acc: 75.6541 Epoch 139, Time(s): 33.9051, Val 0.7120, Best Epoch 70,Val 0.7154, Test 0.6818
+Epoch 140, Time(s): 33.2370,Train loss: 0.5856, Train acc: 75.7205 Epoch 140, Time(s): 34.3070, Val 0.7118, Best Epoch 70,Val 0.7154, Test 0.6818
+Epoch 141, Time(s): 30.9934,Train loss: 0.5842, Train acc: 75.7602 Epoch 141, Time(s): 32.2803, Val 0.7139, Best Epoch 70,Val 0.7154, Test 0.6818
+Epoch 142, Time(s): 31.6658,Train loss: 0.5842, Train acc: 75.7706 Epoch 142, Time(s): 32.8226, Val 0.7136, Best Epoch 70,Val 0.7154, Test 0.6818
+Epoch 143, Time(s): 30.6432,Train loss: 0.5829, Train acc: 75.7787 Epoch 143, Time(s): 31.9439, Val 0.7125, Best Epoch 70,Val 0.7154, Test 0.6818
+Epoch 144, Time(s): 33.3396,Train loss: 0.5828, Train acc: 75.8385 Epoch 144, Time(s): 34.5599, Val 0.7106, Best Epoch 70,Val 0.7154, Test 0.6818
+Epoch 145, Time(s): 33.1779,Train loss: 0.5829, Train acc: 75.8648 Epoch 145, Time(s): 34.6973, Val 0.7140, Best Epoch 70,Val 0.7154, Test 0.6818
+Epoch 146, Time(s): 33.3967,Train loss: 0.5809, Train acc: 75.8627 Epoch 146, Time(s): 34.6943, Val 0.7111, Best Epoch 70,Val 0.7154, Test 0.6818
+Epoch 147, Time(s): 33.8130,Train loss: 0.5802, Train acc: 75.9425 Epoch 147, Time(s): 35.9794, Val 0.7118, Best Epoch 70,Val 0.7154, Test 0.6818
+Epoch 148, Time(s): 34.1394,Train loss: 0.5796, Train acc: 75.9593 Epoch 148, Time(s): 35.2828, Val 0.7097, Best Epoch 70,Val 0.7154, Test 0.6818
+Epoch 149, Time(s): 32.6585,Train loss: 0.5792, Train acc: 75.9501 Epoch 149, Time(s): 33.8287, Val 0.7113, Best Epoch 70,Val 0.7154, Test 0.6818
+Best Epoch 70, Val 0.7154, Test 0.6818
+This history model Train ACC is 0.7562349908340023
+This history model Valid ACC is 0.7153793956811559
+This history model Test ACC is 0.6817549851169648
+Stage: 3, confident nodes: 339603
+# Nodes: 111059956
+# Edges: 1615685872
+# Train: 1207179
+# Val: 125265
+# Test: 214338
+# Classes: 172
+
+172
+111059956
+use teacher label
+Compute neighbor-averaged labels
+Compute neighbor-averaged labels
+Compute neighbor-averaged labels
+Compute neighbor-averaged labels
+Compute neighbor-averaged labels
+Compute neighbor-averaged labels
+Compute neighbor-averaged labels
+Compute neighbor-averaged labels
+Compute neighbor-averaged labels
+use rlu
+R_GAMLP_RLU(
+  (prelu): PReLU(num_parameters=1)
+  (lr_att): Linear(in_features=2048, out_features=1, bias=True)
+  (lr_output): FeedForwardNetII(
+    (layers): ModuleList(
+      (0): Dense(
+        (bias): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      )
+      (1): GraphConvolution(
+        (bias): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      )
+      (2): GraphConvolution(
+        (bias): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      )
+      (3): GraphConvolution(
+        (bias): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      )
+      (4): GraphConvolution(
+        (bias): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      )
+      (5): Dense(
+        (bias): BatchNorm1d(172, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      )
+    )
+    (prelu): PReLU(num_parameters=1)
+    (dropout): Dropout(p=0.5, inplace=False)
+  )
+  (process): ModuleList(
+    (0): FeedForwardNet(
+      (layers): ModuleList(
+        (0): Linear(in_features=128, out_features=1024, bias=True)
+        (1): Linear(in_features=1024, out_features=1024, bias=True)
+      )
+      (bns): ModuleList(
+        (0): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      )
+      (prelu): PReLU(num_parameters=1)
+      (dropout): Dropout(p=0.5, inplace=False)
+    )
+    (1): FeedForwardNet(
+      (layers): ModuleList(
+        (0): Linear(in_features=128, out_features=1024, bias=True)
+        (1): Linear(in_features=1024, out_features=1024, bias=True)
+      )
+      (bns): ModuleList(
+        (0): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      )
+      (prelu): PReLU(num_parameters=1)
+      (dropout): Dropout(p=0.5, inplace=False)
+    )
+    (2): FeedForwardNet(
+      (layers): ModuleList(
+        (0): Linear(in_features=128, out_features=1024, bias=True)
+        (1): Linear(in_features=1024, out_features=1024, bias=True)
+      )
+      (bns): ModuleList(
+        (0): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      )
+      (prelu): PReLU(num_parameters=1)
+      (dropout): Dropout(p=0.5, inplace=False)
+    )
+    (3): FeedForwardNet(
+      (layers): ModuleList(
+        (0): Linear(in_features=128, out_features=1024, bias=True)
+        (1): Linear(in_features=1024, out_features=1024, bias=True)
+      )
+      (bns): ModuleList(
+        (0): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      )
+      (prelu): PReLU(num_parameters=1)
+      (dropout): Dropout(p=0.5, inplace=False)
+    )
+    (4): FeedForwardNet(
+      (layers): ModuleList(
+        (0): Linear(in_features=128, out_features=1024, bias=True)
+        (1): Linear(in_features=1024, out_features=1024, bias=True)
+      )
+      (bns): ModuleList(
+        (0): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      )
+      (prelu): PReLU(num_parameters=1)
+      (dropout): Dropout(p=0.5, inplace=False)
+    )
+    (5): FeedForwardNet(
+      (layers): ModuleList(
+        (0): Linear(in_features=128, out_features=1024, bias=True)
+        (1): Linear(in_features=1024, out_features=1024, bias=True)
+      )
+      (bns): ModuleList(
+        (0): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      )
+      (prelu): PReLU(num_parameters=1)
+      (dropout): Dropout(p=0.5, inplace=False)
+    )
+    (6): FeedForwardNet(
+      (layers): ModuleList(
+        (0): Linear(in_features=128, out_features=1024, bias=True)
+        (1): Linear(in_features=1024, out_features=1024, bias=True)
+      )
+      (bns): ModuleList(
+        (0): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      )
+      (prelu): PReLU(num_parameters=1)
+      (dropout): Dropout(p=0.5, inplace=False)
+    )
+  )
+  (dropout): Dropout(p=0.5, inplace=False)
+  (input_drop): Dropout(p=0.0, inplace=False)
+  (att_drop): Dropout(p=0.0, inplace=False)
+  (res_fc): Linear(in_features=128, out_features=1024, bias=True)
+  (label_drop): Dropout(p=0.0, inplace=False)
+  (label_fc): FeedForwardNet(
+    (layers): ModuleList(
+      (0): Linear(in_features=172, out_features=1024, bias=True)
+      (1): Linear(in_features=1024, out_features=1024, bias=True)
+      (2): Linear(in_features=1024, out_features=1024, bias=True)
+      (3): Linear(in_features=1024, out_features=172, bias=True)
+    )
+    (bns): ModuleList(
+      (0): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (1): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (2): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+    (prelu): PReLU(num_parameters=1)
+    (dropout): Dropout(p=0.5, inplace=False)
+  )
+  (act): Sigmoid()
+)
+# Params: 16308751
+Epoch 0, Time(s): 33.0472,Train loss: 1.2114, Train acc: 61.3760 
+Epoch 1, Time(s): 35.7190,Train loss: 0.8994, Train acc: 67.0068 Epoch 1, Time(s): 37.1900, Val 0.6888, Best Epoch 1,Val 0.6888, Test 0.6608
+Epoch 2, Time(s): 36.7077,Train loss: 0.8509, Train acc: 68.0868 Epoch 2, Time(s): 38.4914, Val 0.6924, Best Epoch 2,Val 0.6924, Test 0.6645
+Epoch 3, Time(s): 40.3065,Train loss: 0.8238, Train acc: 68.6842 Epoch 3, Time(s): 41.5681, Val 0.6977, Best Epoch 3,Val 0.6977, Test 0.6687
+Epoch 4, Time(s): 37.4300,Train loss: 0.8070, Train acc: 69.1450 Epoch 4, Time(s): 39.0904, Val 0.6920, Best Epoch 3,Val 0.6977, Test 0.6687
+Epoch 5, Time(s): 38.0921,Train loss: 0.7937, Train acc: 69.4826 Epoch 5, Time(s): 39.4345, Val 0.6986, Best Epoch 5,Val 0.6986, Test 0.6677
+Epoch 6, Time(s): 32.1690,Train loss: 0.7837, Train acc: 69.7058 Epoch 6, Time(s): 33.3200, Val 0.7049, Best Epoch 6,Val 0.7049, Test 0.6741
+Epoch 7, Time(s): 32.2070,Train loss: 0.7748, Train acc: 69.9757 Epoch 7, Time(s): 33.2164, Val 0.6971, Best Epoch 6,Val 0.7049, Test 0.6741
+Epoch 8, Time(s): 29.7179,Train loss: 0.7680, Train acc: 70.1243 Epoch 8, Time(s): 30.8311, Val 0.6994, Best Epoch 6,Val 0.7049, Test 0.6741
+Epoch 9, Time(s): 31.3349,Train loss: 0.7618, Train acc: 70.3151 Epoch 9, Time(s): 32.3419, Val 0.7060, Best Epoch 9,Val 0.7060, Test 0.6756
+Epoch 10, Time(s): 33.7637,Train loss: 0.7573, Train acc: 70.3845 Epoch 10, Time(s): 34.9971, Val 0.6974, Best Epoch 9,Val 0.7060, Test 0.6756
+Epoch 11, Time(s): 36.4446,Train loss: 0.7515, Train acc: 70.5600 Epoch 11, Time(s): 37.7822, Val 0.7072, Best Epoch 11,Val 0.7072, Test 0.6733
+Epoch 12, Time(s): 35.3139,Train loss: 0.7472, Train acc: 70.6362 Epoch 12, Time(s): 36.5082, Val 0.6997, Best Epoch 11,Val 0.7072, Test 0.6733
+Epoch 13, Time(s): 32.4821,Train loss: 0.7428, Train acc: 70.8218 Epoch 13, Time(s): 33.5661, Val 0.7079, Best Epoch 13,Val 0.7079, Test 0.6758
+Epoch 14, Time(s): 30.2679,Train loss: 0.7389, Train acc: 70.9151 Epoch 14, Time(s): 31.4240, Val 0.7074, Best Epoch 13,Val 0.7079, Test 0.6758
+Epoch 15, Time(s): 29.9093,Train loss: 0.7350, Train acc: 71.0203 Epoch 15, Time(s): 31.1158, Val 0.7078, Best Epoch 13,Val 0.7079, Test 0.6758
+Epoch 16, Time(s): 31.9929,Train loss: 0.7313, Train acc: 71.1350 Epoch 16, Time(s): 32.9931, Val 0.7063, Best Epoch 13,Val 0.7079, Test 0.6758
+Epoch 17, Time(s): 29.6394,Train loss: 0.7284, Train acc: 71.1948 Epoch 17, Time(s): 30.7437, Val 0.7034, Best Epoch 13,Val 0.7079, Test 0.6758
+Epoch 18, Time(s): 30.1997,Train loss: 0.7257, Train acc: 71.3125 Epoch 18, Time(s): 31.2912, Val 0.6970, Best Epoch 13,Val 0.7079, Test 0.6758
+Epoch 19, Time(s): 30.3218,Train loss: 0.7227, Train acc: 71.3728 Epoch 19, Time(s): 31.3244, Val 0.7107, Best Epoch 19,Val 0.7107, Test 0.6774
+Epoch 20, Time(s): 33.0760,Train loss: 0.7195, Train acc: 71.4585 Epoch 20, Time(s): 34.4881, Val 0.7079, Best Epoch 19,Val 0.7107, Test 0.6774
+Epoch 21, Time(s): 33.8663,Train loss: 0.7165, Train acc: 71.5556 Epoch 21, Time(s): 34.9527, Val 0.6991, Best Epoch 19,Val 0.7107, Test 0.6774
+Epoch 22, Time(s): 33.0885,Train loss: 0.7152, Train acc: 71.6045 Epoch 22, Time(s): 34.2696, Val 0.7070, Best Epoch 19,Val 0.7107, Test 0.6774
+Epoch 23, Time(s): 32.5206,Train loss: 0.7128, Train acc: 71.6643 Epoch 23, Time(s): 33.7037, Val 0.7052, Best Epoch 19,Val 0.7107, Test 0.6774
+Epoch 24, Time(s): 34.5407,Train loss: 0.7101, Train acc: 71.7603 Epoch 24, Time(s): 35.5721, Val 0.7074, Best Epoch 19,Val 0.7107, Test 0.6774
+Epoch 25, Time(s): 32.8491,Train loss: 0.7074, Train acc: 71.8039 Epoch 25, Time(s): 34.4094, Val 0.7018, Best Epoch 19,Val 0.7107, Test 0.6774
+Epoch 26, Time(s): 32.5851,Train loss: 0.7057, Train acc: 71.8463 Epoch 26, Time(s): 33.6734, Val 0.7101, Best Epoch 19,Val 0.7107, Test 0.6774
+Epoch 27, Time(s): 32.6969,Train loss: 0.7031, Train acc: 71.9321 Epoch 27, Time(s): 33.8132, Val 0.7047, Best Epoch 19,Val 0.7107, Test 0.6774
+Epoch 28, Time(s): 36.1925,Train loss: 0.7012, Train acc: 72.0229 Epoch 28, Time(s): 37.5292, Val 0.7115, Best Epoch 28,Val 0.7115, Test 0.6801
+Epoch 29, Time(s): 34.5235,Train loss: 0.6993, Train acc: 72.0418 Epoch 29, Time(s): 35.7258, Val 0.7050, Best Epoch 28,Val 0.7115, Test 0.6801
+Epoch 30, Time(s): 34.7458,Train loss: 0.6977, Train acc: 72.0787 Epoch 30, Time(s): 36.1878, Val 0.6947, Best Epoch 28,Val 0.7115, Test 0.6801
+Epoch 31, Time(s): 33.4106,Train loss: 0.6954, Train acc: 72.1765 Epoch 31, Time(s): 34.6445, Val 0.6988, Best Epoch 28,Val 0.7115, Test 0.6801
+Epoch 32, Time(s): 30.5796,Train loss: 0.6936, Train acc: 72.2117 Epoch 32, Time(s): 31.9809, Val 0.7101, Best Epoch 28,Val 0.7115, Test 0.6801
+Epoch 33, Time(s): 32.2868,Train loss: 0.6921, Train acc: 72.2629 Epoch 33, Time(s): 33.4677, Val 0.7097, Best Epoch 28,Val 0.7115, Test 0.6801
+Epoch 34, Time(s): 33.4176,Train loss: 0.6905, Train acc: 72.3249 Epoch 34, Time(s): 34.7841, Val 0.7103, Best Epoch 28,Val 0.7115, Test 0.6801
+Epoch 35, Time(s): 31.8097,Train loss: 0.6881, Train acc: 72.3852 Epoch 35, Time(s): 32.9794, Val 0.7009, Best Epoch 28,Val 0.7115, Test 0.6801
+Epoch 36, Time(s): 34.4479,Train loss: 0.6867, Train acc: 72.4352 Epoch 36, Time(s): 35.7775, Val 0.7108, Best Epoch 28,Val 0.7115, Test 0.6801
+Epoch 37, Time(s): 35.0486,Train loss: 0.6851, Train acc: 72.5143 Epoch 37, Time(s): 36.6850, Val 0.7083, Best Epoch 28,Val 0.7115, Test 0.6801
+Epoch 38, Time(s): 38.0678,Train loss: 0.6835, Train acc: 72.5114 Epoch 38, Time(s): 39.7011, Val 0.7105, Best Epoch 28,Val 0.7115, Test 0.6801
+Epoch 39, Time(s): 35.4547,Train loss: 0.6820, Train acc: 72.5369 Epoch 39, Time(s): 36.9125, Val 0.7087, Best Epoch 28,Val 0.7115, Test 0.6801
+Epoch 40, Time(s): 34.2204,Train loss: 0.6805, Train acc: 72.6568 Epoch 40, Time(s): 35.3935, Val 0.7111, Best Epoch 28,Val 0.7115, Test 0.6801
+Epoch 41, Time(s): 32.6629,Train loss: 0.6789, Train acc: 72.6553 Epoch 41, Time(s): 33.7117, Val 0.7111, Best Epoch 28,Val 0.7115, Test 0.6801
+Epoch 42, Time(s): 31.1054,Train loss: 0.6774, Train acc: 72.7533 Epoch 42, Time(s): 32.2660, Val 0.7099, Best Epoch 28,Val 0.7115, Test 0.6801
+Epoch 43, Time(s): 32.1496,Train loss: 0.6756, Train acc: 72.7324 Epoch 43, Time(s): 33.3611, Val 0.7078, Best Epoch 28,Val 0.7115, Test 0.6801
+Epoch 44, Time(s): 34.5543,Train loss: 0.6745, Train acc: 72.8081 Epoch 44, Time(s): 36.0039, Val 0.7139, Best Epoch 44,Val 0.7139, Test 0.6812
+Epoch 45, Time(s): 30.2363,Train loss: 0.6721, Train acc: 72.8755 Epoch 45, Time(s): 31.1070, Val 0.7107, Best Epoch 44,Val 0.7139, Test 0.6812
+Epoch 46, Time(s): 20.3701,Train loss: 0.6710, Train acc: 72.9082 Epoch 46, Time(s): 21.3168, Val 0.7110, Best Epoch 44,Val 0.7139, Test 0.6812
+Epoch 47, Time(s): 33.2996,Train loss: 0.6701, Train acc: 72.9063 Epoch 47, Time(s): 35.6095, Val 0.7091, Best Epoch 44,Val 0.7139, Test 0.6812
+Epoch 48, Time(s): 29.2323,Train loss: 0.6675, Train acc: 73.0446 Epoch 48, Time(s): 30.0539, Val 0.7098, Best Epoch 44,Val 0.7139, Test 0.6812
+Epoch 49, Time(s): 22.1855,Train loss: 0.6671, Train acc: 73.0265 Epoch 49, Time(s): 23.2313, Val 0.7104, Best Epoch 44,Val 0.7139, Test 0.6812
+Epoch 50, Time(s): 31.4343,Train loss: 0.6648, Train acc: 73.1137 Epoch 50, Time(s): 33.3761, Val 0.7015, Best Epoch 44,Val 0.7139, Test 0.6812
+Epoch 51, Time(s): 26.2834,Train loss: 0.6640, Train acc: 73.1607 Epoch 51, Time(s): 27.6034, Val 0.7118, Best Epoch 44,Val 0.7139, Test 0.6812
+Epoch 52, Time(s): 23.6480,Train loss: 0.6621, Train acc: 73.1793 Epoch 52, Time(s): 25.9079, Val 0.7110, Best Epoch 44,Val 0.7139, Test 0.6812
+Epoch 53, Time(s): 22.4285,Train loss: 0.6612, Train acc: 73.2166 Epoch 53, Time(s): 23.2304, Val 0.7105, Best Epoch 44,Val 0.7139, Test 0.6812
+Epoch 54, Time(s): 22.3440,Train loss: 0.6596, Train acc: 73.2861 Epoch 54, Time(s): 23.2103, Val 0.7122, Best Epoch 44,Val 0.7139, Test 0.6812
+Epoch 55, Time(s): 32.5198,Train loss: 0.6575, Train acc: 73.3677 Epoch 55, Time(s): 35.0867, Val 0.7152, Best Epoch 55,Val 0.7152, Test 0.6808
+Epoch 56, Time(s): 25.4207,Train loss: 0.6573, Train acc: 73.3530 Epoch 56, Time(s): 26.3681, Val 0.7132, Best Epoch 55,Val 0.7152, Test 0.6808
+Epoch 57, Time(s): 21.9264,Train loss: 0.6558, Train acc: 73.4459 Epoch 57, Time(s): 22.8723, Val 0.7061, Best Epoch 55,Val 0.7152, Test 0.6808
+Epoch 58, Time(s): 34.8974,Train loss: 0.6540, Train acc: 73.4390 Epoch 58, Time(s): 35.8459, Val 0.7130, Best Epoch 55,Val 0.7152, Test 0.6808
+Epoch 59, Time(s): 21.2577,Train loss: 0.6527, Train acc: 73.4896 Epoch 59, Time(s): 22.2330, Val 0.7086, Best Epoch 55,Val 0.7152, Test 0.6808
+Epoch 60, Time(s): 35.6751,Train loss: 0.6515, Train acc: 73.5624 Epoch 60, Time(s): 37.4602, Val 0.7142, Best Epoch 55,Val 0.7152, Test 0.6808
+Epoch 61, Time(s): 26.9389,Train loss: 0.6514, Train acc: 73.5367 Epoch 61, Time(s): 28.1782, Val 0.7127, Best Epoch 55,Val 0.7152, Test 0.6808
+Epoch 62, Time(s): 29.7587,Train loss: 0.6496, Train acc: 73.5910 Epoch 62, Time(s): 32.1766, Val 0.7123, Best Epoch 55,Val 0.7152, Test 0.6808
+Epoch 63, Time(s): 33.6126,Train loss: 0.6493, Train acc: 73.5914 Epoch 63, Time(s): 34.8000, Val 0.7126, Best Epoch 55,Val 0.7152, Test 0.6808
+Epoch 64, Time(s): 33.2080,Train loss: 0.6465, Train acc: 73.6953 Epoch 64, Time(s): 36.5359, Val 0.7113, Best Epoch 55,Val 0.7152, Test 0.6808
+Epoch 65, Time(s): 35.9512,Train loss: 0.6454, Train acc: 73.7378 Epoch 65, Time(s): 37.1930, Val 0.7110, Best Epoch 55,Val 0.7152, Test 0.6808
+Epoch 66, Time(s): 30.4078,Train loss: 0.6447, Train acc: 73.7616 Epoch 66, Time(s): 32.8967, Val 0.7094, Best Epoch 55,Val 0.7152, Test 0.6808
+Epoch 67, Time(s): 33.6910,Train loss: 0.6429, Train acc: 73.8328 Epoch 67, Time(s): 34.4327, Val 0.7104, Best Epoch 55,Val 0.7152, Test 0.6808
+Epoch 68, Time(s): 22.7919,Train loss: 0.6422, Train acc: 73.8422 Epoch 68, Time(s): 23.6976, Val 0.7100, Best Epoch 55,Val 0.7152, Test 0.6808
+Epoch 69, Time(s): 35.5223,Train loss: 0.6404, Train acc: 73.9068 Epoch 69, Time(s): 36.7398, Val 0.7124, Best Epoch 55,Val 0.7152, Test 0.6808
+Epoch 70, Time(s): 33.2722,Train loss: 0.6402, Train acc: 73.9053 Epoch 70, Time(s): 34.3579, Val 0.7077, Best Epoch 55,Val 0.7152, Test 0.6808
+Epoch 71, Time(s): 31.7727,Train loss: 0.6384, Train acc: 73.9377 Epoch 71, Time(s): 32.9790, Val 0.7043, Best Epoch 55,Val 0.7152, Test 0.6808
+Epoch 72, Time(s): 32.9001,Train loss: 0.6374, Train acc: 74.0024 Epoch 72, Time(s): 34.5694, Val 0.7076, Best Epoch 55,Val 0.7152, Test 0.6808
+Epoch 73, Time(s): 38.8800,Train loss: 0.6367, Train acc: 74.0387 Epoch 73, Time(s): 40.3635, Val 0.7109, Best Epoch 55,Val 0.7152, Test 0.6808
+Epoch 74, Time(s): 36.5155,Train loss: 0.6342, Train acc: 74.0879 Epoch 74, Time(s): 37.5596, Val 0.7127, Best Epoch 55,Val 0.7152, Test 0.6808
+Epoch 75, Time(s): 35.2346,Train loss: 0.6334, Train acc: 74.1297 Epoch 75, Time(s): 36.3897, Val 0.7052, Best Epoch 55,Val 0.7152, Test 0.6808
+Epoch 76, Time(s): 35.6140,Train loss: 0.6326, Train acc: 74.1352 Epoch 76, Time(s): 37.0620, Val 0.7131, Best Epoch 55,Val 0.7152, Test 0.6808
+Epoch 77, Time(s): 31.3003,Train loss: 0.6317, Train acc: 74.1627 Epoch 77, Time(s): 32.5040, Val 0.7040, Best Epoch 55,Val 0.7152, Test 0.6808
+Epoch 78, Time(s): 34.7861,Train loss: 0.6305, Train acc: 74.2172 Epoch 78, Time(s): 35.8397, Val 0.7128, Best Epoch 55,Val 0.7152, Test 0.6808
+Epoch 79, Time(s): 33.2921,Train loss: 0.6296, Train acc: 74.2134 Epoch 79, Time(s): 34.4006, Val 0.7107, Best Epoch 55,Val 0.7152, Test 0.6808
+Epoch 80, Time(s): 32.1950,Train loss: 0.6282, Train acc: 74.2962 Epoch 80, Time(s): 33.7542, Val 0.7139, Best Epoch 55,Val 0.7152, Test 0.6808
+Epoch 81, Time(s): 33.4533,Train loss: 0.6272, Train acc: 74.3259 Epoch 81, Time(s): 34.4132, Val 0.7124, Best Epoch 55,Val 0.7152, Test 0.6808
+Epoch 82, Time(s): 30.5803,Train loss: 0.6252, Train acc: 74.4274 Epoch 82, Time(s): 31.6135, Val 0.7102, Best Epoch 55,Val 0.7152, Test 0.6808
+Epoch 83, Time(s): 29.6812,Train loss: 0.6255, Train acc: 74.3726 Epoch 83, Time(s): 31.4971, Val 0.7120, Best Epoch 55,Val 0.7152, Test 0.6808
+Epoch 84, Time(s): 32.8613,Train loss: 0.6241, Train acc: 74.4249 Epoch 84, Time(s): 33.9925, Val 0.7079, Best Epoch 55,Val 0.7152, Test 0.6808
+Epoch 85, Time(s): 31.9457,Train loss: 0.6241, Train acc: 74.4272 Epoch 85, Time(s): 33.0168, Val 0.7151, Best Epoch 55,Val 0.7152, Test 0.6808
+Epoch 86, Time(s): 29.1900,Train loss: 0.6221, Train acc: 74.4745 Epoch 86, Time(s): 30.4021, Val 0.7079, Best Epoch 55,Val 0.7152, Test 0.6808
+Epoch 87, Time(s): 35.0481,Train loss: 0.6206, Train acc: 74.5756 Epoch 87, Time(s): 36.2820, Val 0.7116, Best Epoch 55,Val 0.7152, Test 0.6808
+Epoch 88, Time(s): 34.9409,Train loss: 0.6193, Train acc: 74.5985 Epoch 88, Time(s): 36.0982, Val 0.7146, Best Epoch 55,Val 0.7152, Test 0.6808
+Epoch 89, Time(s): 37.6233,Train loss: 0.6184, Train acc: 74.6252 Epoch 89, Time(s): 39.1293, Val 0.7162, Best Epoch 89,Val 0.7162, Test 0.6819
+Epoch 90, Time(s): 33.3509,Train loss: 0.6176, Train acc: 74.6379 Epoch 90, Time(s): 34.7263, Val 0.7118, Best Epoch 89,Val 0.7162, Test 0.6819
+Epoch 91, Time(s): 34.2703,Train loss: 0.6161, Train acc: 74.6910 Epoch 91, Time(s): 35.6198, Val 0.7131, Best Epoch 89,Val 0.7162, Test 0.6819
+Epoch 92, Time(s): 35.8651,Train loss: 0.6168, Train acc: 74.6714 Epoch 92, Time(s): 36.9377, Val 0.7127, Best Epoch 89,Val 0.7162, Test 0.6819
+Epoch 93, Time(s): 30.5575,Train loss: 0.6143, Train acc: 74.7644 Epoch 93, Time(s): 31.6453, Val 0.7109, Best Epoch 89,Val 0.7162, Test 0.6819
+Epoch 94, Time(s): 30.1465,Train loss: 0.6134, Train acc: 74.8168 Epoch 94, Time(s): 31.2732, Val 0.7105, Best Epoch 89,Val 0.7162, Test 0.6819
+Epoch 95, Time(s): 33.0829,Train loss: 0.6128, Train acc: 74.7947 Epoch 95, Time(s): 34.6332, Val 0.7135, Best Epoch 89,Val 0.7162, Test 0.6819
+Epoch 96, Time(s): 35.9796,Train loss: 0.6114, Train acc: 74.8255 Epoch 96, Time(s): 37.1946, Val 0.7095, Best Epoch 89,Val 0.7162, Test 0.6819
+Epoch 97, Time(s): 34.2141,Train loss: 0.6106, Train acc: 74.8930 Epoch 97, Time(s): 35.3034, Val 0.7133, Best Epoch 89,Val 0.7162, Test 0.6819
+Epoch 98, Time(s): 34.3113,Train loss: 0.6100, Train acc: 74.9115 Epoch 98, Time(s): 35.4981, Val 0.7109, Best Epoch 89,Val 0.7162, Test 0.6819
+Epoch 99, Time(s): 30.5253,Train loss: 0.6079, Train acc: 74.9480 Epoch 99, Time(s): 31.9053, Val 0.7105, Best Epoch 89,Val 0.7162, Test 0.6819
+Epoch 100, Time(s): 32.7692,Train loss: 0.6086, Train acc: 74.9141 Epoch 100, Time(s): 34.5382, Val 0.7100, Best Epoch 89,Val 0.7162, Test 0.6819
+Epoch 101, Time(s): 32.8760,Train loss: 0.6070, Train acc: 75.0016 Epoch 101, Time(s): 34.1788, Val 0.7121, Best Epoch 89,Val 0.7162, Test 0.6819
+Epoch 102, Time(s): 33.7766,Train loss: 0.6059, Train acc: 75.0474 Epoch 102, Time(s): 34.9493, Val 0.7114, Best Epoch 89,Val 0.7162, Test 0.6819
+Epoch 103, Time(s): 34.1872,Train loss: 0.6051, Train acc: 75.0488 Epoch 103, Time(s): 35.2210, Val 0.7142, Best Epoch 89,Val 0.7162, Test 0.6819
+Epoch 104, Time(s): 31.9820,Train loss: 0.6040, Train acc: 75.1218 Epoch 104, Time(s): 33.1505, Val 0.7126, Best Epoch 89,Val 0.7162, Test 0.6819
+Epoch 105, Time(s): 30.9083,Train loss: 0.6024, Train acc: 75.1705 Epoch 105, Time(s): 32.6478, Val 0.7142, Best Epoch 89,Val 0.7162, Test 0.6819
+Epoch 106, Time(s): 35.9873,Train loss: 0.6023, Train acc: 75.1507 Epoch 106, Time(s): 37.4031, Val 0.7103, Best Epoch 89,Val 0.7162, Test 0.6819
+Epoch 107, Time(s): 32.3627,Train loss: 0.6017, Train acc: 75.2014 Epoch 107, Time(s): 33.3902, Val 0.7101, Best Epoch 89,Val 0.7162, Test 0.6819
+Epoch 108, Time(s): 30.6660,Train loss: 0.6002, Train acc: 75.2241 Epoch 108, Time(s): 31.8633, Val 0.7072, Best Epoch 89,Val 0.7162, Test 0.6819
+Epoch 109, Time(s): 30.1633,Train loss: 0.5996, Train acc: 75.2467 Epoch 109, Time(s): 31.1952, Val 0.7136, Best Epoch 89,Val 0.7162, Test 0.6819
+Epoch 110, Time(s): 29.8145,Train loss: 0.5988, Train acc: 75.2857 Epoch 110, Time(s): 30.8994, Val 0.7129, Best Epoch 89,Val 0.7162, Test 0.6819
+Epoch 111, Time(s): 30.5828,Train loss: 0.5978, Train acc: 75.2799 Epoch 111, Time(s): 31.6282, Val 0.7102, Best Epoch 89,Val 0.7162, Test 0.6819
+Epoch 112, Time(s): 29.7622,Train loss: 0.5969, Train acc: 75.3431 Epoch 112, Time(s): 30.7525, Val 0.7128, Best Epoch 89,Val 0.7162, Test 0.6819
+Epoch 113, Time(s): 32.0820,Train loss: 0.5961, Train acc: 75.3545 Epoch 113, Time(s): 33.6414, Val 0.7118, Best Epoch 89,Val 0.7162, Test 0.6819
+Epoch 114, Time(s): 32.1822,Train loss: 0.5961, Train acc: 75.3841 Epoch 114, Time(s): 33.2483, Val 0.7127, Best Epoch 89,Val 0.7162, Test 0.6819
+Epoch 115, Time(s): 32.3418,Train loss: 0.5937, Train acc: 75.4290 Epoch 115, Time(s): 33.3917, Val 0.7117, Best Epoch 89,Val 0.7162, Test 0.6819
+Epoch 116, Time(s): 30.6640,Train loss: 0.5942, Train acc: 75.4392 Epoch 116, Time(s): 31.8510, Val 0.7098, Best Epoch 89,Val 0.7162, Test 0.6819
+Epoch 117, Time(s): 32.8778,Train loss: 0.5932, Train acc: 75.4527 Epoch 117, Time(s): 34.0660, Val 0.7145, Best Epoch 89,Val 0.7162, Test 0.6819
+Epoch 118, Time(s): 39.5494,Train loss: 0.5928, Train acc: 75.5209 Epoch 118, Time(s): 40.7513, Val 0.7120, Best Epoch 89,Val 0.7162, Test 0.6819
+Epoch 119, Time(s): 33.7274,Train loss: 0.5909, Train acc: 75.5342 Epoch 119, Time(s): 34.7154, Val 0.7085, Best Epoch 89,Val 0.7162, Test 0.6819
+Epoch 120, Time(s): 30.7877,Train loss: 0.5898, Train acc: 75.5984 Epoch 120, Time(s): 31.9443, Val 0.7132, Best Epoch 89,Val 0.7162, Test 0.6819
+Epoch 121, Time(s): 33.2777,Train loss: 0.5893, Train acc: 75.6035 Epoch 121, Time(s): 34.5644, Val 0.7114, Best Epoch 89,Val 0.7162, Test 0.6819
+Epoch 122, Time(s): 30.4065,Train loss: 0.5872, Train acc: 75.6755 Epoch 122, Time(s): 31.5134, Val 0.7125, Best Epoch 89,Val 0.7162, Test 0.6819
+Epoch 123, Time(s): 32.1569,Train loss: 0.5890, Train acc: 75.6507 Epoch 123, Time(s): 33.3586, Val 0.7138, Best Epoch 89,Val 0.7162, Test 0.6819
+Epoch 124, Time(s): 32.0020,Train loss: 0.5870, Train acc: 75.7038 Epoch 124, Time(s): 33.2340, Val 0.7096, Best Epoch 89,Val 0.7162, Test 0.6819
+Epoch 125, Time(s): 32.6452,Train loss: 0.5853, Train acc: 75.7316 Epoch 125, Time(s): 33.7395, Val 0.7150, Best Epoch 89,Val 0.7162, Test 0.6819
+Epoch 126, Time(s): 31.7074,Train loss: 0.5849, Train acc: 75.7857 Epoch 126, Time(s): 33.1368, Val 0.7131, Best Epoch 89,Val 0.7162, Test 0.6819
+Epoch 127, Time(s): 34.1536,Train loss: 0.5839, Train acc: 75.7893 Epoch 127, Time(s): 35.6763, Val 0.7131, Best Epoch 89,Val 0.7162, Test 0.6819
+Epoch 128, Time(s): 34.4748,Train loss: 0.5835, Train acc: 75.8208 Epoch 128, Time(s): 36.1174, Val 0.7112, Best Epoch 89,Val 0.7162, Test 0.6819
+Epoch 129, Time(s): 35.1734,Train loss: 0.5829, Train acc: 75.8437 Epoch 129, Time(s): 36.3588, Val 0.7137, Best Epoch 89,Val 0.7162, Test 0.6819
+Epoch 130, Time(s): 31.7348,Train loss: 0.5821, Train acc: 75.8434 Epoch 130, Time(s): 32.8794, Val 0.7116, Best Epoch 89,Val 0.7162, Test 0.6819
+Epoch 131, Time(s): 30.3546,Train loss: 0.5809, Train acc: 75.9312 Epoch 131, Time(s): 31.8945, Val 0.7062, Best Epoch 89,Val 0.7162, Test 0.6819
+Epoch 132, Time(s): 31.2930,Train loss: 0.5796, Train acc: 75.9462 Epoch 132, Time(s): 32.4350, Val 0.7163, Best Epoch 132,Val 0.7163, Test 0.6813
+Epoch 133, Time(s): 34.8605,Train loss: 0.5801, Train acc: 75.9380 Epoch 133, Time(s): 36.2446, Val 0.7128, Best Epoch 132,Val 0.7163, Test 0.6813
+Epoch 134, Time(s): 35.6041,Train loss: 0.5788, Train acc: 76.0047 Epoch 134, Time(s): 36.8871, Val 0.7133, Best Epoch 132,Val 0.7163, Test 0.6813
+Epoch 135, Time(s): 31.8301,Train loss: 0.5779, Train acc: 75.9839 Epoch 135, Time(s): 33.2637, Val 0.7103, Best Epoch 132,Val 0.7163, Test 0.6813
+Epoch 136, Time(s): 32.2262,Train loss: 0.5777, Train acc: 76.0362 Epoch 136, Time(s): 33.7816, Val 0.7100, Best Epoch 132,Val 0.7163, Test 0.6813
+Epoch 137, Time(s): 34.7205,Train loss: 0.5768, Train acc: 76.0566 Epoch 137, Time(s): 35.9438, Val 0.7114, Best Epoch 132,Val 0.7163, Test 0.6813
+Epoch 138, Time(s): 32.3717,Train loss: 0.5763, Train acc: 76.0630 Epoch 138, Time(s): 33.5215, Val 0.7129, Best Epoch 132,Val 0.7163, Test 0.6813
+Epoch 139, Time(s): 30.2561,Train loss: 0.5749, Train acc: 76.0963 Epoch 139, Time(s): 31.4820, Val 0.7133, Best Epoch 132,Val 0.7163, Test 0.6813
+Epoch 140, Time(s): 32.5825,Train loss: 0.5741, Train acc: 76.1219 Epoch 140, Time(s): 33.7778, Val 0.7106, Best Epoch 132,Val 0.7163, Test 0.6813
+Epoch 141, Time(s): 32.2171,Train loss: 0.5735, Train acc: 76.1459 Epoch 141, Time(s): 33.1757, Val 0.7117, Best Epoch 132,Val 0.7163, Test 0.6813
+Epoch 142, Time(s): 33.5582,Train loss: 0.5728, Train acc: 76.1774 Epoch 142, Time(s): 34.6519, Val 0.7128, Best Epoch 132,Val 0.7163, Test 0.6813
+Epoch 143, Time(s): 34.9376,Train loss: 0.5721, Train acc: 76.2425 Epoch 143, Time(s): 36.1800, Val 0.7126, Best Epoch 132,Val 0.7163, Test 0.6813
+Epoch 144, Time(s): 35.1504,Train loss: 0.5707, Train acc: 76.2474 Epoch 144, Time(s): 36.5464, Val 0.7130, Best Epoch 132,Val 0.7163, Test 0.6813
+Epoch 145, Time(s): 33.3944,Train loss: 0.5709, Train acc: 76.2473 Epoch 145, Time(s): 34.4271, Val 0.7099, Best Epoch 132,Val 0.7163, Test 0.6813
+Epoch 146, Time(s): 32.4207,Train loss: 0.5698, Train acc: 76.2618 Epoch 146, Time(s): 33.6106, Val 0.7122, Best Epoch 132,Val 0.7163, Test 0.6813
+Epoch 147, Time(s): 32.4360,Train loss: 0.5685, Train acc: 76.3380 Epoch 147, Time(s): 33.9739, Val 0.7122, Best Epoch 132,Val 0.7163, Test 0.6813
+Epoch 148, Time(s): 31.6961,Train loss: 0.5684, Train acc: 76.3183 Epoch 148, Time(s): 32.7881, Val 0.7114, Best Epoch 132,Val 0.7163, Test 0.6813
+Epoch 149, Time(s): 30.1185,Train loss: 0.5681, Train acc: 76.3477 Epoch 149, Time(s): 31.1598, Val 0.7091, Best Epoch 132,Val 0.7163, Test 0.6813
+Best Epoch 132, Val 0.7163, Test 0.6813
+Run 1 start training
+# Nodes: 111059956
+# Edges: 1615685872
+# Train: 1207179
+# Val: 125265
+# Test: 214338
+# Classes: 172
+
+172
+111059956
+Compute neighbor-averaged labels
+Compute neighbor-averaged labels
+Compute neighbor-averaged labels
+Compute neighbor-averaged labels
+Compute neighbor-averaged labels
+Compute neighbor-averaged labels

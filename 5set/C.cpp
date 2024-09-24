@@ -29,10 +29,66 @@ using t3=tuple<int,int,int>;
 #define N 300030
 #define MOD 998244353
 #define INF 1000000007 
-__attribute__((optimize("Ofast,unroll-loops"),target("avx,avx2,fma")))
+random_device rd; 
+mt19937 gen(rd());
+uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist(gen)
+
+string s;
+int cnt[26];
 
 void Solve(){
-
+    int n;
+    cin>>n;
+    cin>>s;
+    fill(cnt,cnt+26,0);
+    rng(i,0,n-1) cnt[s[i]-'a']++;
+    int mx=0;
+    int mxidx=0;
+    rng(i,0,25) if(mx<cnt[i]){
+        mx=cnt[i];
+        mxidx=i;
+    }
+    if(2*mx-1<=n){
+        //cout<<"hello?"<<'\n';
+        int last=-1;
+        rng(i,0,n-1){
+            mx=0, mxidx=-1;
+            rng(j,0,25){
+                if(j!=last && cnt[j]>mx){
+                    mx=cnt[j];
+                    mxidx=j;
+                }
+            }
+            assert(mx>0);
+            cout<<char('a'+mxidx);
+            cnt[mxidx]--;
+            last=mxidx;
+        }
+        cout<<'\n';
+    }
+    else{
+        int m=n-mx;
+        while(mx>m){
+            cout<<char('a'+mxidx);
+            mx--;
+            cnt[mxidx]--;
+        }
+        int last=mxidx;
+        rng(i,0,2*m-1){
+            mx=0, mxidx=-1;
+            rng(j,0,25){
+                if(j!=last && cnt[j]>mx){
+                    mx=cnt[j];
+                    mxidx=j;
+                }
+            }
+            assert(mx>0);
+            cout<<char('a'+mxidx);
+            cnt[mxidx]--;
+            last=mxidx;
+        }
+        cout<<'\n';
+    }
 }
 
 int main(){

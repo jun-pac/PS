@@ -1,0 +1,245 @@
+WARNING:root:The OGB package is out of date. Your version is 1.3.5, while the latest version is 1.3.6.
+Namespace(jjnorm=True, num_hops=6, output_emb_prefix='./ogbn-papers100M-pmp.node-emb', pretrained_emb_path='None', root='./dataset')
+labels.shape : torch.Size([111059956])
+First labals : -9223372036854775808
+
+First 10 train idx
+tensor(602)
+tensor(684)
+tensor(1384)
+tensor(1525)
+tensor(2127)
+tensor(2184)
+tensor(2205)
+tensor(3965)
+tensor(4200)
+tensor(5031)
+First 10 valid idx
+tensor(57698)
+tensor(145220)
+tensor(599977)
+tensor(692549)
+tensor(730071)
+tensor(787610)
+tensor(790194)
+tensor(852706)
+tensor(885742)
+tensor(968113)
+First 10 text idx
+tensor(43768)
+tensor(122141)
+tensor(251239)
+tensor(458801)
+tensor(503557)
+tensor(671042)
+tensor(1068741)
+tensor(1416999)
+tensor(1848797)
+tensor(1884478)
+
+Time 1825 | Num : 2.0 | Ratio : 1.6567551028856542e-06
+Time 1826 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1827 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1828 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1829 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1830 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1831 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1832 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1833 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1834 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1835 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1836 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1837 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1838 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1839 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1840 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1841 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1842 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1843 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1844 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1845 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1846 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1847 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1848 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1849 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1850 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1851 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1852 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1853 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1854 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1855 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1856 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1857 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1858 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1859 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1860 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1861 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1862 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1863 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1864 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1865 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1866 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1867 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1868 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1869 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1870 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1871 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1872 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1873 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1874 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1875 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1876 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1877 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1878 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1879 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1880 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1881 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1882 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1883 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1884 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1885 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1886 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1887 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1888 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1889 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1890 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1891 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1892 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1893 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1894 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1895 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1896 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1897 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1898 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1899 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1900 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1901 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1902 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1903 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1904 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1905 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1906 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1907 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1908 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1909 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1910 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1911 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1912 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1913 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1914 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1915 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1916 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1917 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1918 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1919 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1920 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1921 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1922 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1923 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1924 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1925 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1926 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1927 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1928 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1929 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1930 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1931 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1932 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1933 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1934 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1935 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1936 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1937 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1938 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1939 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1940 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1941 | Num : 2.0 | Ratio : 1.6567551028856542e-06
+Time 1942 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1943 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1944 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1945 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1946 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1947 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1948 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1949 | Num : 2.0 | Ratio : 1.6567551028856542e-06
+Time 1950 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1951 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1952 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1953 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1954 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1955 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1956 | Num : 3.0 | Ratio : 2.4851326543284813e-06
+Time 1957 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1958 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1959 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1960 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1961 | Num : 2.0 | Ratio : 1.6567551028856542e-06
+Time 1962 | Num : 2.0 | Ratio : 1.6567551028856542e-06
+Time 1963 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1964 | Num : 2.0 | Ratio : 1.6567551028856542e-06
+Time 1965 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1966 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1967 | Num : 3.0 | Ratio : 2.4851326543284813e-06
+Time 1968 | Num : 4.0 | Ratio : 3.3135102057713084e-06
+Time 1969 | Num : 1.0 | Ratio : 8.283775514428271e-07
+Time 1970 | Num : 7.0 | Ratio : 5.798643087473465e-06
+Time 1971 | Num : 4.0 | Ratio : 3.3135102057713084e-06
+Time 1972 | Num : 4.0 | Ratio : 3.3135102057713084e-06
+Time 1973 | Num : 2.0 | Ratio : 1.6567551028856542e-06
+Time 1974 | Num : 2.0 | Ratio : 1.6567551028856542e-06
+Time 1975 | Num : 3.0 | Ratio : 2.4851326543284813e-06
+Time 1976 | Num : 2.0 | Ratio : 1.6567551028856542e-06
+Time 1977 | Num : 7.0 | Ratio : 5.798643087473465e-06
+Time 1978 | Num : 4.0 | Ratio : 3.3135102057713084e-06
+Time 1979 | Num : 3.0 | Ratio : 2.4851326543284813e-06
+Time 1980 | Num : 3.0 | Ratio : 2.4851326543284813e-06
+Time 1981 | Num : 5.0 | Ratio : 4.141887984587811e-06
+Time 1982 | Num : 9.0 | Ratio : 7.455398190359119e-06
+Time 1983 | Num : 16.0 | Ratio : 1.3254040823085234e-05
+Time 1984 | Num : 14.0 | Ratio : 1.159728617494693e-05
+Time 1985 | Num : 11.0 | Ratio : 9.112152838497423e-06
+Time 1986 | Num : 24.0 | Ratio : 1.988106123462785e-05
+Time 1987 | Num : 19.0 | Ratio : 1.573917325004004e-05
+Time 1988 | Num : 32.0 | Ratio : 2.6508081646170467e-05
+Time 1989 | Num : 27.0 | Ratio : 2.2366193661582656e-05
+Time 1990 | Num : 66.0 | Ratio : 5.467292066896334e-05
+Time 1991 | Num : 207.0 | Ratio : 0.00017147415201179683
+Time 1992 | Num : 1704.0 | Ratio : 0.0014115553349256516
+Time 1993 | Num : 4683.0 | Ratio : 0.003879292169585824
+Time 1994 | Num : 7594.0 | Ratio : 0.006290699355304241
+Time 1995 | Num : 10108.0 | Ratio : 0.008373240008950233
+Time 1996 | Num : 12548.0 | Ratio : 0.01039448194205761
+Time 1997 | Num : 15214.0 | Ratio : 0.01260293647646904
+Time 1998 | Num : 19433.0 | Ratio : 0.016097860410809517
+Time 1999 | Num : 21928.0 | Ratio : 0.018164662644267082
+Time 2000 | Num : 25008.0 | Ratio : 0.020716065540909767
+Time 2001 | Num : 28052.0 | Ratio : 0.023237647488713264
+Time 2002 | Num : 30701.0 | Ratio : 0.02543202042579651
+Time 2003 | Num : 33328.0 | Ratio : 0.027608167380094528
+Time 2004 | Num : 37651.0 | Ratio : 0.031189244240522385
+Time 2005 | Num : 41375.0 | Ratio : 0.03427411988377571
+Time 2006 | Num : 45002.0 | Ratio : 0.03727864846587181
+Time 2007 | Num : 49814.0 | Ratio : 0.04126479849219322
+Time 2008 | Num : 55684.0 | Ratio : 0.04612737521529198
+Time 2009 | Num : 58986.0 | Ratio : 0.04886268079280853
+Time 2010 | Num : 64441.0 | Ratio : 0.053381480276584625
+Time 2011 | Num : 69028.0 | Ratio : 0.05718124657869339
+Time 2012 | Num : 76995.0 | Ratio : 0.06378093361854553
+Time 2013 | Num : 86293.0 | Ratio : 0.07148318737745285
+Time 2014 | Num : 91285.0 | Ratio : 0.0756184458732605
+Time 2015 | Num : 98723.0 | Ratio : 0.08177991956472397
+Time 2016 | Num : 109812.0 | Ratio : 0.09096579998731613
+Time 2017 | Num : 111353.0 | Ratio : 0.09224233031272888
+
+train : torch.Size([1207179])
+max min ; 2017, 1825
+max min ; 171, 0
+
+valid : torch.Size([125265])
+Year max min ; 2018, 2018
+Label max min ; 170, 4
+
+test : torch.Size([214338])
+Year max min ; 2020, 2019
+Label max min ; 170, 4
+Flush

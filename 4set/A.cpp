@@ -25,20 +25,45 @@ using pil=pair<int,ll>;
 using pli=pair<ll,int>;
 using pll=pair<ll,ll>;
 using t3=tuple<int,int,int>;
-__attribute__((optimize("Ofast,unroll-loops"),target("avx,avx2,fma")))
 
 #define N 300030
 #define MOD 998244353
 #define INF 1000000007 
+random_device rd; 
+mt19937 gen(rd());
+uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist(gen)
+
 
 void Solve(){
-
+    ll n,k;
+    cin>>n>>k;
+    if(n%2==0){
+        cout<<n/2<<' ';
+        gnr(i,n,1){
+            if(i==n/2) rng(j,0,k-2) cout<<i<<' ';
+            else rng(j,0,k-1) cout<<i<<' ';
+        }
+        cout<<'\n';
+    }
+    else if(n==1){
+        rng(i,0,k-1) cout<<(n+1)/2<<' ';
+    }
+    else{
+        rng(i,0,k-1) cout<<(n+1)/2<<' ';
+        cout<<n/2<<' ';
+        gnr(i,n,1){
+            if(i==(n+1)/2) continue;
+            if(i==n/2) rng(j,0,k-2) cout<<i<<' ';
+            else rng(j,0,k-1) cout<<i<<' ';
+        }
+        cout<<'\n';
+    }
 }
 
 int main(){
     ios_base::sync_with_stdio(false); cin.tie(NULL);
     int t=1;
-    cin>>t;
+    //cin>>t;
     while(t--){
         Solve();
     }

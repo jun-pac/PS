@@ -1,0 +1,50 @@
+\begin{table}[]
+    \vspace{-15pt}
+    \fontsize{7}{8.4}\selectfont
+    %\vspace{-10pt}
+
+    \center
+    \caption{Scalability of \IMPaCT methods. "Graph." indicates method is applied by graph reconstruction. $N_c=|\bold{Y}||\bold{T}|$, $R$ is number of training epochs, and \JJnorm\textdagger indicates layer-wise \JJnorm.}
+
+    \begin{tabular}{lllll}
+    \hline
+     &
+      \multicolumn{2}{l}{{ Decoupled GNN}} &
+      \multicolumn{2}{l}{{ General spatial GNN}} \\ \cline{2-5} 
+    \multirow{-2}{*}{Method} &
+      { Graph.} &
+      { Message passing} &
+      { Graph.} &
+      { Message passing} \\ \hline
+    \MMP &
+      { $\mathcal{O}(|E|)$} &
+      { $\mathcal{O}(|E|fK)$} &
+      { $\mathcal{O}(|E|)$} &
+      { $\mathcal{O}(R|E|fK)$} \\ \hline
+    \PMP &
+      { $\mathcal{O}(|E|)$} &
+      { $\mathcal{O}(|E|fK)$} &
+      { $\mathcal{O}(|E|)$} &
+      { $\mathcal{O}(R|E|fK)$} \\ \hline
+    \PNY &
+      { -} &
+      { $\mathcal{O}(Kf^2(N_cf+N_c^2+N)+|E|f)$} &
+      { -} &
+      { $\mathcal{O}(RKf^2(N_cf+N_c^2+N)+R|E|f)$} \\ \hline
+    \JJnorm &
+      { -} &
+      { $\mathcal{O}(Nf)$} &
+      { -} &
+      { $\mathcal{O}(RNf)$} \\
+    \JJnorm \textdagger&
+      { -} &
+      { $\mathcal{O}(NfK)$} &
+      { -} &
+      { $\mathcal{O}(RNfK)$} \\ \hline
+    \end{tabular}
+
+    \vspace{3pt}
+    \label{table:scalability}
+    \vspace{-14pt}
+
+\end{table}

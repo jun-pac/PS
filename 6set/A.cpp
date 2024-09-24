@@ -25,15 +25,67 @@ using pil=pair<int,ll>;
 using pli=pair<ll,int>;
 using pll=pair<ll,ll>;
 using t3=tuple<int,int,int>;
-__attribute__((optimize("Ofast,unroll-loops"),target("avx,avx2,fma")))
 
 #define N 300030
 #define MOD 998244353
 #define INF 1000000007 
+random_device rd; 
+mt19937 gen(rd());
+uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist(gen)
 
-void Solve(){
+vc<int> edges[N];
+string s;
+int nleaf, n0, n1, nelse;
 
+void DFS(int idx, int p){
+    for(auto next : edges[idx]){
+        if(next!=p){
+            DFS(next,idx);
+        }
+    }
+    if(idx!=0 && edges[idx].size()==1){
+        // leaf
+        nleaf++;
+        if(s[idx]=='1') n1++;
+        if(s[idx]=='0') n0++;
+    }
+    else if(idx!=0 && s[idx]=='?'){
+        nelse++;
+    }
 }
+void Solve(){
+    int n;
+    cin>>n;
+    rng(i,0,n-1) edges[i].clear();
+    rng(i,0,n-2){
+        int a,b;
+        cin>>a>>b;
+        a--, b--;
+        edges[a].pb(b);
+        edges[b].pb(a);
+    }
+    cin>>s;
+    nelse=0;
+    nleaf=0, n0=0, n1=0;
+    DFS(0,-1);
+    if(s[0]=='?'){
+        if(n0>n1){
+            cout<<n0+(nleaf-n0-n1)/2<<'\n';
+        }
+        else if(n0<n1){ // 같으면 상관없음
+            cout<<n1+(nleaf-n0-n1)/2<<'\n';
+        }
+        else{
+            // 같을 때는 먼저하는게 손해기때문에
+            if(nelse%2==0) cout<<n0+(nleaf-n0-n1)/2<<'\n';
+            else cout<<n0+(nleaf-n0-n1+1)/2<<'\n';
+        }
+    }
+    else{
+        if(s[0]=='0') cout<<n1+(nleaf-n0-n1+1)/2<<'\n';
+        else cout<<n0+(nleaf-n0-n1+1)/2<<'\n';
+    }
+}   
 
 int main(){
     ios_base::sync_with_stdio(false); cin.tie(NULL);

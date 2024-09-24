@@ -1,0 +1,173 @@
+\pdfoutput=1
+\documentclass{article}
+\PassOptionsToPackage{numbers, sort&compress}{natbib}
+\usepackage[preprint]{neurips_2024}
+% \usepackage[final]{neurips_2024}
+
+\usepackage[linesnumbered,ruled]{algorithm2e}
+
+\usepackage[utf8]{inputenc} % allow utf-8 input
+\usepackage[T1]{fontenc}    % use 8-bit T1 fonts
+\usepackage{url}            % simple URL typesetting
+\usepackage{booktabs}       % professional-quality tables
+\usepackage{amsfonts}       % blackboard math symbols
+\usepackage{nicefrac}       % compact symbols for 1/2, etc.
+\usepackage{xcolor}         % colors
+\usepackage{graphicx}
+\usepackage{bbm}
+\usepackage{paralist}
+\usepackage{xspace}
+\usepackage{bm}
+\usepackage{multirow}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{subcaption}
+\usepackage{makecell}
+\usepackage{dsfont}
+
+% \usepackage{algorithm}     % algorithm envir
+% \usepackage{algpseudocode} % algorithm envir
+% \renewcommand{\algorithmicrequire}{\textbf{Input:}}
+% \renewcommand{\algorithmicensure}{\textbf{Output:}}
+
+\usepackage{amsthm}
+\usepackage{hyperref} 
+\definecolor{mydarkblue}{rgb}{0,0.1,0.6}
+\hypersetup{
+    colorlinks=true,
+    citecolor=mydarkblue
+          }
+          
+\input{dfn}
+
+\newcommand{\revise}[1]{{\color{blue}#1}}
+\usepackage{wrapfig}
+
+% if you need to pass options to natbib, use, e.g.:
+%     \PassOptionsToPackage{numbers, compress}{natbib}
+% before loading neurips_2022
+
+
+
+
+% \usepackage{neurips_2022}
+
+% to compile a preprint version, e.g., for submission to arXiv, add add the
+% [preprint] option:
+    % \usepackage[preprint]{neurips_2022}
+
+
+% to compile a camera-ready version, add the [final] option, e.g.:
+%     \usepackage[final]{neurips_2022}
+
+
+% to avoid loading the natbib package, add option nonatbib:
+%    \usepackage[nonatbib]{neurips_2022}
+
+
+    % hyperlinks
+\usepackage{url}            % simple URL typesetting
+\usepackage{xcolor}
+\urlstyle{rm}
+
+\setlength{\belowcaptionskip}{0pt}
+\setlength{\abovedisplayskip}{0pt}
+\setlength{\belowdisplayskip}{0pt}
+\setlength{\abovedisplayshortskip}{0pt}
+\setlength{\belowdisplayshortskip}{0pt}
+
+\usepackage{titlesec}
+\titlespacing*{\subsection}{0pt}{1pt}{1pt}
+\titlespacing*{\section}{0pt}{2pt}{2pt}
+\newtheorem{corollary}{Corollary}[theorem]
+
+
+\newtheorem{innercustomthm}{Theorem}
+\newenvironment{customthm}[1]
+  {\renewcommand\theinnercustomthm{#1}\innercustomthm}
+  {\endinnercustomthm}
+
+\title{IMPaCT GNN : Invariant Message Passing for Domain Adaptation in Chronological Split Graphs}
+
+
+% The \author macro works with any number of authors. There are two commands
+% used to separate the names and addresses of multiple authors: \And and \AND.
+%
+% Using \And between authors leaves it to LaTeX to determine where to break the
+% lines. Using \AND forces a line break at that point. So, if LaTeX puts 3 of 4
+% authors names on the first line, and the last on the second line, try using
+% \AND instead of \And before the third author name.
+
+
+\author{%
+  Sejun Park\\
+  Seoul National University\\
+  \texttt{skg4078@snu.ac.kr} \\
+  % examples of more authors
+  \And
+ Jooyoung Park\\
+ Seoul National University\\
+ \texttt{jyp531@snu.ac.kr}\\
+  \And
+  Hyunwoo Park\\
+  Seoul National University\\
+  \texttt{hyunwoopark@snu.ac.kr} \\
+}
+
+
+\begin{document}
+
+
+\maketitle
+
+
+\begin{abstract}
+This study addresses domain adaptation challenges in graph data arising from chronological splits. We propose invariant message passing methods to attain invariant representations, showcasing superiority over existing methods both theoretically and in performance on real datasets. Semi-supervised Node Classification (SSNC) tasks, often involving nodes with temporal information, particularly on chronologically split datasets, lack systematic research on leveraging temporal information effectively. Disparities in node connections based on temporal information create domain shifts, presenting an domain adaptation problem. Domain adaptation in transductive graph learning is crucial yet challenging, especially when extending from historical to recent environments. We rigorously apply the invariant principle within decoupled Graph Neural Networks (GNNs) and introduce robust assumptions reflecting temporal graph characteristics to derive effective environment sets. We propose Invariant Message Passing for Chronological-split Temporal graph(\IMPaCT) methods preserving the invariance of representation moments and analyze their ability to approximate invariant information. Experimental results on real and synthetic datasets, notably achieving a 6.1\% improvement on the ogbn-mag citation graph dataset, demonstrate the effectiveness of our methods. Additionally, introducing the Temporal Stochastic Block Model (TSBM) enables realistic replication of temporal graphs with different environments, further showcasing the applicability of our methods to general spatial GNNs, yielding significant performance gains.
+\end{abstract}
+
+
+\section{Introduction}
+\input{0-Intro}
+
+\section{Related Work}
+\input{1-Related}
+
+\section{Assumptions}
+\input{2-Assumption}
+
+\section{First moment alignment methods}\label{sec:1st}
+\input{3-firstorder}
+
+\section{Second moment alignment methods}
+\input{4-secondorder}
+
+\section{Experiments}
+\input{5-Experiments}
+
+\section{Conclusions}
+\input{6-Conclusion}
+
+
+
+\clearpage
+\bibliographystyle{abbrvnat}
+\bibliography{reference}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \clearpage
+% \section*{Checklist}
+% \input{99-Checklist}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\appendix
+\clearpage
+\section{Appendix}
+\input{7-Appendix}
+
+
+
+\clearpage
+\section*{NeurIPS Paper Checklist}
+\input{99-Checklist}
+\end{document}

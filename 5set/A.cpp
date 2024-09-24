@@ -25,14 +25,22 @@ using pil=pair<int,ll>;
 using pli=pair<ll,int>;
 using pll=pair<ll,ll>;
 using t3=tuple<int,int,int>;
-__attribute__((optimize("Ofast,unroll-loops"),target("avx,avx2,fma")))
 
 #define N 300030
 #define MOD 998244353
 #define INF 1000000007 
+random_device rd; 
+mt19937 gen(rd());
+uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist(gen)
+
 
 void Solve(){
-
+    int n;
+    cin>>n;
+    string s;
+    cin>>s;
+    if(s[0]!=s[n-1]) cout<<"YES\n";
+    else cout<<"NO\n";
 }
 
 int main(){

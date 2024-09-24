@@ -1,0 +1,239 @@
+% !TEX root = ms.tex
+\def\rvx{{\mathbf{x}}}
+
+
+\newcommand{\la}[1]{{\color{red} LA: #1}}
+\newcommand{\lz}[1]{{\color{purple} LZ: #1}}
+\newcommand{\ns}[1]{{\color{blue} NS: #1}}
+
+% tuples
+\newcommand{\tps}[1]{\overrightarrow{\boldsymbol{#1}}}
+% multisets
+\newcommand{\mms}[1]{\{\mskip-5mu\{#1\}\mskip-5mu\}}
+
+\newcommand{\bbmms}[1]{\big\{\mskip-10mu \big\{  #1 \big\} \mskip-10mu \big\}}
+\newcommand{\bmms}[1]{\Big\{\mskip-10mu \Big\{  #1 \Big\} \mskip-10mu \Big\}}
+\newcommand{\Bmms}[1]{\bigg\{\mskip-10mu \bigg\{  #1 \bigg\} \mskip-10mu \bigg\}}
+\newcommand{\ms}[1]{\tilde{\boldsymbol{#1}}}
+% sets 
+\newcommand{\s}[1]{\hat{\boldsymbol{#1}}}
+
+\newcommand{\cbit}{\begin{compactitem}}
+\newcommand{\ceit}{\end{compactitem}}
+\newcommand{\cben}{\begin{compactenum}}
+\newcommand{\ceen}{\end{compactenum}}
+\newcommand{\todo}[1]{{\textsf{\textcolor{blue}{TODO: #1}}}}
+
+\newtheorem{observation}{Observation}
+\newtheorem{conjecture}{Conjecture}
+\newtheorem{problem}{Problem}
+\newtheorem{algo}{Algorithm}
+
+%\theoremstyle{definition}
+\newtheorem{definition}{Definition}[section]
+
+\newtheorem{lemma}{Lemma}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{question}{Question}
+\newtheorem{example}{Example}
+\newtheorem{answer}{Answer}
+%\newtheorem{proof}{Proof}
+\newtheorem{insight}{Insight}
+%\newcommand{\hide}[1]{}
+% \newcommand{\notice}[1]{{\textsf{\textcolor{green}{{\em [#1]}}}}}
+\newcommand{\notice}{\todo[inline]}
+% \newcommand{\notice}{\todo}
+\newcommand{\reminder}[1]{{\textsf{\textcolor{blue}{#1}}}}
+%
+\newcommand{\vectornorm}[1]{\left|\left|#1\right|\right|}
+
+\newcommand{\cmark}{\ding{51}}%
+
+\newcommand{\amethod}{{\sc $(\leq)$}\xspace}
+
+\newcommand{\method}{{\sc $(k,c)(\leq)$-SetGNN}\xspace}
+\newcommand{\methods}{{\sc $(k,c)(\leq)$-SetGNN$^*$}\xspace}
+
+\newcommand{\JJnorm}{{\sc $\textrm{JJ-Norm}$}\xspace}
+\newcommand{\PMP}{{$\textrm{PMP}$}\xspace}
+\newcommand{\MMP}{{$\textrm{MMP}$}\xspace}
+\newcommand{\PNY}{{$\textrm{PNY}$}\xspace}
+\newcommand{\IMPaCT}{{$\textrm{IMPaCT}$}\xspace}
+
+\newcommand{\balpha}{\bm{\alpha}}%
+\newcommand{\blambda}{\bm{\lambda}}%
+\newcommand{\btheta}{\bm{\theta}}%
+
+\newcommand\scalemath[2]{\scalebox{#1}{\mbox{\ensuremath{\displaystyle #2}}}}
+
+%\makeatletter
+%\newcommand\footnoteref[1]{\protected@xdef\@thefnmark{\ref{#1}}\@footnotemark}
+%\makeatother
+
+    % \setlength{\marginparwidth}{0in}
+    % \setlength{\marginparsep}{0in}
+    % \newgeometry{margin=1in}
+
+
+
+\newcommand{\mkclean}{
+    \renewcommand{\reminder}{\hide}
+    \renewcommand{\notice}{\hide}
+    % \renewcommand{\todo}{\hide}
+    % \usepackage[top=1in, bottom=1in, outer=0in, inner=0in, heightrounded, margin
+    % parwidth=0in, marginparsep=0in]{geometry}
+    % \usepackage[letterpaper]{geometry}
+    % \PassOptionsToPackage{letterpaper}{geometry}
+    % \setlength{\top}{1in}
+    % \setlength{\bottom}{1in}
+    % \setlength{\outer}{1in}
+    % \setlength{\inner}{1in}
+    % \newgeometry{top=1in, bottom=1in, outer=1in, inner=1in}
+}
+
+
+\makeatletter
+\newcommand\footnoteref[1]{\protected@xdef\@thefnmark{\ref{#1}}\@footnotemark}
+\makeatother
+
+%\renewcommand{\algorithmicrequire}{\textbf{Input:}}
+%\renewcommand{\algorithmicensure}{\textbf{Output:}}
+%\renewcommand{\algorithmiccomment}[1]{\hfill$\blacktriangleright$ #1}
+
+\newcommand{\cdash}{\multicolumn{1}{c}{--} }
+
+
+
+% from cf: shorthands - also they make tighter lists
+%     needs package paralist
+% \newcommand{\cbit}{\begin{compactitem}}
+% \newcommand{\ceit}{\end{compactitem}}
+% \newcommand{\cben}{\begin{compactenum}}
+% \newcommand{\ceen}{\end{compactenum}}
+
+\newcommand{\beq}{\begin{equation}}
+	\newcommand{\eeq}{\end{equation}}
+
+
+\newcommand{\bit}{\begin{itemize}}
+	\newcommand{\eit}{\end{itemize}}
+\newcommand{\ben}{\begin{enumerate}}
+	\newcommand{\een}{\end{enumerate}}
+
+\newcommand{\QED}{ \hfill {\bf QED}}
+
+
+\newcommand{\scale}{{Scalability\xspace}}
+\newcommand{\effective}{{Effectiveness\xspace}}
+
+
+\newcommand{\ny}{{Nystr\"{o}m}\xspace}
+
+
+\newcommand{\kreg}{{$k$-regular\xspace}}
+
+\newcounter{x}\setcounter{x}{1}
+\newtheorem{inneraxiom}{{Axiom}}
+\newenvironment{axiom}[1]
+  {\renewcommand\theinneraxiom{\arabic{x} (#1)}\inneraxiom\stepcounter{x}}
+  {\endinneraxiom}
+
+% \newtheorem{lemma}{Lemma}
+
+% symbols and notations used
+\newcommand{\pv}{PV}
+\newcommand{\outflag}{O} % outlier flag
+\newcommand{\lbl}{Y}
+\newcommand{\samples}{n}
+\newcommand{\dimension}{m}
+\newcommand{\xobs}{\bs{x}}
+
+
+\newcommand{\udr}{{\sc UDR}\xspace}
+\newcommand{\mc}{{\sc MC}\xspace}
+\newcommand{\hits}{{\sc HITS}\xspace}
+\newcommand{\hitse}{{\sc HITS-ens}\xspace}
+
+
+\newcommand{\ndcg}{{\sc NDCG}\xspace}
+
+\newcommand{\pk}{{\sc PK}\xspace}
+\newcommand{\wl}{{\sc WL}\xspace}
+\newcommand{\gtovec}{{\sc g2vec}\xspace}
+
+
+\newcommand{\MMD}{{\sc MMD}\xspace}
+
+\newcommand{\mC}{\mathcal{C}}
+\newcommand{\mG}{\mathcal{G}}
+\newcommand{\mS}{\mathcal{S}}
+\newcommand{\mH}{\mathcal{H}}
+\newcommand{\mP}{\mathcal{P}}
+\newcommand{\mN}{\mathcal{N}}
+\newcommand{\mB}{\mathcal{B}}
+\newcommand{\mW}{\mathcal{W}}
+\newcommand{\mV}{\mathcal{V}}
+\newcommand{\mE}{\mathcal{E}}
+
+\newcommand{\calK}{\mathcal{K}}
+\newcommand{\calX}{\mathcal{X}}
+
+
+\newcommand{\bW}{\mathbf{W}}
+\newcommand{\bK}{\mathbf{K}}
+\newcommand{\bH}{\mathbf{H}}
+\newcommand{\bU}{\mathbf{U}}
+\newcommand{\bS}{\mathbf{\Sigma}}
+\newcommand{\bV}{\mathbf{V}}
+\newcommand{\bD}{\bm{\Lambda}}
+
+
+\newcommand{\bx}{\mathbf{x}}
+\newcommand{\by}{\mathbf{y}}
+\newcommand{\bh}{\mathbf{h}}
+\newcommand{\bhp}{\mathbf{h}^\prime}
+
+
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\E}{\mathbb{E}}
+
+
+\newcommand{\bq}{\mathbb{Q}}
+\newcommand{\bp}{\mathbb{P}}
+\newcommand{\bpi}{\mathbb{P}_i}
+\newcommand{\bpip}{\mathbb{P}_{j}}
+\newcommand{\hbpi}{\widehat{\mathbb{P}}_i}
+\newcommand{\hbpip}{\widehat{\mathbb{P}}_{j}}
+
+%types of methods
+\newcommand{\prem}{{preprocessing}\xspace}
+\newcommand{\inm}{{in-processing}\xspace}
+
+
+
+%colors
+\newcommand{\red}[1]{\colorbox{red!50}{#1}}
+\newcommand{\lred}[1]{\colorbox{red!20}{#1}}
+\newcommand{\blue}[1]{\colorbox{blue!40}{#1}}
+\newcommand{\green}[1]{\colorbox{green!40}{#1}}
+
+\newcommand{\bs}[1]{\boldsymbol{#1}}
+
+% creating danger symbol -- for wall clock plot to indicate methods do not follow axioms
+\newcommand*{\TakeFourierOrnament}[1]{{%
+\fontencoding{U}\fontfamily{futs}\selectfont\char#1}}
+\newcommand*{\danger}{\TakeFourierOrnament{66}}
+
+\newcommand{\xmark}{\ding{55}}%
+
+\newcommand{\numdatasets}{{4\xspace}}
+
+% comment command for neil and leman
+\newcommand{\leman}[1]{{\textsf{\textcolor{red}{#1}}}}
+
+
+\newcommand{\neil}[1]{{\textsf{\textcolor{black!20!orange!90!}{#1}}}}
+
+
+

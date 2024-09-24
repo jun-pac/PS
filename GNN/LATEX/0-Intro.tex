@@ -1,0 +1,52 @@
+The task of Semi-supervised Node Classification (SSNC) often involves nodes with temporal information. For instance, in academic graph representing connections between papers, authors, and institutions, each paper node may contain information regarding the year of its publication. The focus of this study lies within such graph data, particularly on datasets where the train and test splits are arranged in chronological order. In other words, the separation between nodes available for training and those targeted for inference occurs temporally, requiring the classification of the labels of nodes with the most recent temporal information based on the labels of nodes with historical temporal information. While leveraging GNNs trained on historical data to classify newly added nodes is a common scenario in industrial and research settings \cite{liu2016predicting,bai2020temporal,pareja2020evolvegcn}, systematic research on effectively utilizing temporal information within chronological split graphs remains scarce.
+
+\begin{figure}[hbt!]
+	\vspace{-0.15in}
+	\centering
+	\includegraphics[width=0.90\textwidth]{figs/Chronological_split_PNG.png}
+	\vspace{-0.1in}
+	\caption{Illustrative explanation of chronological split dataset.}
+	 \label{fig:chronological_split}
+	 \vspace{-0.3in}
+\end{figure}
+\vspace{1in}
+%Failure to appropriately utilize temporal information can lead to significant performance degradation when the model attempts to classify labels of recent data. The distribution of neighboring nodes¡¯ classes may not remain constant over time, and the relative connectivity frequency of nodes also depends on temporal information. We conducted a toy experiment on the ogbn-mag dataset, an academic graph dataset having features with chronological split, to confirm the existence of such distribution shifts. The specific settings of this experiment can be found in Appendix \ref{apdx:toy_experiment}. Table \ref{table:toy} presents results of the toy experiment.
+Failure to appropriately utilize temporal information can lead to significant performance degradation when the model attempts to classify labels of recent data. We conducted a toy experiment on the ogbn-mag dataset, an academic graph dataset having features with chronological split, to confirm the existence of such distribution shifts. The specific settings of this experiment can be found in Appendix \ref{apdx:toy_experiment}. Table \ref{table:toy} presents results of the toy experiment.
+
+
+% \begin{figure}[hbt!]
+% 	\vspace{-0.15in}
+% 	\centering
+% 	\includegraphics[width=0.99\textwidth]{figs/toy_experiment.png}
+% 	\vspace{-0.1in}
+% 	\caption{[Left] Neighboring node aggregation in chronological split, [Right] in random split.}
+% 	 \label{fig:toy_exp}
+% 	 \vspace{-0.3in}
+% \end{figure}
+
+
+% The performance degradation caused by chronological splits can be clearly observed by comparing the maximum accuracy achieved by GNN models when nodes are randomly separated for train/validation/test and when they are arranged chronologically.
+
+\input{TABLE/toy}
+
+% For the effectiveness of time positional encoding, an improvement in test accuracy is observed only when the dataset split is random, suggesting that the temporal information of nodes influences the distribution of neighboring node labels. However, in the context of chronological split datasets, a decrease in performance is noted. This can be intuitively explained within the context of chronological split datasets: during training, nodes with time positional encoding corresponding to recent temporal information are not visited as target nodes. Consequently, the inference process of test nodes encounters time positional encoding not encountered during training, necessitating assumptions for non-obvious extrapolation.
+% This toy experiment's results clearly demonstrate the presence of distribution shift induced by chronological split and highlight the challenges in addressing this issue. The substantial difference in accuracy, 5.2\%, between the chronological split and random split settings underscores this point. Furthermore, the increase in accuracy when using time positional encoding in the Random split setting indicates that the temporal information of nodes influences the distribution of neighboring connections. However, time positional encoding does not contribute to the improvement of test accuracy in the chronological split setting. This discrepancy arises because the inference process of test nodes encounters time positional encoding not encountered during training. The distribution for recent nodes may exhibit an extrapolation property diverging from that of past nodes, thereby contributing to the challenging nature of this problem.
+
+The substantial difference in accuracy, 5.2\%, between the chronological split and random split settings clearly demonstrates the presence of distribution shift induced by the chronological split. Time positional encoding contributes to obtain better test accuracy only in random split setting. This discrepancy arises because in the chronological split setting, the inference process of test nodes encounters time positional encodings not seen during training. The distribution for recent nodes may exhibit extrapolation properties that diverge from those of past nodes, thereby adding to the challenging nature of this problem. In our work, we presented robust and realistic assumptions on temporal graph, and proposed message passing methods, \IMPaCT, to learn invariant representation.
+
+
+
+
+
+
+
+
+% These disparities create domain shift, leading to the Out-of-Distribution (OOD) generalization problem where representations learned from the training set do not generalize effectively to the test set. Thereby, effective utilization of temporal information can lead to significant performance gains. 
+% Based on thorough analysis, we presented robust and realistic assumptions that reflect the characteristics of graphs with temporal information, and proposed invariant message passing methods to effectively obtain invariant information. We showcased substantial performance improvements in both real dataset and synthetic dataset, and theoretically proved superiority of our proposed method.
+
+
+
+    
+\textbf{Contributions} Our research contributes in the following ways:\\
+1. We present robust and realistic assumptions that rooted in properties observable in real-world graphs, to effectively analyze and address the domain adaptation problem in graph datasets with chronological splits. 2. We propose the scalable invariant message passing methods, \IMPaCT, and established a theoretical upper bound of the distance between train and test distributions when our methods were used. 3. We propose Temporal Stochastic Block Model (TSBM) to generate realistic temporal graph, and systematically demonstrate the robustness and applicability to general spatial GNNs of \IMPaCT. 4. We showcase significant performance improvements on the real-world citation graph ogbn-mag, yielding significant margin of 6.1\% over current SOTA method.
+% (1) We effectively analyzes and addresses the domain adaptation problem in massive datasets with chronological splits. Rather than relying on unprovable principles or define overly broad environment set, we present robust and realistic assumptions that rooted in properties observable in real-world graphs, and rigorously apply the invariant principle to graph domain adaptation within decoupled GNNs. (2) Based on the assumptions, we propose the invariant message passing methods, \IMPaCT, to guarantee the preservation of invariance of the aggregated message during the message passing step. We have demonstrated that this approach enables us to obtain invariant information and have shown its scalability and readiness for application. (3) In experiments with synthetic graphs, we introduce the Temporal Stochastic Block Model (TSBM) to generate realistic temporal graph, and systematically demonstrate the robustness of invariant message passing methods and their applicability to general spatial GNNs. (4) We showcase significant performance improvements on the real-world citation graph dataset ogbn-mag. Applying only 1st moment alignment yields a substantial improvement over the previous state-of-the-art, with a significant margin of 5.4\%, and 6.1\% when applying 2nd moment alignment.

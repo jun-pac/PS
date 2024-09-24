@@ -1,0 +1,165 @@
+# Intro
+
+\textbf{Graph Neural Networks.} Graph Neural Networks (GNNs) have gained significant attention across various domains, including paper categorization, social network recommendation algorithms, and protein binding analysis. Broadly speaking, GNNs can be categorized into Spectral GNNs, which are based on Graph Spectral Theory, and Spatial GNNs, which derive topological information by aggregating information from neighboring nodes through neighbor aggregation and semantic aggregation. Spatial GNNs have evolved into models such as GCN, GraphSAGE, GAT, and their extensions to heterogeneous graphs, such as HGNN. Typically, the layers of Spatial GNNs in Semi-Supervised Node Classification (SSNC) problems are formulated as follows:
+
+$$
+M_v^{(k+1)} \leftarrow \text{AGG}(\{X_u^{(k)},\forall u\in \mathcal{N}_v\}) \\ X_v^{(k+1)}\leftarrow \text{COMBINE}(\{X_v^{(k)},M_v^{(k+1)}\}),\ \forall v\in \bold{V}, k<K
+$$
+
+Here, $K$ is the number of GNN layers, $X_v^0 = X_v$ is initial feature vector of each node, and the output of the last layer $X_v^K=Z_v$ serves as the input to the node-wise classifier. The AGG function performs topological aggregation by collecting information from neighboring nodes, while the COMBINE function performs semantic aggregation through processes the collected information for each node.
+
+Scalability is a crucial issue when applying GNNs to massive graphs. The computation graph (ego graph), which defines the scope of information influencing the classification of a single node, exponentially increases with the number of GNN layers increase(\cite{Graphsage}). Therefore, to ensure scalability, algorithms must be meticulously designed to efficiently utilize computation and memory resources. For instance, \cite{Graphsage} introduced node-wise neighbor sampling, and \cite{clustergnn, graphsaint}, introduced graph-wise sampling, which splits the graph into smaller subgraphs based on its properties.
+
+Decoupled GNNs, such as SGC, SIGN, and GAMLP, have recently demonstrated outstanding performance on many real-world datasets. These models simplify the process of aggregating topological information linearly without learnable parameters, resulting in significant scalability gains without substantial performance loss \cite{SGC, rossi2020sign, GAMLP}. Notably, SeHGNN proposes a decoupled GNN that efficiently applies to heterogeneous graphs by constructing different embedding spaces for each metapath \cite{SeHGNN}, while RpHGNN introduces random projection into the aggregation process to reduce information loss while bounding complexity \cite{RpHGNN}. These models exhibit excellent performance on large and critical datasets such as ogbn-mag and ogbn-papers100M.
+
+\textbf{Out-of distribution generalization problem on graph.}
+When applying chronological split to real-world datasets, domain shift occurs, leading to the Out-of-Distribution (OOD) problem where representations learned from the training set do not generalize effectively to the test set. We examined the impact of domain shift on the ogbn-mag dataset through a simple experiment. We compared the test accuracy obtained when applying chronological split to the dataset with that achieved by conducting a random split, disregarding temporal data, and training the same GNN model.
+
+Previous studies handling ogbn-mag and ogbn-240m datasets attempted to incorporate time information by adding time positional encoding to node features. We further investigated whether incorporating temporal information in the form of time positional encoding significantly influences the distribution of neighboring nodes.
+
+We conduct this toy experiment on ogbn-mag, a heterogeneous graph within the Open Graph Benchmark (\cite{OGB}), comprising Paper, Author, Institution, and Fields of study nodes. In this graph, paper nodes are divided into train, validation, and test nodes based on publication year, with the objective of classifying test and validation nodes into one of 343 labels. The performance metric is accuracy, representing the proportion of correctly labeled nodes among all test nodes. SeHGNN(\cite{SeHGNN}) was employed for experimentation. The rationale for employing SeHGNN lies in its ability to aggregate semantics from diverse metapaths, thereby ensuring expressiveness, while also enabling fast learning due to neighbor aggregation operations being performed only during preprocessing.
+
+![Chronological_split_PNG.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/ba842ab0-b218-4919-860c-862d259ffd62/f304b76e-e89a-40a5-965d-229f6a310937/Chronological_split_PNG.png)
+
+Table 1 presents the final classification accuracy of SeHGNN when data is split randomly and when split chronologically.
+
+```
+Table1 - Toy example
+```
+
+The performance degradation caused by chronological splits can be clearly observed by comparing the maximum accuracy achieved by GNN models when nodes are randomly separated for train/validation/test and when they are arranged chronologically.
+
+For the effectiveness of time positional encoding, an improvement in test accuracy is observed only when the dataset split is random, suggesting that the temporal information of nodes influences the distribution of neighboring node classes. However, in the context of chronological split datasets, a decrease in performance is noted. This can be intuitively explained within the context of chronological split datasets: during training, nodes with time positional encoding corresponding to recent temporal information are not visited as target nodes. Consequently, the inference process of test nodes encounters time positional encoding not encountered during training, necessitating assumptions for non-obvious extrapolation.
+
+![Difference of year.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/ba842ab0-b218-4919-860c-862d259ffd62/ed4a110b-d28b-4b7d-8fc6-246948192348/Difference_of_year.png)
+
+# Chronological split
+
+\textbf{Chronological Split.} The task of Semi-supervised Node Classification (SSNC) often involves nodes with temporal information. For instance, in academic graph representing connections between papers, authors, and institutions, each paper node may contain information regarding the year of its publication. The focus of this study lies within such graph data, particularly on datasets where the train and test splits are arranged in chronological order. In other words, the separation between nodes available for training and those targeted for inference occurs temporally, requiring the classification of the labels of nodes with the most recent temporal information based on the labels of nodes with historical temporal information. While leveraging GNNs trained on historical data to classify newly added nodes is a common scenario in industrial and research settings, systematic research on effectively utilizing temporal information within chronological split graphs remains scarce.
+
+Failure to appropriately utilize temporal information can lead to significant performance degradation when the model attempts to classify labels of recent data. The distribution of neighboring nodes’ classes may not remain constant over time, and the relative connectivity frequency of nodes also depends on temporal information. 
+
+We conducted a toy experiment on the ogbn-mag dataset, an academic graph dataset features a chronological split, to confirm the existence of such distribution shifts. The specific settings and results of this experiment can be found in Appendix 1.
+
+These disparities create *domain shift*, leading to the Out-of-Distribution (OOD) generalization problem where representations learned from the training set do not generalize effectively to the test set. Thereby, effective utilization of temporal information can lead to significant performance gains. Based on thorough analysis, we presented robust and realistic assumptions that reflect the characteristics of graphs with temporal information, and proposed invariant message passing methods to effectively obtain invariant information. We showcased substantial performance improvements in both real dataset and synthetic dataset, and theoretically proved superiority of our proposed method.
+
+### Domain adaptation
+
+Out-of-Distribution generalization is a form of domain adaptation. It can be formulated as follows: Let $X$ denote the data used for training and $Y$ its corresponding label. The distribution $P(X,Y)$ is determined by the environment $e$.
+
+$R(f\mid e) = \mathbb{E}_{X,Y\sim P_e(X,Y)}{L(f(X),Y)}$
+
+Empirical risk : $\hat{R}(f\mid e)= {1\over n} \sum_i{L(f(X_i),Y_i)}$
+
+The objective of domain adaptation is to minimize the maximum risk achievable across possible environment sets $\epsilon$ by optimizing function $f$.
+
+$f^* \in {arg\,min}_{f} \sup_{e\in supp(\epsilon)} \hat{R}(f\mid e)$
+
+When optimizing the above objective, there are two significant challenges. Firstly, it is impossible to know the environment set $\epsilon$ perfectly. We can only access the training environment set, $\epsilon^{tr}$. In most cases, we can only empirically approach $e\in \epsilon^{tr}$ since we usually have realized datasets. Without assumptions about the environment set $\epsilon$, obtaining a practical bound on the minimum risk is impossible. Therefore, for domain adaptation, explicit or implicit assumptions about $\epsilon$ are necessary. Hence, it is necessary to assume that $e^{te}$ is included in the set of accessible environments during the training process, $\epsilon^{tr}$, or to generalize $\epsilon^{tr}$ based on prior knowledge to create $\epsilon^{all}$, which is expected to include $e^{te}$.
+
+The second problem is the computational expense of directly optimizing the above objective. Even with a sufficient environment set $\epsilon$ for training, calculating $\sup{e\in supp(\epsilon)} \hat{R}(f\mid e)$ requires computing the risk for all environments. Therefore, many studies on domain adaptation simplify the problem to a computationally tractable level by accepting two principles, Invariant principle and the Sufficient principle.
+
+Firstly, the Invariant principle assumes the existence of invariant information $\Phi(X)$ such that $P_e(Y\mid \Phi(X))$ remains constant regardless of the environment. The Sufficient principle suggests that by utilizing only invariant information, we can optimize the risk minimization objective. In other words, ${min}_{f} \sup_{e\in supp(\epsilon)} \hat{R}(f\mid e) ={min}_{f} \sup_{e\in supp(\epsilon)} \hat{R}(f\circ \Phi \mid e)$.
+
+Many previous studies on domain adaptation based on these principles have added regularizers to increase the similarity between representations or removed spurious correlations present only in specific environments through an adversarial learning scheme.
+
+It is important to note that the Invariant principle not only makes the optimization process tractable but also plays a crucial role in generalizing functions optimized on $\epsilon^{tr}$ to $e^{te}$. The basis of the Invariant principle assumes that Invariant information implies a causal data generation process.
+
+Furthermore, the Sufficient principle, means that if we have obtained invariant information and a prediction function to optimize the risk minimization objective, when expressed as $Y=f^*(\Phi^*(X))+u$, where $u \perp X$, the residual term $u$ remains independent of $X$. If there is invariant information in the residual term, $u \perp X$ cannot be satisfied, which supports the intuition that to obtain the optimal prediction function, we must fully exploit the invariant information.
+
+### Domain adaptation in graph
+
+Surprisingly, despite its significance, studies on domain adaptation in GNNs are relatively scarce. This scarcity can be attributed to several factors: (1) Data corresponding to different environments may have interdependencies. (2) Real-world graph datasets often impose stringent scalability requirements in terms of time complexity and memory usage. (3) *Extrapolating* nature of domain.
+
+In this section, we analyze the characteristics of domain adaptation in graphs and introduce why the problem we aim to address through our research is challenging.
+
+In our study, focusing on chronological split, the environment becomes the temporal information associated with the nodes to be classified. That is, for $t \in \bold{T}, P(X_t,Y_t)$, depends on $t$. For clarity, let's consider the $t$, temporal information possessed by the nodes, as the environment, and the set of possible temporal information $\bold{T}$ as the environment set. In other words, if the distribution of any value or attribute $x_i$ assigned to node $i$ does not depend on the node's temporal information $t_i$, then it is considered invariant. While other environments may exist in the graph that affect the distribution of data and labels, analyzing only temporal information is sufficient since the train/test split occurs solely based on time information.
+
+- Interdependency
+
+In the case of transductive graph learning tasks, defining the environment clearly is challenging due to the interdependency among the pieces of information. The basic mathematical model of GNNs takes the entire graph as input to simultaneously predict labels for all nodes, i.e., $\bold{f} : \bold{X}\rightarrow \bold{Y}$. In such cases, it is challenging to analyze the environment and its effects adequately.
+
+Fortunately, by confining the discussion to spatial GNNs, this problem can be relieved by defining the ego-graph $C_g(x)$, which is the set of information influencing the prediction of a specific node $i$.
+
+$$
+C_g(i) =\big\{i,\ \mathcal{N}_k(i),\ \{(u,v)\mid u,v\in \mathcal{N}_{k}(i)\}\big\}
+$$
+
+Here, the notation $\mathcal{N}_k(i)$ denotes the set of neighbor nodes within a distance of $k$ from node $i$. The inclusion of the target node in the definition of the ego-graph is needed because, even if the subgraph remains the same, the topological information varies depending on which node serves as the center of the subgraph.
+
+As information beyond the ego-graph does not influence classification, the operation of the GNN can be formulated as follows:
+
+$f : \{C_g(i)\mid i \in \bold{V}\} \rightarrow \bold{Y}$
+
+Then, our objective can be effectively described as follows:
+
+$f^* \in {arg\,min}_{f} \sup_{e\in supp(\epsilon)} \hat{R}_{x\in \bold{V^{tr}}}(f\circ C_g \mid e)$
+
+\textbf{Time and memory complexity}: In the realm of transductive graph learning or domain adaptation, practical considerations of time and memory complexity are paramount.
+
+```
+다른 방법들의 complexity에 대한 분석 (힐난)
+```
+
+\textbf{Challenges in Assumptions about the Environment}: Earlier, it was stated that without direct or indirect assumptions about $e^{te}$, it is practically infeasible to optimize risk minimization objective. Building upon the aforementioned discussion, two approaches emerge: (1) assuming the inclusion of $e^{te}$ in $\epsilon^{tr}$, or (2) augmenting or generalizing $\epsilon^{tr}$ to $\epsilon^{all}$.
+
+However, in the case of (1), when a chronological split occurs, $e^{te}$ denotes the most recent temporal information, thus it clearly cannot be considered a part of $\epsilon^{tr}$. From this perspective, chronological split can be seen as a task necessitating extrapolation on the underlying environment.
+
+As for approach (2), it is crucial to generalize $\epsilon^{all}$ effectively to reflect the causal data generation process akin to actual data.
+
+For instance, in many graph Out-of-Distribution (OOD) generalization studies, either covariate shift or concept shift has been assumed, where $P_e(X|Y)=P_{e'} (X|Y)$ but $P_e(X)\neq P_{e'} (X),\ \forall e,e'\in \epsilon$, it is referred to as covariate shift, and vice versa for concept shift. However, since real data often involves both covariate and concept shifts simultaneously, assuming only one of them is unrealistic. By generalizing $\epsilon^{all}$ based on such unrealistic assumptions, the learned invariant information cannot be regarded as a causal factor influencing the label distribution.
+
+Some studies resort to employing the graph permutation invariant assumption to obtain $\epsilon^{all}$. However, while permutation invariance is realistic, it is not particularly useful for analyzing chronological splits. Permutation invariance is a broadly applied concept that does not adequately account for the differences in topological and semantic information due to chronological information.
+
+Lastly, we aim to demonstrate that defining an unnecessarily broad environment set leads to suboptimal bounds.
+
+> Thm1. Larger environment set gives larger optimal risk.
+> 
+
+Suppose that the optimal function of minimizing the maximal risk exists for both environment sets $\epsilon1$ and $\epsilon2$ which satisfies $supp(\epsilon1) \subseteq supp(\epsilon2)$. Let $f_1^* \in  {arg\,min}_{f} \sup_{e\in supp(\epsilon_1)} \hat{R}(f\mid e)$ and $f_2^* \in  {arg\,min}_{f} \sup_{e\in supp(\epsilon_2)} \hat{R}(f\mid e)$. Then, $\sup_{e\in supp(\epsilon_1)} \hat{R}(f_1^* \mid e) \leq \sup_{e\in supp(\epsilon_2)} \hat{R}(f_2^* \mid e)$. Equivalently, ${min}_{f} \sup_{e\in supp(\epsilon_1)} \hat{R}(f\mid e) \leq {min}_{f} \sup_{e\in supp(\epsilon_2)} \hat{R}(f\mid e)$.
+
+proof) $\sup_{e\in supp(\epsilon_1)} \hat{R}(f_1^* \mid e) \leq \sup_{e\in supp(\epsilon_1)} \hat{R}(f_2^* \mid e) \leq \sup_{e\in supp(\epsilon_2)} \hat{R}(f_2^*\mid e)$
+
+First inequality holds from the assumption $f_1^* \in  {arg\,min}_{f} \sup_{e\in supp(\epsilon_1)} \hat{R}(f\mid e)$, and second inequality holds from the assumption $supp(\epsilon_1) \subseteq supp(\epsilon_2)$.
+
+Thm2. The optimal minimizer function learned on a larger environment set gives a larger risk for such environments satisfying the condition of the statement. 
+
+Let $\delta = \sup_{e\in supp(\epsilon_2)} \hat{R}(f_2^\mid e) - \sup_{e\in supp(\epsilon_1)} \hat{R}(f_1^\mid e) \geq 0$. Non-negativity is obtained by Thm1. For $e_{te} \in supp(\epsilon_1) \subseteq supp(\epsilon_2)$ such that $\hat{R}(f_2^* \mid e_{te}) \geq \sup_{e\in supp(\epsilon_2)} \hat{R}(f_2^* \mid e) - \delta$, $\hat{R}(f_1^* \mid e_{te}) \leq \hat{R}(f_2^* \mid e_{te})$ holds.
+
+proof) $\hat{R}(f_1^* \mid e_{te}) \leq \sup_{e\in supp(\epsilon_1)} \hat{R}(f_1^* \mid e) = \sup_{e\in supp(\epsilon_2)} \hat{R}(f_2^*\mid e) - \delta \leq \hat{R}(f_2^*\mid e_{te})$
+
+First inequality holds from definition of supremum, and second inequality holds from the assumption of $e_{te}$. Hence, we established the inequality $\hat{R}(f_1^* \mid e_{te}) \leq \hat{R}(f_2^* \mid e_{te})$ for specific test environments satisfying the inequality assumption.
+
+Thus, it has been demonstrated that tight environment generalization is superior. This implies the necessity of introducing assumptions that accurately specify and explain the distribution shift between $e^{te}$ and the remaining environments. Broadening the environment set through overly general assumptions unrelated to the causes of differences in distributions between $e^{te}$ and other environments is inefficient.
+
+### Our model
+
+Through the preceding discussions, we have introduced the challenges of domain adaptation in graph data. Particularly, we presented the difficulties arising from the *extrapolation* nature of chronological splits, which complicates the introduction of existing methodologies and assumptions. Moreover, we underscored the significant time and memory requirements in handling domain adaptation problems within large graphs, imposing substantial constraints.
+
+In this study, we proposed realistic assumptions grounded in the influence of temporal information on node connectivity and defined the most effective environment set accordingly. By leveraging \PMP and \JJnorm, we extracted invariant information and devised a model capable of exploit such invariance. In this manner, we have overcomed the challenges outlined earlier. Furthermore, we demonstrated that widening the definition of the environment set reduces the amount of learnable invariant information, thereby increasing the minimum risk. Ultimately, under the assumption of the validity of the proposed temporal information, we showed that our method is optimal.
+
+The assumptions introduced in this study are directly tied to the properties of chronological information in the data generation process. As these assumptions are equally applicable to $e^{te}$, they are more realistic than assumptions introduced in other papers, and facilitate the natural generalization of the trained model to the test environment $e^{te}$.
+
+$$
+{min}_{f} \sup_{e\in supp(\epsilon)} \hat{R}\big(f(\Phi \circ C_g) \mid e\big), \text{ s.t. } x\perp u
+$$
+
+In practical GNNs, the process of aggregating information from the ego-graph $C_g(i)$ to classify the target node $i$ is inherently learnable. This implies that the extraction of invariant information, as depicted in the equation above, cannot be separated from the downstream function $f$. To simplify the discussion, we have confined our analysis to decoupled GNNs. Decoupled GNNs entail that the process of collecting topological information occurs solely during preprocessing and is parameter-free. Therefore, if the final aggregated information remains invariant, it corresponds to $\Phi(C_g(i))$. In this scenario, $\Phi(C_g(i))$ can be assumed to belong to $\mathbb{R}^h$, where $h$ represents the dimensionality of the final representation. We have devised methods named \MMP and \PMP for correcting the 1st moment of aggregated messages, and methods named \PNY and \JJnorm for correcting the 2nd moment, to ensure that the representation at each layer remains approximately invariant during the message passing process. These methods adjust all representations $X_i,\forall i\in \bold{V}$ computed during the process of collecting topological information, including the final representation, so that $P_e(X_i\mid Y) =P_{e^{te}}(X_i\mid Y),\ \forall e\in \epsilon^{tr}$ is approximately satisfied. Given Assumption 2, where $P_e(Y)=P(Y),\ \forall e\in \epsilon^{tr}$, it follows that $P_e(X_i, Y) = P_{e^{te}}(X_i, Y),\ \forall e\in \epsilon^{tr}$. Since the final representation obtained during the aggregation of topological information represents $\Phi(C_g(i))$, it follows that $P_e(\Phi(C_g(i)), Y) = P_{e^{te}}(\Phi(C_g(i)), Y),\ \forall e\in \epsilon^{tr}, i\in \bold{V}$.
+
+ 
+
+In particular, let $K$ denote the number of layers in a spatial GNN, and consider any $k<K$. We proposed a novel message passing function that ensures the aggregated message $M_{i}^{(k+1)}$ satisfies $P_e(M_i^{(k+1)}\mid Y) =P_{e^{te}}(M_i^{(k+1)}\mid Y),\ \forall e\in \epsilon^{tr}$ when the representations $X_i^{(k)},\forall i\in \bold{V}$ at the $k$th layer are invariant to temporal information, i.e., $P_e(X_i^{(k)}\mid Y) =P_{e^{te}}(X_i^{(k)}\mid Y),\ \forall e\in \epsilon^{tr}$. Even if we obtain representations $X_{i}^{(k+1)}= \sigma(M_{i}^{(k+1)})$ through a nodewise semantic aggregation function $\sigma:\R^{f^{(k+1)}} \rightarrow \R^{h^{(k+1)}}$, $P_e(X_i^{(k+1)}\mid Y) =P_{e^{te}}(X_i^{(k+1)}\mid Y),\ \forall e\in \epsilon^{tr}$ approximately holds. In Section \ref{section3}, we introduce and demonstrate the operation of four invariant message passing techniques: \PMP, \MMP for 1st moment alignment, and \PNY, \JJnorm for 2nd moment alignment. 
+
+In Section \ref{section4}, we present mathematical bounds demonstrating the conditions under which final representations remain invariant when applying invariant message passing methods to decoupled GNNs composed of multiple layers or general spatial GNNs featuring nonlinearity at each layer. Through this analysis, we showcase our ability to obtain approximately invariant final representations and rigorously examine the conditions necessary for applying our model to general spatial GNNs.
+
+\PMP, \PNY, and \JJnorm are parameter-free and can be seamlessly applied to existing decoupled GNNs with minimal overhead. Therefore, they exhibit universality and scalability. 
+
+As the joint distribution of inputs and outputs of the downstream function $f:\mathbb{R}^h\rightarrow\bold{Y}$ remains consistent across environments, the model trained on the training data inherently generalizes to the test dataset.
+
+$$
+f^*={\arg\min}_{f} {1\over \mid \bold{V^{tr}}\mid} \sum _{i\in \bold{V^{tr}}} \mathcal{L}\big(f(\Phi(C_g(i))),Y_i\big)
+$$
+
+Through the invariant message passing devised in our study, we derive invariant representations $\Phi(C_g(i))$ by directly assuming the impact of chronological information on the connectivity distributions. This process enables models trained on the training dataset to generalize to the test data without the need for specific assumptions about causation, such as the principle of "Invariance as causation". This approach holds significant importance in demonstrating the viability of solving domain adaptation problems based on assumptions that can be empirically validated, rather than on unprovable principles.
+
+In Section \ref{Section 5}, we validate the performance of the invariant message passing methods proposed in this study on both synthetic graphs and real-world datasets. In the experiments on synthetic graphs, we introduce the Temporal Stochastic Block Model (TSBM), a method for generating graph structures with realistic and repeatable chronological information. We compare the performance improvements of invariant message passing methods on graphs that satisfy our assumptions and verify their robustness. In experiments on real-world graphs, we apply \PMP and \JJnorm to the obgn-mag dataset, a key dataset with chronological splits, and achieve remarkable results that significantly outperform existing state-of-the-art models.

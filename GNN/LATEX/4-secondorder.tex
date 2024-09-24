@@ -1,0 +1,155 @@
+While 1st order alignment methods like \PMP and \MMP preserve the invariance of the 1st moment of the aggregated message, they do not guarantee such property for the 2nd moment. 
+
+Let's suppose that the 1st moment of the previous layer's representation $X$ is invariant with node's time $t$, and 2nd moment of the initial feature is invariant. That is, $\forall\tilde{y} \in\bold{Y}, \forall\tilde{t}\in\bold{T}$, $\mathbb{E}[X]=\mu_{X}^{pmp(k)}(\tilde{y})$ for $X\sim {x_{\tilde{y} \tilde{t}}^{pmp(k)}}$ and $\Sigma_{XX}^{pmp(0)}\left(\tilde{y},\tilde{t}\right)=
+\Sigma_{XX}^{pmp(0)}\left(\tilde{y},t_{max}\right)$ where $\Sigma_{XX}^{pmp(k)}\left(\tilde{y},\tilde{t}\right)=
+\text{var}({X})=\mathbb{E}\left[(X-\mu_{X}^{pmp(k)}\left(\tilde{y},\tilde{t}\right))(X-\mu_{X}^{pmp(0)}\left(\tilde{y},\tilde{t}\right))^{\top}\right]$ for $X\sim {x_{\tilde{y} \tilde{t}}^{pmp(k)}}$. Given that the invariance of 1st moment is preserved after message passing by \PMP or \MMP, one naive idea for aligning the 2nd moment is to calculate the covariance matrix of the aggregated message $M_{v}^{pmp(k+1)}$ for each time $t$ of node $v$ and adjust for the differences. However, when $t=t_{max}$, we cannot directly estimate $\text{var}(M_{v}^{pmp (k+1)})$ since the labels are unknown for nodes in the test set. We introduce \PNY and \JJnorm, the methods for adjusting the aggregated message obtained using the \PMP method to achieve invariant property even for the 2nd moment, when the invariance for 1st moment is preserved.
+
+\textbf{\textit{The second moment of aggregated message}}. The \textit{approximate} variance of $M_{v}^{pmp(k+1)}$ can also be calculated rigorously by using the definition of approximate variance in Appendix \ref{apdx:PMP}, as:
+\vspace{-4pt}
+{\scriptsize
+\begin{align}
+\hat{\text{var}}(M_{v}^{pmp(k+1)}) = {\sum_{\tilde{y}\in \bold{Y}}\left(\sum_{\tilde{t}\in\bold{T}_{t}^{\text{single}}}4\mathcal{P}_{yt}\left(\tilde{y}, \tilde{t}\right)+\sum_{\tilde{t}\in\bold{T}_{t}^{\text{double}}}\mathcal{P}_{yt}\left(\tilde{y}, \tilde{t}\right)\right)\Sigma_{XX}^{pmp(k)}\left(\tilde{y},\tilde{t}\right)
+\over
+\left(\sum_{\tilde{y}\in \bold{Y}}\sum_{\tilde{t}\in\bold{T}_{t}^{\text{single}}}2\mathcal{P}_{yt}\left(\tilde{y}, \tilde{t}\right)+\sum_{\tilde{y}\in \bold{Y}}\sum_{\tilde{t}\in\bold{T}_{t}^{\text{double}}}\mathcal{P}_{yt}\left(\tilde{y}, \tilde{t}\right)\right)^2|\mathcal{N}_{yt}|}
+\end{align}
+}%
+
+\vspace{-5pt}
+Hence, we can write $\hat{\text{var}}(M_{v}^{pmp(k+1)})$=$\Sigma^{pmp(k+1)}_{MM}(y,t)$. Since $\Sigma^{pmp(k+1)}_{MM}(y,t)$ is a covariance matrix, it is positive semi-definite, orthogonally diagonalized as $\Sigma^{pmp(k+1)}_{MM}(y,t) = U_{y t}\Lambda_{y t}U_{y t}^{-1}$.
+
+
+\subsection{Persistent Numerical Yield: \PNY}
+\vspace{-5pt}
+
+If we can specify $\mathcal{P}_{y t}(\tilde{y}, \tilde{t})$ for $\forall y, \tilde{y} \in \bold{Y}, \forall t, \tilde{t} \in \bold{T}$, transformation of covariance matrix during the \PMP process could be calculated. \PNY numerically estimates the transformation of the covariance matrix during the \PMP process, and determines an affine transformation to correct this variation.
+
+
+\begin{definition}\label{def:env1}
+The \PNY from the $k$-th layer to the $k+1$-th layer of target node $v$ is defined as:
+
+For affine transformation matrix $A_{t} = U_{y t_{max}} \Lambda_{y t_{max}}^{1/2} \Lambda_{y t}^{-1/2} U_{y t}^{\top}$, \\
+
+\vspace{-23pt}
+\begin{align}
+M_v^{PNY(k+1)} = A_{t}(M_v^{pmp (k+1)}-\mu_{M}^{pmp(k+1)}(y))+\mu_{M}^{pmp(k+1)}(y)
+\end{align}
+
+\vspace{-12pt}
+\end{definition}
+
+Note that $M_v^{pmp (k+1)}$ is a random vector defined as \ref{eqn:pmp}, so $M_v^{PNY(k+1)}$ is also a random vector.
+
+\begin{theorem}\label{thm:pny}
+The 1st and 2nd moments of aggregated message after \PNY transform is invariant, if the 1st and 2nd moments of previous representations are invariant.\\
+
+\vspace{-10pt}
+
+\textbf{Sketch of proof} $\hat{\mathbb E}\left[{M_{ v}^{PNY(k+1)}}\right]$=$\mu_{M}^{pmp(k+1)}(y)$, $\hat{\text{var}}(M_{v}^{pmp(k+1)})$=$\Sigma^{pmp(k+1)}_{MM}(y,t_{max})$ holds,
+
+so the 1st and 2nd moments of representations are invariant with $t$. See Appendix \ref{apdx:PNY} for details.
+\end{theorem}
+
+
+\subsection{Junction and Junction normalization: \JJnorm}
+A drawback of \PNY is its complexity in handling covariance matrices, requiring computation of covariance matrices and diagonalization for each label and time of nodes, leading to high computational overhead. Additionally, estimation of $\mathcal{P}_{yt}\left(\tilde{y},\tilde{t}\right)$ when $t$ or $\tilde{t}$ is $t_{max}$, necessitates solving overdetermined nonlinear systems of equations as Appendix \ref{apdx:rel_con}, making it difficult to analyze.
+
+% The function $g\left(y, \tilde{y}, |\tilde{t}-t|\right)$ represents how the proportion of neighboring nodes varies with the relative time difference, Assuming it to be consistent to $y$ and $\tilde{y}$ significantly simplifies the alignment of the 2nd order moment. Here, we introduce \JJnorm as a practical implementation of this idea. In \JJnorm, we introduce an additional Assumption 4:
+Assuming the function $g\left(y, \tilde{y}, |\tilde{t}-t|\right)$ to be consistent to $y$ and $\tilde{y}$ significantly simplifies the alignment of the 2nd moment. Here, we introduce \JJnorm as a practical implementation of this idea.
+
+
+\vspace{-15pt}
+\begin{align}\label{assumption4}
+    \textit{Assumption 4}: g\left(y, \tilde{y}, \Delta \right) = g\left(y', \tilde{y}', \Delta \right) , \forall y, \tilde{y}, y', \tilde{y}' \in \bold{Y}, \forall\Delta \in \{|t_2 -t_1 | \mid t_1, t_2\in \bold{T}\}
+\end{align}
+
+\vspace{-5pt}
+
+Moreover, we will only consider GNNs with linear semantic aggregation functions. Formally,
+
+\vspace{-15pt}
+
+\begin{align}
+&M_v^{pmp(k+1)} \leftarrow \text{\PMP}(X_w^{pmp(k)},w\in \mathcal{N}_v)\\
+&X_v^{pmp(k+1)} \leftarrow A^{(k+1)}M_v^{pmp(k+1)}, \ \forall k<K, v\in \bold{V}
+\end{align}
+
+\vspace{-5pt}
+
+
+\begin{lemma}\label{lem:jj}
+$\forall t \in \bold{T}$, there exists a constant $\alpha_{t}^{(k+1)}$>$0$ only depending on $t$ and layer $k+1$ such that
+
+\vspace{-20pt}
+\begin{align}
+    \left(\alpha_{t}^{(k+1)}\right)^2\Sigma^{pmp(k+1)}_{MM}(y,t)=\Sigma^{pmp(k+1)}_{MM}(y,t_{max}), \forall y \in \bold{Y}
+\end{align}
+\vspace{-15pt}
+
+The covariance matrix of the aggregated message differs only by a constant factor depending on the layer $k$ and time $t$. Proof of this lemma is in Appendix \ref{apdx:JJnormlemma}.
+
+\end{lemma}
+
+% \begin{figure}[hbt!]
+%     \vspace{-10pt}
+% 	\centering
+% 	\includegraphics[width=0.99\textwidth]{figs/JJ_norm_hor.png}
+% 	\vspace{-0.1in}
+% 	\caption{Graphical explanation of \JJnorm. Under assumption 4, covariance matrices of aggregated message on each community differs only by a constant factor $\alpha_t$.}
+% 	 \label{fig:JJ}
+%   \vspace{-10pt}
+% \end{figure}
+
+
+\begin{definition}\label{lem:def1}
+We define the constant of the final layer $\alpha_{t}$=$\alpha_{t}^{(K)} > 0$ as the JJ constant of node $v$. 
+
+\end{definition}
+
+
+\begin{definition}\label{lem:def2}
+The \JJnorm is a normalization of the aggregated message to node $v \in \bold{V}\setminus\bold{V}_{\cdot,t_{max}}$ after the final layer of \PMP defined as:
+
+\vspace{-20pt}
+
+\begin{align}
+M_v^{JJ} = \alpha_{t}\left(M_v^{pmp(K)}-\mu_M^{JJ}(y, t)\right)+\mu_M^{JJ}(y, t)
+\end{align}
+\vspace{-10pt}
+
+where $\bold{V}_{y,t} = \{u \in \bold{V} \mid u \; \text{has label} \; y \; \text{and time} \; t\}$, $\bold{V}_{\cdot,t} = \{u \in \bold{V} \mid u \; \text{has time} \; t\}$, $\mu_M^{JJ}(y, t)={1\over {\mid \bold{V}_{y,t} \mid}}\sum_{w\in \bold{V}_{y,t}}M_w^{pmp(K)}$, $\mu_M^{JJ}(\cdot, t)={1\over {\mid \bold{V}_{\cdot,t} \mid}}\sum_{w\in \bold{V}_{\cdot,t}}M_w^{pmp(K)}$, and $\alpha_t$ is the JJ constant.
+
+\vspace{-10pt}
+
+\end{definition}
+
+The 1st and 2nd moments of aggregated message processed by \JJnorm, $\hat{\hat{\mathbb E}}\left[M_v^{JJ}\right]$ and $\hat{\hat{\text{var}}}\left(M_v^{JJ}\right)$, are defined differently from the definition above. Refer to Appendix \ref{apdx:moments_in_jjnorm} for details.
+
+\begin{theorem}\label{thm:jj}
+The 1st and 2nd moments of aggregated message processed by \JJnorm is invariant.
+
+\vspace{-5pt}
+
+\textbf{Sketch of proof} We can calculate $\hat{\hat{\mathbb E}}\left[M_v^{JJ}\right]=\mu_{M}^{pmp(K)}(y)$, and $\hat{\hat{\text{var}}}\left(M_v^{JJ}\right)=\Sigma^{pmp(K)}_{MM}(y,t_{max})$.
+
+% \vspace{-15pt}
+% \begin{align}
+% \hat{\hat{\mathbb E}}\left[M_v^{JJ}\right]=\mu_{M}^{pmp(K)}(y) - \sum_{\tilde{y}\in \bold{Y}}P(\tilde{y})\mu_{M}^{pmp(K)}(\tilde{y})\\
+% \hat{\hat{\text{var}}}\left(M_v^{JJ}\right)=\Sigma^{pmp(K)}_{MM}(y,t_{max})
+% \end{align}
+% \vspace{-10pt}
+
+So the 1st and 2nd moments of aggregated messages are invariant. See Appendix \ref{apdx:moments_in_jjnorm} for details.
+
+\end{theorem}
+
+\vspace{-10pt}
+% Unlike \PNY, which involves indirect estimation of $\hat{\mathcal{P}}_{y t}\left(\tilde{y}, \tilde{t}\right)$, \JJnorm provides a more direct and efficient method to obtain an estimate $\hat{\alpha}_{t}$ of $\alpha_{t}$. Refer to Appendix \ref{apdx:JJnorm} for details.
+We further present an unbiased estimator $\hat{\alpha}_{t}$ of $\alpha_{t}$. Refer to Appendix \ref{apdx:JJnorm} for derivation.
+{\scriptsize
+\begin{align}
+\hat{\alpha}_t = { {1\over \mid{\bold{V}_{\cdot,t_{max}}}\mid-1}\sum\limits_{i\in \bold{V}_{\cdot,t_{max}}}(M_v^{pmp(K)}-\mu_M^{JJ}(\cdot,t_{max}))^2  -{1\over \mid{\bold{V}_{\cdot,t}}\mid-1} \sum\limits_{y\in \bold{Y}}\sum\limits_{i \in \bold{V}_{y,t}}(\mu_M^{JJ}(y,t) -\mu_M^{JJ}(\cdot,t) )^2  \over{1\over \mid{\bold{V}_{\cdot,t}}\mid-1} \sum_{y\in\bold{Y}} \sum_{i \in \bold{V}_{y,t}}(M_v^{JJ}-\mu_M^{JJ}(y,t))^2}
+\end{align}
+}%
+\vspace{-5pt}
+
+% Such a property can be applied in most decoupled GNNs that solely collect topological information linearly, such as in Yang et al. \cite{SeHGNN} or Hu et al. \cite{RpHGNN}. By applying \JJnorm only once at the final representation instead of at each layer's message passing process, alignment of the 2nd moment becomes efficient. This is because the condition for applying \JJnorm at the final representation, $\beta_{t}^{(K)}\Sigma_{XX}^{pmp (K)}(y,t_{max})= \Sigma_{XX}^{pmp (K)}(y,t)$, is automatically satisfied. This property endows \JJnorm, when used in conjunction with \PMP in most decoupled GNNs, with very high scalability and adaptability. As it can obtain invariant information without modifying the message passing function of the baseline model, it enables effective operation with minimal cost when applied to chronological split datasets.

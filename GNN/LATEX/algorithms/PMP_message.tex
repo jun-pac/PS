@@ -1,0 +1,22 @@
+\begin{algorithm}
+    \caption{\name Persistent Message Passing as neighbor aggregation}
+    \label{alg:agg}
+        \SetKwInOut{Input}{Input}\SetKwInOut{Output}{Output}
+        \Input{~Undirected graph $\mathcal{G}(\bold{V},\bold{E})$; input features $X_v, \forall v\in \bold{V}$; number of layers $K$; node time function $time:\bold{V}\rightarrow \mathrm{R}$; maximum time value $t_{\max}$; minimum time value $t_{\min}$; aggregate functions $\textsc{agg}$; combine functions $\textsc{combine}$; multisets of neighborhood $\mathcal{N}_v, \forall v \in \bold{V}$}
+        \BlankLine
+        \Output{~Final embeddings $\bold{z}_v, \forall v \in \bold{V}$}
+        \BlankLine
+        \BlankLine
+        $\mb{h}^0_v \leftarrow \mb{X}_v, \forall v \in \bold{V}$\;
+        \For{$k=0...K-1$}{
+            \For{$v \in \bold{V}$}{
+                $\mathcal{N'}(v) \leftarrow \mathcal{N}(v)$\;
+                \uIf{$|time(u)-time(v)|>\min(t_{\max}-time(v),time(v)-t_{\min})$}{
+                    $\mathcal{N'}(v).\text{insert}(u)$ \;
+                }
+                $\mb{M}^{(k+1)}_{v} \leftarrow \textsc{agg}(\{\mb{h}_u^{(k)}, \forall u \in \mathcal{N'}(v)\})$\;
+                $\mb{X}^{(k+1)}_{v} \leftarrow \textsc{combine}(\{\mb{X}^{(k)}_v, \mb{M}^{(k+1)}_{v}\})$\;
+            }
+        }
+        $\mb{z}_v\leftarrow \mb{X}^{K}_v, \forall v \in \bold{V}$ \;
+    \end{algorithm}

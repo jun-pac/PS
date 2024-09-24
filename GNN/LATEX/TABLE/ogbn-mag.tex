@@ -1,0 +1,24 @@
+
+\begin{wraptable}{R}{0.55\textwidth}
+    \vspace{0pt}
+        \fontsize{8}{8.4}\selectfont
+        \centering
+        \caption{The results on the ogbn-mag dataset. All data was obtained by averaging the results from nine different seeds. The symbol \textdagger denotes statistics obtained after excluding training results that failed to converge.}
+    
+        \begin{tabular}{ccc}
+        \hline
+        Methods                      & Valid                                  & Test                                   \\ \hline
+        {MLP}   & {0.2626 ¡¾ 0.0016} & {0.2692 ¡¾ 0.0026} \\ 
+        {SeHGNN+ComplEx}    & {0.5917 ¡¾ 0.0009} & {0.5719   ¡¾ 0.0012} \\ 
+        {RpHGNN+LP+CR+LINE} & {0.5973 ¡¾ 0.0008} & {0.5773 ¡¾ 0.0012}   \\
+        {CLGNN(baseline)} & {0.8021 ¡¾ 0.0020} & {0.7956 ¡¾ 0.0047} \\ \hline
+        CLGNN+MMP\textdagger                   & {0.7603 ¡¾ 0.0397} & {0.7601 ¡¾ 0.0389} \\
+        CLGNN+MMP                    & {0.3056 ¡¾ 0.3920} & {0.3047 ¡¾ 0.3926} \\ 
+        CLGNN+PMP                    & {0.8537 ¡¾ 0.0049} & {0.8497 ¡¾ 0.0048} \\ 
+        \textbf{CLGNN+PMP+JJnorm}             & \textbf{0.8608 ¡¾ 0.0049} & \textbf{0.8569 ¡¾ 0.0059} \\ \hline
+        \end{tabular}
+        \vspace{3pt}
+    
+        \label{table:ogbn-mag}
+        \vspace{-10pt}
+    \end{wraptable}

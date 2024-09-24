@@ -1,0 +1,21 @@
+
+\begin{table}[hbt!]
+    \small
+    \centering
+        \vspace{-14pt}
+        \caption{Accuracy of SeHGNN \cite{SeHGNN} on ogbn-mag when dataset split chronologically and randomly.}
+        \vspace{2pt}
+        \begin{tabular}{lll}
+        \hline
+        Split                                & wo/time emb                            & w/time emb                             \\ \hline
+        {Chronological} & {0.5682 ¡¾ 0.001}  & {0.5580 ¡¾ 0.0009} \\ \hline
+        {Random}        & {0.6302 ¡¾ 0.0011} & {0.6387 ¡¾ 0.0011} \\ \hline
+        \end{tabular}
+        \vspace{3pt}
+        \label{table:toy}
+        \vspace{-12pt}
+    
+        
+    \end{table}
+    
+    %when datasets split chronologically and randomly. Chronological split includes data up to 2017 in the training set, data from 2018 in the validation set, and data thereafter in the test set. Time encoding utilized a 20-bit sinusoidal positional encoding.

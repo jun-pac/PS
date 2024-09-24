@@ -1,0 +1,46 @@
+
+\begin{algorithm}
+    \caption{\name Estimation of relative connectivity.}
+    \label{alg:rel_con}
+            \SetKwInOut{Input}{Input}\SetKwInOut{Output}{Output}
+        \Input{~ Neighboring node sets $\mathcal{N}_{u},\ \forall u \in \bold{V}$; node time function $time:V\rightarrow \bold{T}$; train, test split $V^{tr}=\{v\mid v\in V, time(v) < t_{\max}\}$ and $V^{te}=\{v\mid v\in \bold{V}, time(v) = t_{\max}\}$; node label function $label:\bold{V}^{tr} \rightarrow \bold{Y}$.}
+        \BlankLine
+        \Output{~Estimated relative connectivity $\hat{\mathcal{P}}_{y, t}(\tilde y ,\tilde t)$, $\forall y, \tilde y\in \bold{Y},\ t, \tilde t \in \bold{T}$.}
+    
+        \BlankLine
+        \BlankLine
+        \textbf{Estimate $\hat{\mathcal{P}}_{y, t} (\tilde y ,\tilde t)$ when $t \neq t_{\max}$ and $\tilde t \neq t_{\max}$.}\\
+        \For{$t \in \bold{T}\setminus\{t_{\max}\}$}{
+            \For{$\tilde t \in \bold{T}\setminus\{t_{\max}\}$}{
+                $\hat{\mathcal{P}}_{y, t} (\tilde y ,\tilde t)\leftarrow{\sum_{u\in \{v\in \bold{V} | v\text{ has label }y, v\text{ has time }t\}}|\{v\in \mathcal{N}_u | v\text{ has label }\tilde y, v\text{ has time }\tilde t\}|\over \sum _{u\in \{v\in \bold{V} | v\text{ has label }y, v\text{ has time }t\}}|\mathcal{N}_u|}$\;
+            }
+        }
+        
+        \BlankLine
+        \textbf{Estimate $g$ function.}\\
+        \For{$y \in \bold{Y}$}{
+            \For{$\tilde y \in \bold{Y}$}{
+                \For{$\Delta \in \{|\tilde t -t | \mid t, \tilde t\in \bold{T}\}$}{
+                    $\hat{g}(y, \tilde y, \Delta)\leftarrow {\sum_{t< t_{\max}-\Delta}\hat{\mathcal{P}}_{y,t}(\tilde y, t+\Delta)+\sum_{t<t_{\max}} \hat{\mathcal{P}}_{y,t}(\tilde y, t-\Delta)\over \sum_{t< t_{\max}-\Delta}\sum_{y'\in\bold Y}\hat{\mathcal{P}}_{y,t}(y', t)+\sum_{t<t_{\max}}\sum_{y'\in\bold Y}\hat{\mathcal{P}}_{y,t}(y', t)}$\;
+                }
+            }
+        }
+    
+        \BlankLine
+        \textbf{Estimate $\hat{\mathcal{P}}_{y, t} (\tilde y ,\tilde t)$ when $t = t_{\max}$ or $\tilde t = t_{\max}$.}\\
+        \For{$y \in \bold{Y}$}{
+            \For{$\tilde y \in \bold{Y}$}{
+                \For{$t \in \bold{T}$}{
+                    $\hat{\mathcal P}_{y, t}(\tilde y, t_{\max})\leftarrow{\hat{g}(y, \tilde y, |t_{\max}-t|)\over \sum_{y'\in \bold{Y}}\sum_{t'\in\bold{T}}\hat{g}(y, y', |t'-t|)}$\;
+                }
+            }
+        }
+        \For{$y \in \bold{Y}$}{
+            \For{$\tilde y \in \bold{Y}$}{
+                \For{$\tilde t \in \bold{T}$}{
+                    $\hat{\mathcal P}_{y, t_{\max}}(\tilde y, \tilde t)\leftarrow{\hat{g}(y, \tilde y, |\tilde t-t_{\max}|)\over \sum_{y'\in \bold{Y}}\sum_{t'\in\bold{T}}\hat{g}(y, y', |t'-t_{\max}|)}$\;
+                }
+            }
+        }
+        
+    \end{algorithm}

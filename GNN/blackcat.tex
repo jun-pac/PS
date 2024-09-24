@@ -1,0 +1,492 @@
+# Assumptions
+
+\textbf{Assumption 1}: 
+
+$P_e(Y) =P(Y)$ , which implies $P_{e^{te}}(Y) = P_e(Y), \ \forall e \in \epsilon^{tr}$
+
+\textbf{Assumption 2}: 
+
+$P_e(X\mid Y) =P(X\mid Y)$ , which implies $P_{e^{te}}(X\mid Y) = P_e(X\mid Y), \ \forall e \in \epsilon^{tr}$
+
+\textbf{Assumption 3}: 
+
+$\mathcal{P}_{y_1 t_1} (y_2 ,t_2) = f(y_1, t_1) g(y_1, y_2, \mid t_2-t_1\mid), \ \forall t_1, t_2 \in \bold{T}, y_1, y_2\in \bold{Y}$
+
+Let $\bold{Y}$ denote the set of labels, and $\bold{T}=\{\dots, t_{max-1}, t_{max}\}$ represent the set of temporal information associated with nodes. The set $\bold{T}$ consists of discrete time elements, ranging from infinitely past times to the most recent time, with uniform intervals.
+
+Here, $\mathcal{P}_{y_1 t_1} (y_2 ,t_2)$ denotes the probability distribution of label and time pairs of neighboring nodes, where the label is $y_1$ and the time is $t_1$. Since it is a probability distribution, it satisfies $\sum_{y_2 \in \bold{Y}}\sum_{t_2 \in \bold{T}} \mathcal{P}_{y_1 t_1}(y_2, t_2)=1$. This does not signify the actual probability of connection but rather represents the relative proportions of attributes among neighboring nodes. Additionally, the functions $f(y_1,t_1)$ and $g(y_1, y_2, \mid t_1- t_2\mid)$ indicate separability functions rather than probability density functions.
+
+Assumptions 1 and 2 posit that the features and labels allocated to each node originate from the same distribution. Assumption 3 assumes separability in the distribution of neighboring nodes.
+
+Incorporating Assumptions 1 and 2 yields $P_e(X, Y) = P(X, Y)$; however, interpreting this as the absence of distribution shift would be erroneous. Even if the joint distribution of the initial feature $X^{(0)}$ and label remain identical, the topological information within ego-graphs varies with the target node's temporal context. Failure to adequately address such shifts results in the aggregated message distribution shifting with each GNN aggregation layer.
+
+Assumption 3 is based on the observation that the proportion of nodes at time $t_2$ within the set of neighboring nodes of the target node at time $t_1$ decreases as the time difference $|t_2 - t_1|$ between them increases. $g(y_1,y_2,|t_2 - t_1|)$ is the function represents the proportion of neighboring nodes as a function that decays relative to the time difference $|t_2 - t_1|$. However, assuming $g(y1, y2, |t_2-t_1|)$ directly as a joint distribution is unrealistic. This is because the distribution of relative time differences among neighboring nodes varies depending on the target node's time $t_1$. For instance, if $t_1=1$, neighboring nodes can have relative times of $0,1,\dots,t_{max}-1$, while if $t_1=\lfloor t_{max}/2\rfloor$, the possible relative times of neighboring nodes become $0,1,\dots,\lfloor(t_{max}+1)/2\rfloor$. Therefore, to ensure that $\mathcal{P}_{y_1 t_1}(y_2, t_2)$ becomes a probability density function, the relative proportion value $g(y_1, y_2, |t_2 - t_1|)$ needs to be adjusted. The function $f(y_1 ,t_1)$ plays the role of converting these relative proportion values into probability density function values.
+
+![function_g.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/ba842ab0-b218-4919-860c-862d259ffd62/4dbbaa0f-d3e2-4045-a4a0-53580570e090/function_g.png)
+
+Expressing the probability distribution as the product of two functions, $f$ and $g$, yields surplus degrees of freedom. Notably, altering function $f$ by a constant $\lambda$ and adjusting function $g$ accordingly by $\lambda$ does not impact $\mathcal{P}_{y_1 t_1}(y_2, t_2)$. In fact, the constant $\lambda$ can vary for different $y_1$ values without consequence, allowing for distinct $\lambda_{y_1}$ values. To confine this freedom, we introduce the following constraint.:
+
+$$
+\sum_{y_2\in \bold{Y}} g(y_1, y_2, 0 )=1
+$$
+
+![scale_factor_f.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/ba842ab0-b218-4919-860c-862d259ffd62/88ebf28a-b363-45de-8611-2ec8d3c0f603/scale_factor_f.png)
+
+These assumptions are rooted in properties observable in real-world graphs. For instance, in the academic paper citation graph utilized in this study, labels represent the categories of papers, while features comprise vector embeddings of paper abstracts. While the joint distribution of paper categories and abstracts may remain stable with minor temporal changes, the probability of two papers being linked via citation decreases significantly with the temporal gap between them. Hence, in citation graphs, the probability distribution of connections between nodes evolves much more sensitively to time than to features or labels.
+
+~~In addition to intuitive reasoning, we have empirically validated the validity of these assumptions in real datasets. Statistical analyses regarding these assumptions for the ogbn-mag dataset, employed in this paper, are provided in the Appendix 2.~~
+
+Revisiting the objective of our study, based on Assumptions 1 to 3, our aim is to derive the invariant information $\Phi(C_g(i))$ that fully exploits all possible information while satisfying $P_e(Y|\Phi \circ C_g) = P_{e^{te}}(Y|\Phi \circ C_g),\ \forall e\in \epsilon^{tr}$.
+
+Based on these three assumptions, we propose an invariant message passing method that maintains the invariance of the previous layer's representation. Specifically, we introduce methods for aligning the first and second moments of the aggregated message to ensure invariance. The first-order alignment corrects the aggregated message's first moment to be invariant if the first moment of the previous layer's representation is invariant. Similarly, the second-order alignment method corrects the second moment.
+
+Furthermore, we theoretically analyze how the difference in representation¡¯s distribution depending on the environment is bounded when a nodewise semantic aggregation function is applied between message passing. Given the assumption of invariance in initial features in Assumptions 1 and 2, we were able bound the final representation obtained through the entire process of topological aggregation to be approximately invariant.
+
+To model the chronological split, we designate the set of nodes with time information $t_{max}$ as the test set, while the remaining nodes form the training set. Specifically, we define $\bold{V}^{te}=\bold{V}_{\cdot,t{max}} = \{u \in \bold{V} \mid t_u=t_{max}\}$ and $\bold{V}^{tr}=\bold{V}\setminus\bold{V}_{\cdot,t{max}} = \{u \in \bold{V} \mid t_u\neq t_{max}\}$.
+
+In alternative terms, within the set of environments $\epsilon=\{\dots,t_{max}\}$, the test environment comprises $e^{te} = {t_{max}}$, while the train environment consists of $e^{tr} = \{\dots,t_{max}-1\}$. Therefore, in subsequent discussions, we presume that the labels of nodes with time $t_{max}$ are unknown during the training process.
+
+# 1st order alignment
+
+Message passing refers to the process of aggregating representations from neighboring nodes in the previous layer. Here, we assume the commonly used averaging message passing procedure. For any arbitrary target node $i\in\bold{V}$,
+
+$\mathbb E\left[{M_{ i}^{(k+1)}}\right]=\mathbb E_{(y, t)\sim\mathcal{P}_{y_i t_i}, \bold{x}\sim {X_{yt}^{(k)}}}\left[\bold{x}\right]=\sum_{y\in \bold{Y}}\sum_{t\in\bold{T}}\mathcal{P}_{y_i t_i}(y, t)\mathbb E_{\bold{x}\sim {X_{yt}^{(k)}}} \left[\bold{x}\right]$
+
+Where $M_i^{(k+1)}$ represents the aggregated message at node $i$ in the $k+1$-th layer, and $X_{yt}^{(k)}$ denotes the distribution of representations from the previous layer.
+
+Even if the mean of the representations from the previous layer is invariant across time, i.e., $\mathbb{E}_{\bold{x}\sim {X_{yt}^{(k)}}}\left[\bold{x}\right]=\mu_{X}^{(k)}(y)$, $\mathbb E[{M_{ i}^{(k+1)}}]$remains dependent on $t_i$ due to the dependency of $\mathcal{P}_{y_i t_i}(y, t)$ on the time $t_i$ of the target node. This disappearance of invariance is a consequence of the averaging message passing.
+
+Our objective is to modify the spatial aggregation method to ensure that the final representation obtained by collecting all topological information is invariant. Here, we propose an improved message passing method to ensure that the 1st moment of the aggregated message obtained through message passing is invariant with respect to time.
+
+## \PMP
+
+As one approach to achieving 1st moment alignment, we propose Persistent Message Passing (\PMP).
+
+The reason for the dependency on the target node's time during averaging message passing is that the distribution of relative times held by neighboring nodes varies. Let $t_i$ denote the time of the target node and $t_j$ denote the time of a neighboring node. According to Assumption 3, the distribution of times held by neighboring nodes depends on the difference in absolute relative times. Specifically, for $\Delta=  | t_j - t_i|$ where $0<\Delta \le | t_{max}-t_i|$, both $t_i + \Delta$ and $t_i - \Delta$ neighbor nodes can exist. However, nodes with $\Delta >|t_{max}-t_i|$ are only possible when $t_j=t_i-\Delta$. Consequently, certain ranges of relative time receive twice the weighting in the averaging process, depending on $t_i$.
+
+The motivation behind \PMP is to correct this by incorporating neighboring nodes that satisfy $| t_j - t_i | =0$ or $| t_j - t_i | > | t_{max}-t_i |$ with double weighting.
+
+![PMP.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/ba842ab0-b218-4919-860c-862d259ffd62/91968520-3eb6-46ac-81a7-f8404c0b22d8/PMP.png)
+
+Formally, when defined as $\mathcal{N}^{\text{single}}_i=\{v\in \mathcal{N}_i \big| t_v=t_i \text{ or }  t_v < 2t_i - t_{max} \}$ and $\mathcal{N}^{\text{double}}_i=\{v\in \mathcal{N}_i\big| | t_v-t_i|\le| t_{max} - t_i | \}$, the message passing from the $k$-th layer to the $k+1$-th layer is as follows:
+
+$$
+M_{i}^{pmp(k+1)} ={{2\sum_{v\in \mathcal{N}^{\text{single}}_i} \bold{x}_{v}^{(k)}+\sum_{v\in \mathcal{N}^{\text{double}}_i} \bold{x}_{v}^{(k)}}\over{2\big|\mathcal{N}^{\text{single}}_i\big| + \big|\mathcal{N}^{\text{double}}_i\big|}}
+$$
+
+Alternatively, when defined as $\mathcal{N}_i (y,t) = \{v \in \mathcal{N}_i \mid y_v=y, t_v=t \}$, $\bold{T}_{\tau}^{\text{single}}= \{t \in \bold{T}\ \big |\  t =\tau \text{ or }t<2\tau-t_{max}\}$, and $\bold{T}_{\tau}^{\text{double}}= \{t \in \bold{T}\ \big | \ |t- \tau| \le|t_{max}-\tau|, t\neq \tau\}$, the message passing mechanism of \PMP can be expressed as followes:
+
+$$
+M_{i}^{pmp(k+1)} = {\sum_{y\in \bold{Y}}\sum_{t\in\bold{T}_{t_i}^{\text{single}}}\sum_{v\in \mathcal{N}_{i}(y, t) }2\bold{x}_v^{(k)}+\sum_{y\in \bold{Y}}\sum_{t\in\bold{T}_{t_i}^{\text{double}}}\sum_{v\in \mathcal{N}_{i}(y, t) }\bold{x}_v^{(k)}\over \sum_{y\in \bold{Y}}\sum_{t\in\bold{T}_{t_i}^{\text{single}}}2|\mathcal{N}_{i}(y, t)|+\sum_{y\in \bold{Y}}\sum_{t\in\bold{T}_{t_i}^{\text{double}}}|\mathcal{N}_{i}(y, t)|}\\={\sum_{y\in \bold{Y}}\sum_{t\in\bold{T}_{t_i}^{\text{single}}}{|\mathcal{N}_i(y,t)|\over |\mathcal{N}_i|}2{\sum_{v\in \mathcal{N}_{i}(y, t) }\bold{x}_v^{(k)} \over |\mathcal{N}_i(y,t)|}+\sum_{y\in \bold{Y}}\sum_{t\in\bold{T}_{t_i}^{\text{single}}}{|\mathcal{N}_i(y,t)|\over |\mathcal{N}_i|}{\sum_{v\in \mathcal{N}_{i}(y, t) }\bold{x}_v^{(k)} \over |\mathcal{N}_i(y,t)|}\over \sum_{y\in \bold{Y}}\sum_{t\in\bold{T}_{t_i}^{\text{single}}}2{|\mathcal{N}_{i}(y, t)|\over| \mathcal{N}_i|}+\sum_{y\in \bold{Y}}\sum_{t\in\bold{T}_{t_i}^{\text{double}}}{|\mathcal{N}_{i}(y, t)|\over| \mathcal{N}_i|}}\\ \simeq {\sum_{y\in \bold{Y}}\sum_{t\in\bold{T}_{t_i}^{\text{single}}}2{\mathcal{P}_{y_i t_i}(y,t)}{\sum_{v\in \mathcal{N}_{i}(y, t) }\bold{x}_v^{(k)} \over |\mathcal{N}_i(y,t)|}+\sum_{y\in \bold{Y}}\sum_{t\in\bold{T}_{t_i}^{\text{single}}}{\mathcal{P}_{y_i t_i}(y,t)}{\sum_{v\in \mathcal{N}_{i}(y, t) }\bold{x}_v^{(k)} \over |\mathcal{N}_i(y,t)|}\over \sum_{y\in \bold{Y}}\sum_{t\in\bold{T}_{t_i}^{\text{single}}}2{\mathcal{P}_{y_i t_i}(y,t)}+\sum_{y\in \bold{Y}}\sum_{t\in\bold{T}_{t_i}^{\text{double}}}{\mathcal{P}_{y_i t_i}(y,t)}}
+
+$$
+
+Suppose the representations from the previous layer are invariant, i.e., $\mathbb{E}_{\bold{x}\sim {X_{yt}^{(k)}}}\left[\bold{x}\right]=\mu_{X}^{(k)}(y)$. In this case, the expectation of the aggregated message is as follows.
+
+~~For any arbitrary time $t$, we can assume that the ratio of neighboring nodes of target node $i$ that have time $t$ and the average of their representations are independent. That is, ${|\{v\in\mathcal{N}_i \mid t_v = t\}|\over{2\big|\mathcal{N}^{\text{single}}_i\big| + \big|\mathcal{N}^{\text{double}}_i\big|}} \perp {1\over |\{v\in\mathcal{N}_i \mid t_v = t\}|}\sum_{v\in \{v\in\mathcal{N}_i \mid t_v = t\}}\bold{x}_v^{(k)}$.~~
+
+$$
+\mathbb E\left[{M_{ i}^{pmp(k+1)}}\right] = {\sum_{y\in \bold{Y}}\sum_{t\in\bold{T}_{t_i}^{\text{single}}}2\mathcal{P}_{y_i t_i}(y, t) \mu_{X}^{(k)}(y)+\sum_{y\in \bold{Y}}\sum_{t\in\bold{T}_{t_i}^{\text{double}}}\mathcal{P}_{y_i t_i}(y, t) \mu_{X}^{(k)}(y)\over \sum_{y\in \bold{Y}}\sum_{t\in\bold{T}_{t_i}^{\text{single}}}2\mathcal{P}_{y_i t_i}(y, t)+\sum_{y\in \bold{Y}}\sum_{t\in\bold{T}_{t_i}^{\text{double}}}\mathcal{P}_{y_i t_i}(y, t)}\\={\sum_{y\in \bold{Y}}\left(\sum_{t\in\bold{T}_{t_i}^{\text{single}}}2\mathcal{P}_{y_i t_i}(y, t)+\sum_{t\in\bold{T}_{t_i}^{\text{double}}}\mathcal{P}_{y_i t_i}(y, t)\right)\mu_{X}^{(k)}(y)\over\sum_{y\in \bold{Y}}\left(\sum_{t\in\bold{T}_{t_i}^{\text{single}}}2\mathcal{P}_{y_i t_i}(y, t)+\sum_{t\in\bold{T}_{t_i}^{\text{double}}}\mathcal{P}_{y_i t_i}(y, t)\right)}
+$$
+
+By assumption 3,
+
+$$
+\sum_{t\in\bold{T}_{t_i}^{\text{single}}}2\mathcal{P}_{y_i t_i}(y, t)+\sum_{t\in\bold{T}_{t_i}^{\text{double}}}\mathcal{P}_{y_i t_i}(y, t) \\=f(y_i, t_i )\left(\sum_{t\in\bold{T}_{t_i}^{\text{single}}}2g(y_i, y, |t_i - t|)+\sum_{t\in\bold{T}_{t_i}^{\text{double}}}g(y_i, y, |t_i - t|)\right)
+$$
+
+$$
+f(y_i, t_i )\left(2g(y_i, y, 0)+2\sum_{\tau>|t_{max}-t_i |}g(y_i, y,\tau)+\sum_{0<\tau\le|t_{max}-t_i|}g(y_i, y, \tau)\right) \\= 2f(y_i, t_i )\sum_{\tau\ge 0}g(y_i, y, \tau)
+$$
+
+Substituting this into the previous expression yields,
+
+$$
+\mathbb E\left[{M_{ i}^{pmp(k+1)}}\right]={\sum_{y\in \bold{Y}}\sum_{\tau\ge 0}g(y_i, y, \tau)\mu_{X}^{(k)}(y)\over\sum_{y\in \bold{Y}}\sum_{\tau\ge 0}g(y_i, y, \tau)}
+$$
+
+Since there is no $t_i$ term in this expression, the mean of this aggregated message is invariant with respect to the target node's time.
+
+## \MMP
+
+\PMP is not the only method for achieving 1st order alignment. There can be infinitely many ways to adjust the distribution of absolute relative times to be consistent regardless of the target node's time. Introducing Monodirectional Message Passing (\MMP) as one such approach.
+
+\MMP aggregates information only from neighboring nodes whose times are the same as or earlier than the target node. In other words, it is a message passing function that collects and averages information only from past nodes among adjacent nodes.
+
+![MMP.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/ba842ab0-b218-4919-860c-862d259ffd62/d8b22392-59fa-4aa1-953f-bb6c44fb347e/MMP.png)
+
+$$
+M_{i}^{mmp(k+1)} = {{\sum_{v\in \{v\in \mathcal{N}_i \mid t_v \le t_i \}} \bold{x}_{v}^{(k)}}\over{\big|\{v\in \mathcal{N}_i \mid t_v \le t_i \}\big| }} \simeq {\sum_{y\in \bold{Y}}\sum_{t\le t_i}{\mathcal{P}_{y_i t_i}(y,t)}{\sum_{v\in \mathcal{N}_{i}(y, t) }\bold{x}_v^{(k)} \over |\mathcal{N}_i(y,t)|}\over \sum_{y\in \bold{Y}}\sum_{t\le t_i}{\mathcal{P}_{y_i t_i}(y,t)}}
+
+$$
+
+Applying assumption 3 as in \PMP, the expectation is as follows.
+
+$$
+\mathbb E\left[{M_{ i}^{mmp(k+1)}}\right] = {\sum_{y\in \bold{Y}}\sum_{t\le t_i }\mathcal{P}_{y_i t_i}(y, t) \mu_{X}^{(k)}(y)\over \sum_{y\in \bold{Y}}\sum_{t\le t_i }\mathcal{P}_{y_i t_i}(y, t)}={\sum_{y\in \bold{Y}}\sum_{\tau\ge 0}g(y_i, y,\tau) \mu_{X}^{(k)}(y)\over \sum_{y\in \bold{Y}}\sum_{\tau\ge 0}g(y_i, y,\tau)}
+$$
+
+This also lacks the $t_i$ term, thus it is invariant.
+
+Both \PMP and \MMP adjust the weights of messages collected from neighboring nodes that meet certain conditions, either doubling or ignoring their impact. They can be implemented easily by reconstructing the graph according to the conditions without any modifications to the existing code.
+
+Comparing \PMP and \MMP, \MMP collects less information. As \MMP always gathers information only from the past during the process of collecting topological information, the effective ego-graph size that affects the final representation decreases exponentially with the number of layers. A decrease in the amount of collected information leads to an increase in the variance of the final representation, resulting in reduced prediction accuracy. The difference in prediction accuracy when applying \MMP and \PMP can be observed in the experimental results of *Graph1, Graph2*. 
+
+It is important here that not all invariant information is our interest. For instance, if the final representation is constant, it is invariant, but it does not provide meaningful information for classification. In other words, we are interested in invariant representation that is maximally informative. Thus, since \MMP is arbitrarily reducing the effective ego-graph, so it cannot be said that it satisfies the requirements for maximally informative. 
+
+To summarize, \PMP not only performs better experimentally compared to \MMP as an invariant message passing method but is also the most straightforward and intuitive method to satisfy the necessary condition for maximizing informativeness. \PMP has almost no additional overhead compared to traditional averaging message passing and can be easily applied in practice by simply duplicating edges belonging to $\mathcal{N}_i^{\text{single}}$, that is, by reconstructing the graph. Moreover, it is more expressive than \MMP due to its larger effective ego-graph size. Given these advantages, PMP will be used as the 1st order alignment method in the subsequent discussions.
+
+# 2nd order alignment
+
+Methods like \PMP and \MMP, which are 1st order alignment methods, preserve the invariance of the 1st moment of the aggregated message, but they do not guarantee the same property for the 2nd moment. 
+
+Let's suppose that the 1st moment and 2nd moment of the previous layer's representation $\bold x$ do not depend on time. That is, $E_{\bold{x}\sim {X_{yt}^{(k)}}}\left[\bold{x}\right]=\mu_{X}^{(k)}(y)$ and $\text{var}{(X_{yt})}=\mathbb{E}_{\bold{x}\sim {X_{yt}^{(k)}}}\left[(\bold{x}-\mu_{X}^{(k)}(y))(\bold{x}-\mu_{X}^{(k)}(y))^{\top}\right]=\Sigma_{XX}^{(k)}(y)$.
+
+When supposing that the 1st order moment is preserved after passing through \PMP or \MMP, one naive method for aligning the 2nd moment is to calculate the covariance matrix of the aggregated message $M_{i}^{pmp(k+1)}$ for each time $t_i$ of node $i$ and adjust for the differences. However, when $t_i=t_{max}$, i.e., for nodes in the test set where the label is unknown, we cannot compute $\text{var}(M_{y t_{max}}^{pmp (k+1)})$. Here, we introduce \PNY and \JJnorm, which are methods for adjusting the aggregated message obtained using the \PMP method to achieve alignment even for the 2nd moment when the 1st moment is invariant.
+
+### \PNY norm
+
+Suppose that the variance and expectation of the representation from the previous layer are invariant with respect to the target node's time $t_1$. If we can specify $\mathcal{P}_{y_1 t_1}(y_2, t_2)$ for all cases, transformation of covariance matrix during the \PMP process could be calculated. \PNY numerically estimates the transformation of the covariance matrix during the \PMP process, and determines an affine transformation that can correct this variation.
+
+The calculation of the $k+1$-th aggregated message $M_{i}^{pmp(k+1)}$ for the node $i$ described earlier is as follows:
+
+$$
+M_{i}^{pmp(k+1)} = {{2\sum_{v\in \mathcal{N}^{\text{single}}_i} \bold{x}_{v}^{(k)}+\sum_{v\in \mathcal{N}^{\text{double}}_i} \bold{x}_{v}^{(k)}}\over{2\big|\mathcal{N}^{\text{single}}_i\big| + \big|\mathcal{N}^{\text{double}}_i\big|}}
+$$
+
+Here, $\mathcal{N}^{\text{single}}_i=\{v\in \mathcal{N}_i \big| t_v=t_i \text{ or }  t_v < 2t_i - t_{max} \}$*,* $\mathcal{N}^{\text{double}}_i=\{v\in \mathcal{N}_i\big| | t_v-t_i|\le| t_{max} - t_i | \}$*.* We previously proved that the expectation of $M_{i}^{pmp(k+1)}$ is time-invariant. Therefore, we can express $\mathbb{E}_{i\in \bold{V}_{yt}} [ M_i^{pmp (k+1)}] =\mu_{M}^{pmp(k+1)}(y_i)$, where $\bold{V}_{yt}= \{v\in \bold{V} \mid t_v = t, y_v = y\}$.
+
+We will analyze how the covariance matrix of the aggregated message at node $i$ varies with time $t_i$, and label $y_i$, and define affine transformations to make them time-invariant.
+
+$$
+\text{var}(M_{i}^{pmp(k+1)})=\mathbb{E}\left[(M_i ^{pmp (k+1)}-\mu_{M}^{pmp(k+1)}(y_i))(M_i ^{pmp (k+1)}-\mu_{M}^{pmp(k+1)}(y_i))^{\top}\right]
+$$
+
+We assume independence between representations from the previous layer ~~and also assume, as in \PMP, that the distribution of neighboring nodes' time information and their representations are independent~~, And suppose that the 2nd moment of representations from the previous layer is invariant. In other words, if $\text{var}(X_i^{(k)})=\text{var}(X_j^{(k)})\text{ s.t. }y_i=y_j$, then we can denote the 2nd moment as $\text{var}(X_i^{(k)})=\Sigma_{XX}^{pmp(k)}(y_i)$. Then 2nd moment of the aggregated message through \PMP is as follows:
+
+$$
+\text{var}(M_{i}^{pmp(k+1)}) = {\sum_{y\in \bold{Y}}\left(\sum_{t\in\bold{T}_{t_i}^{\text{single}}}4\mathcal{P}_{y_i t_i}(y, t)+\sum_{t\in\bold{T}_{t_i}^{\text{double}}}\mathcal{P}_{y_i t_i}(y, t)\right)\Sigma_{XX}^{pmp(k)}(y)
+\over
+\left(\sum_{y\in \bold{Y}}\sum_{t\in\bold{T}_{t_i}^{\text{single}}}2\mathcal{P}_{y_i t_i}(y, t)+\sum_{y\in \bold{Y}}\sum_{t\in\bold{T}_{t_i}^{\text{double}}}\mathcal{P}_{y_i t_i}(y, t)\right)^2}
+$$
+
+This value depends not only on the label $y_i$ of the target node but also on $t_i$. Therefore, we can express $\text{var}(M_{i}^{pmp(k+1)})=\Sigma^{pmp(k+1)}_{MM}(y_i,t_i)$. Let's design an affine transformation to make it invariant over time. For a time $t$ where $t \neq t_{\text{max}}$ and for any $y$, generally $\Sigma^{pmp(k+1)}_{MM}(y_i,t_i)\neq\Sigma^{pmp(k+1)}_{MM}(y_i,t_{\text{max}})$.
+
+Since the covariance matrix is always positive semi-definite, we can always orthogonally diagonalize it as $\Sigma^{pmp(k+1)}_{MM}(y,t)=P_tD_t P_t^{-1}$ and $\Sigma^{pmp(k+1)}_{MM}(y,t_{\text{max}})=P_{t_{\text{max}}}D_{t_{\text{max}}} P_{t_{\text{max}}}^{-1}$, where the diagonal elements of $D_{t}$ and $D_{t_{\text{max}}}$ are non-negative. Therefore, when $\text{var}(M_i^{pmp (k+1)})=\Sigma^{pmp(k+1)}_{MM}(y_i,t_i)$, $\mathbb E[M_i^{pmp(k+1)}]=\mu_M^{pmp (k+1)}({y_i})$, we can define the following affine transformation:
+
+$M_{i}^{PNY(k+1)}\leftarrow A_{t_i} (M_i^{pmp(k+1)}-\mu_{M}^{pmp(k+1)}(y_i))+\mu_{M}^{pmp(k+1)}(y_i)$
+
+At this point, it can be easily shown that $\mathbb{E}[M_{i}^{PNY(k+1)}]=\mu_{M}^{pmp(k+1)}(y)$ and $\text{var}(M_{i}^{PNY(k+1)})=A_{t_i}\Sigma^{pmp(k+1)}_{MM}(y_i,t_i)A{t_i}^{\top} = \Sigma^{pmp(k+1)}_{MM}(y_i,t_{max})$. In other words, if we can estimate $\Sigma^{pmp(k+1)}_{MM}(y,t)$ for any $y\in \bold{Y}, \ t\in \bold{T}$, then through affine transformation, we can make the 2nd moment of aggregated messages invariant over node time.
+
+However, to obtain $\Sigma^{pmp(k+1)}_{MM}(y,t)$, we need to know $\mathcal{P}_{y_i t_i}(y_j ,t_j)$ for any arbitrary $t_i, t_j \in \bold{T}$ and $y_i, y_j\in \bold{Y}$. While the best unbiased estimator involves counting the number of nodes with attribute $y_j, t_j$ in neighboring nodes, for each node with attribute $y_i, t_i$ and dividing by the total number of neighboring nodes, directly estimating $\mathcal{P}_{y_i t_i} (y_j ,t_j)$ when $t_i=t_{max}$ or $t_j=t_{max}$ is not feasible due to the unavailability of labels in the test set. It's important to note that this limitation doesn't apply when $t_i \neq t_{max}$ and $t_j \neq t_{max}$ because even if neighboring nodes have the time $t_{max}$, counting their total number is still feasible. Thus, when $t_i \neq t_{max}$ and $t_j \neq t_{max}$, $\mathcal{P}_{y_i t_i} (y_j ,t_j)$ has the following best unbiased estimator:
+
+$$
+\hat{\mathcal{P}}_{y_i t_i} (y_j ,t_j)={\sum_{u\in \{v\in \bold{V} | y_v=y_i, t_v=t_i\}}|\{v\in \mathcal{N}_u | y_v=y_j, t_v=t_j\}|\over \sum _{u\in \{v\in \bold{V} | y_v=y_i, t_v=t_i\}}|\mathcal{N}_u|} , \ \forall t_i, t_j \neq t_{max}
+$$
+
+To estimate the covariance matrix as shown in Equation 3-2, we need to estimate $\mathcal{P}_{y_i t_i} (y_j ,t_j)$ for all arbitrary $t_i, t_j \in \bold{T}$ and $y_i, y_j\in \bold{Y}$. We utilize assumption 3 to compute $\hat{\mathcal{P}}_{y_i t_i} (y_j ,t_j)$ for cases where $t_i =t_{max} \text{ or } t_j =t_{max}$.
+
+---
+
+Let's first consider the following equation:
+
+$$
+\sum_{y_j\in\bold Y}\mathcal{P}_{y_it_i}(y_j, t_i) = \sum_{y_j \in \bold{Y}} f(y_i, t_i)g(y_i, y_j, 0) =f(y_i, t_i)\sum_{y_j \in \bold{Y}}g(y_i, y_j, 0)
+$$
+
+Earlier, when introducing assumption 3, we defined $\sum_{y_j \in \bold{Y}}g(y_i, y_j, 0)=1$. Therefore, when $t_i<t_{max}$, we can express $f(y_i, t_i)$ as follows:
+
+$$
+f(y_i, t_i)=\sum_{y_j\in\bold Y}\mathcal{P}_{y_it_i}(y_j, t_i)
+$$
+
+For any $\Delta \in \{|t_2 -t_1 | \mid t_1, t_2\in \bold{T}\}$, we have:
+
+$$
+\sum_{t_< t_{max}-\Delta}\mathcal{P}_{y_it_i}(y_j, t_i+\Delta) =\sum_{t_< t_{max}-\Delta}f(y_i, t_i)g(y_i, y_j, \Delta)
+$$
+
+$$
+\sum_{t_i<t_{max}}\mathcal{P}_{y_it_i}(y_j, t_i-\Delta) =\sum_{t_i<t_{max}}f(y_i, t_i)g(y_i, y_j, \Delta)
+$$
+
+The reason we consider up to $t_i= {t_{max}-1-\Delta}$ in the first equation and up to $t_i = t_{max}-1$ in the second equation is because we assume situations where ${\mathcal{P}}_{y_i t_i} (y_j ,t_j)$ **cannot be estimated when **$t_i=t_{max}$ or $t_j=t_{max}$. Utilizing both equations aims to construct an estimator using as many measured values as possible when $t_i\neq t_{max}$.
+
+Thus,
+
+$$
+g(y_i, y_j, \Delta)= {\sum_{t_i< t_{max}-\Delta}\mathcal{P}_{y_it_i}(y_j, t_i+\Delta)+\sum_{t_i<t_{max}} \mathcal{P}_{y_it_i}(y_j, t_i-\Delta)\over \sum_{t_i< t_{max}-\Delta}f(y_i, t_i)+\sum_{t_i<t_{max}}f(y_i, t_i)}
+$$
+
+Since $f(y_i, t_i)=\sum_{y_j\in\bold Y}\mathcal{P}_{y_it_i}(y_j, t_i)$,
+
+$$
+g(y_i, y_j, \Delta)= {\sum_{t_< t_{max}-\Delta}\mathcal{P}_{y_it_i}(y_j, t_i+\Delta)+\sum_{t_i<t_{max}} \mathcal{P}_{y_it_i}(y_j, t_i-\Delta)\over \sum_{t_< t_{max}-\Delta}\sum_{y\in\bold Y}\mathcal{P}_{y_it_i}(y, t_i)+\sum_{t_i<t_{max}}\sum_{y\in\bold Y}\mathcal{P}_{y_it_i}(y, t_i)}
+$$
+
+For any $y_1, y_2 \in \bold{Y}$ and $\Delta \in \{|t_2 -t_1 | \mid t_1, t_2\in \bold{T}\}$, we can construct an estimator $\hat{g}(y_i, y_j, \Delta)$ for $g(y_i, y_j, \Delta)$ as follows.
+
+$$
+\hat{g}(y_i, y_j, \Delta)= {\sum_{t_< t_{max}-\Delta}\hat{\mathcal{P}}_{y_it_i}(y_j, t_i+\Delta)+\sum_{t_i<t_{max}} \hat{\mathcal{P}}_{y_it_i}(y_j, t_i-\Delta)\over \sum_{t_< t_{max}-\Delta}\sum_{y\in\bold Y}\hat{\mathcal{P}}_{y_it_i}(y, t_i)+\sum_{t_i<t_{max}}\sum_{y\in\bold Y}\hat{\mathcal{P}}_{y_it_i}(y, t_i)}
+$$
+
+This estimator is designed to utilize as many measured values $\hat{\mathcal{P}}_{y_i t_i} (y_j ,t_j)$ as possible, excluding cases where $t_i=t_{max}$ or $t_j=t_{max}$.
+
+$$
+\mathcal P_{y_i t_i}(y_j, t_j)= {\mathcal P_{y_i t_i}(y_j, t_j)\over \sum_{y\in \bold{Y}}\sum_{t\in\bold{T}}\mathcal{P}_{y_i t_i}(y, t)}={f(y_i,t_i)g(y_i, y_j, |t_j-t_i|)\over \sum_{y\in \bold{Y}}\sum_{t\in\bold{T}}f(y_i,t_i)g(y_i, y, |t-t_i|)}\\={g(y_i, y_j, |t_j-t_i|)\over \sum_{y\in \bold{Y}}\sum_{t\in\bold{T}}g(y_i, y, |t-t_i|)}
+$$
+
+Therefore, for all $y_1, y_2 \in \bold{Y}$ and $|t_j - t_i |\in\{|t_2 -t_1 | \mid t_1, t_2\in \bold{T}\}$, we can define the estimator $\hat{\mathcal P}_{y_i t_i}(y_j, t_j)$ of $\mathcal P_{y_i t_i}(y_j, t_j)$ as follows:
+
+$$
+\hat{\mathcal P}_{y_i t_i}(y_j, t_j)={\hat{g}(y_i, y_j, |t_j-t_i|)\over \sum_{y\in \bold{Y}}\sum_{t\in\bold{T}}\hat{g}(y_i, y, |t-t_i|)}
+$$
+
+Using Equation 3-3 is preferable for estimating unless $t_i=t_{max}$ or $t_j=t_{max}$, so we applied Equation 3-5 only where the direct estimation is not possible, i.e., $t_i=t_{max}$ or $t_j=t_{max}$.
+
+~~However, when~~ $|t_j - t_i | = t_{max}-t_1$~~, that is, when~~ $t_i=t_{max}, t_j = t_1$ ~~or~~ $t_i=t_1 , t_j =t_{max}$~~, it is not possible to construct an estimator from measurable values.~~
+
+Based on the above estimations, we can formulate an estimator for ${\Sigma}_{MM}^{pmp(k+1)}(y_i, t_i)$ as follows.
+
+$$
+\hat{\Sigma}^{pmp(k+1)}_{MM}(y_i,t_i) = {\sum_{y\in \bold{Y}}\left(\sum_{t\in\bold{T}_{t_i}^{\text{single}}}4\hat{\mathcal{P}}_{y_i t_i}(y, t)+\sum_{t\in\bold{T}_{t_i}^{\text{double}}}\hat{\mathcal{P}}_{y_i t_i}(y, t)\right)\hat\Sigma_{XX}^{pmp(k)}(y)
+\over
+\left(\sum_{y\in \bold{Y}}\sum_{t\in\bold{T}_{t_i}^{\text{single}}}2\hat{\mathcal{P}}_{y_i t_i}(y, t)+\sum_{y\in \bold{Y}}\sum_{t\in\bold{T}_{t_i}^{\text{double}}}\hat{\mathcal{P}}_{y_i t_i}(y, t)\right)^2}
+$$
+
+Then, $\hat\Sigma^{pmp(k+1)}_{MM}(y_i,t_i)=\hat P_{y_i t_i}\hat D_{y_i t_i} \hat P_{y_i t_i}^{-1}$, $\hat\Sigma^{pmp(k+1)}_{MM}(y_i,t_{max})=\hat P_{y_i t_{max}}\hat D_{y_it_{max}} \hat P_{y_it_{max}}^{-1}$ can be orthogonally diagonalized.
+
+Finally, utilizing the obtained estimators, the \PNY transform can be expressed as follows.
+
+$$
+M_i^{PNY(k+1)}\leftarrow  \hat P_{y_i t_{max}}\hat D_{y_i t_{max}}^{1/2}\hat D_{y_i t_i}^{-1/2}\hat P_{y_i t_i}^{\top}(M_i^{pmp (k+1)}-\hat\mu_{M}^{pmp(k+1)}(y_i))+\hat \mu_{M}^{pmp(k+1)}(y_i)
+$$
+
+As proven earlier, when the representation in the previous layer has 1st moment and 2nd moment invariant to the node's time, using \PMP and \PNY transform yields $\mathbb{E}[M_i^{PNY(k+1)}]=\mu_{M}^{pmp(k+1)}(y_i)$ and $\text{var}(M_i^{PNY(k+1)})=\Sigma^{pmp(k+1)}_{MM}(y_i,t_{max})$, ensuring that both the 1st order moment and 2nd order moment in the aggregated message become invariant to the node's time.
+
+## \JJnorm
+
+A drawback of \PNY is its complexity in handling covariance matrices, requiring computation of covariance matrices and diagonalization for each label and time of nodes, leading to high computational overhead. Additionally, estimating $\mathcal{P}_{y_it_i}(y_j,t_j)$ when $t_i=t_{max}$ or $t_j=t_{max}$ relies on estimators obtained from other values, making it difficult to analyze theoretical bounds.
+
+The function $g(y_1, y_2, |t_2-t_1|)$ represents how the proportion of neighboring nodes varies with the relative time difference, assuming it to be invariant to $y_1$ and $y_2$ significantly simplifies the alignment of the 2nd order moment. Here, we introduce \JJnorm as a practical implementation of this idea.
+
+![JJ_norm_hor.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/ba842ab0-b218-4919-860c-862d259ffd62/1b691171-1a7d-4e3d-82b8-b659215bd060/JJ_norm_hor.png)
+
+In \JJnorm, we introduce an additional Assumption 4:
+
+\textbf{Assumption 4}:
+
+$$
+g(y_1 ,y_2, \Delta) =g(y_1' ,y_2', \Delta) , \forall y_1, y_2, y_1',y_2'\in \bold{Y}, \Delta \in \{|t_2 -t_1 | \mid t_1, t_2\in \bold{T}\}
+$$
+
+As shown earlier, when passing through \PMP, the covariance matrix of the aggregated message is as follows.
+
+$$
+\Sigma^{pmp(k+1)}_{MM}(y_i,t_i) = {\sum_{y\in \bold{Y}}\left(\sum_{t\in\bold{T}_{t_i}^{\text{single}}}4\mathcal{P}_{y_i t_i}(y, t)+\sum_{t\in\bold{T}_{t_i}^{\text{double}}}\mathcal{P}_{y_i t_i}(y, t)\right)\Sigma^{pmp(k)}_{XX}(y)
+\over
+\left(\sum_{y\in \bold{Y}}\left(\sum_{t\in\bold{T}_{t_i}^{\text{single}}}2\mathcal{P}_{y_i t_i}(y, t)+\sum_{t\in\bold{T}_{t_i}^{\text{double}}}\mathcal{P}_{y_i t_i}(y, t)\right)\right)^2}
+$$
+
+However, when $t_i=t_{max}$, $\bold{T}_{t_{max}}^{\text{double}}= \{t \in \bold{T}\ \big | \ |t- t_{max}|\le|t_{max}-t_{max}|, t\neq t_{max}\}=\phi$, making the covariance matrix simpler as follows.
+
+$$
+\Sigma^{pmp(k+1)}_{MM}(y_i,t_{max})= {\sum_{y\in \bold{Y}}\sum_{t\in\bold{T}}4\mathcal{P}_{y_i t_i}(y, t)\Sigma_{XX}^{pmp(k)}(y)
+\over
+\left(\sum_{y\in \bold{Y}}\sum_{t\in\bold{T}}2\mathcal{P}_{y_i t_i}(y, t)\right)^2}
+$$
+
+To examine how the covariance matrix varies with time, let's consider the following two ratios.
+
+$$
+{\sum_{t\in\bold{T}_{t_i}^{\text{single}}}4\mathcal{P}_{y_i t_i}(y, t)+\sum_{t\in\bold{T}_{t_i}^{\text{double}}}\mathcal{P}_{y_i t_i}(y, t)\over \sum_{t\in\bold{T}}4\mathcal{P}_{y_i t_i}(y, t)}\\={4g(y_i, y, 0)+2\sum_{0<\tau\le |t_{max}-t_i|}g(y_i, y, \tau)+4\sum_{|t_{max}-t_i|<\tau}g(y_i, y, \tau)\over 4\sum_{0\le\tau}g(y_i,y,\tau)}=\gamma_{t_i}
+$$
+
+$$
+{\sum_{t\in\bold{T}_{t_i}^{\text{single}}}2\mathcal{P}_{y_i t_i}(y, t)+\sum_{t\in\bold{T}_{t_i}^{\text{double}}}\mathcal{P}_{y_i t_i}(y, t)\over \sum_{t\in\bold{T}}2\mathcal{P}_{y_i t_i}(y, t)}\\={2g(y_i, y, 0)+\sum_{0<\tau\le |t_{max}-t_i|}g(y_i, y, \tau)+2\sum_{|t_{max}-t_i|<\tau}g(y_i, y, \tau)\over 2\sum_{0\le\tau}g(y_i,y,\tau)}=\lambda_{t_i}
+$$
+
+Here, we can denote these values as $\gamma_{t_i}$ and $\lambda_{t_i}$ because the value of $g(y_i, y, \tau)$ is invariant to $y_i$ and $y$ due to *Assumption 4*. Utilizing this, we can transform the equation as follows:
+
+$$
+\Sigma^{pmp(k+1)}_{MM}(y_i,t_i)= {\gamma_{t_i} \over \lambda_{t_i}^2}\Sigma^{pmp(k+1)}_{MM}(y_i,t_{max})
+$$
+
+In other words, when *Assumption 4* holds true, the covariance matrix of the aggregated message differs only by a constant factor, and this constant depends solely on the node's time. For simplicity, let's define $\alpha_{t} = {\lambda_{t}^2 \over \gamma_t}$, then we can express it as follows:
+
+$$
+\Sigma^{pmp(k+1)}_{MM}(y_i,t_{max})=\alpha_{t_i}\Sigma^{pmp(k+1)}_{MM}(y_i,t_i)
+$$
+
+Unlike \PNY, which estimates an affine transformation using $\hat{\mathcal{P}}_{y_i t_i}(y_j, t_j)$ to align the covariance matrix to be invariant, \JJnorm provides a more direct method to obtain an estimate $\hat{\alpha}_{t_i}$ of $\alpha_{t_i}$.
+
+Since we know that the covariance matrix differs only by a constant factor, we can simply use norms in multidimensional space rather than the covariance matrix to estimate $\alpha_{t_i}$.
+
+---
+
+Firstly, let's define $\bold{V}_{y,t} = \{u \in \bold{V} \mid y_u=y, t_u=t\}$, $\bold{V}_{\cdot,t} = \{u \in \bold{V} \mid t_u=t\}$. We can compute the mean of the aggregated message for each label and time: $\mu_M(\cdot,t) = \mathbb{E}_{i\in \bold{V}_{\cdot,t}}\left[M_i\right]$, $\mu_M(y,t) = \mathbb{E}_{i\in \bold{V}_{y,t}}\left[M_i\right]$. Here, \JJnorm is a process of transforming the aggregated message, which is aggregated through \PMP, into a time-invariant representation. Hence, we can suppose that $\mu_M(y,t)$ is invariant to $t$. That is, for all $t\in\bold{T}$, $\mu_M(y,t)=\mu_M(y,t_{max})$. Additionally, we can define the variance of distances as follows: $\sigma_{y,t}^2=\mathbb{E}_{i\in \bold{V}_{y,t}}\left[(M_i-\mu_M(y,t))^2\right]$, $\sigma_{\cdot,t}^2=\mathbb{E}_{i\in \bold{V}_{\cdot,t}}\left[(M_i-\mu_M(\cdot,t))^2\right]$. Here, the square operation denotes the L2-norm.
+
+$$
+\mathbb{E}_{i\in \bold{V}_{\cdot,t}}\left[(M_i-\mu_M(\cdot,t))^2\right] = \sum_{y\in \bold{Y}}P(y)\mathbb{E}_{i\in \bold{V}_{y,t}}\left[ (M_i - \mu_M(y,t)+\mu_M(y,t)-\mu_M(\cdot,t))^2\right]\\=\sum_{y\in \bold{Y}}P(y)\Big(\mathbb{E}_{i\in \bold{V}_{y,t}}\left[ (M_i - \mu_M(y,t))^2 \right] +(\mu_M(y,t)-\mu_M(\cdot,t))^2\Big)
+$$
+
+Since $\mathbb{E}_{i\in \bold{V}_{y,t}}\left[ (M_i - \mu_M(y,t))^{\top}(\mu_M(y,t)-\mu_M(\cdot,t))\right]=\mathbb{E}_{i\in \bold{V}_{y,t}}\left[ (\mu_M(y,t)-\mu_M(\cdot,t))^{\top}(M_i - \mu_M(y,t))\right]=0$.
+
+Here, mean of the aggregated messages during training and testing times satisfies the following equation: $\mu_M(\cdot,t) = \mu_M(\cdot,t_{max})$
+
+$$
+\mu_M(\cdot,t)=\sum_{y\in\bold{Y}}P(y)\mu_M(y,t)=\sum_{y\in\bold{Y}}P(y)\mu_M(y,t_{max})=\mu_M(\cdot,t_{max})
+$$
+
+This equation is derived from the assumption that $\mu_M(y,t)$ is invariant to $t$ and from *Assumption 1* regarding $P(y)$. Furthermore, by using *Assumption 1* again, we can show that the variance of the mean computed for each label is also invariant to $t$:
+
+$$
+\sum_{y\in\bold{Y}}P(y)\mathbb{E}_{i\in \bold{V}_{y,t}}\left[(\mu_M(y,t)-\mu_M(\cdot,t))^2 \right]=\sum_{y\in\bold{Y}}P(y)\mathbb{E}_{i\in \bold{V}_{y,t_{max}}}\left[(\mu_M(y,t_{max})-\mu_M(\cdot,t_{max}))^2 \right]
+$$
+
+$$
+\mathbb{E}_{i\in \bold{V}_{y,t}}\left[(\mu_M(y,t)-\mu_M(\cdot,t))^2 \right]=\mathbb{E}_{i\in \bold{V}_{y,t_{max}}}\left[(\mu_M(y,t_{max})-\mu_M(\cdot,t_{max}))^2\right] =\nu^2,\ t\in \bold{T}
+$$
+
+Here, $\nu^2$ can be interpreted as the variance of the mean of messages from nodes with the same $t\in \bold{T}$ for each label. According to the above equality, this is a value invariant to $t$.
+
+Meanwhile, from *Assumption 4*,
+
+$$
+\alpha_t \mathbb{E}_{i\in \bold{V}_{y,t}}\left[ (M - \mu_M(y,t))^2 \right] = \mathbb{E}_{i\in \bold{V}_{y,t_{max}}}\left[ (M - \mu_M(y,t_{max}))^2\right], \forall t\in \bold{T}
+$$
+
+$$
+\alpha_t\sum_{y\in\bold{Y}}P(y)\mathbb{E}_{i\in \bold{V}_{y,t}}\left[ (M_i - \mu_M(y,t))^2 \right]=\sum_{y\in\bold{Y}}P(y)\mathbb{E}_{i\in \bold{V}_{y,t_{max}}}\left[ (M_i - \mu_M(y,t_{max}))^2\right]
+$$
+
+Adding $\nu^2$ to both sides,
+
+$$
+\alpha_t\sum_{y\in \bold{Y}}P(y)\mathbb{E}_{i\in \bold{V}_{y,t}}\left[ (M_i - \mu_M(y,t))^2 \right] +\sum_{y\in \bold{Y}}P(y)\mathbb{E}_{i\in \bold{V}_{y,t}}\left[(\mu_M(y,t)-\mu_M(\cdot,t))^2 \right] =\sigma_{\cdot,t_{max}}^2 
+$$
+
+Thus,
+
+$$
+\alpha_t = { \sigma_{\cdot,t_{max}}^2  - \nu^2\over\sum_{y\in \bold{Y}}P(y)\mathbb{E}_{i\in \bold{V}_{y,t}}\left[ (M_i- \mu_M(y,t))^2 \right]}
+$$
+
+Here, $\hat{\alpha}_t$ is an unbiased estimator of $\alpha_t$.
+
+$$
+\hat{\alpha}_t = {\left( {1\over \mid{\bold{V}_{\cdot,t_{max}}}\mid-1}\sum_{i\in \bold{V}_{\cdot,t_{max}}}(M_i-\hat\mu_M(\cdot,t_{max}))^2  -{1\over \mid{\bold{V}_{\cdot,t}}\mid-1} \sum_{y\in \bold{Y}}\sum_{i \in \bold{V}_{y,t}}(\hat\mu_M(y,t) -\hat\mu_M(\cdot,t) )^2  \right)\over{1\over \mid{\bold{V}_{\cdot,t}}\mid-1} \sum_{y\in\bold{Y}} \sum_{i \in \bold{V}_{y,t}}(M_i-\hat\mu_M(y,t))^2}
+$$
+
+Where $\hat\mu_M(y,t)={1\over {\mid \bold{V}_{y,t} \mid}}\sum_{i\in \bold{V}_{y,t}}M_i$  and $\hat\mu_M(\cdot,t) ={1\over {\mid \bold{V}_{\cdot,t} \mid}}\sum_{i\in \bold{V}_{\cdot,t}}M_i$ . 
+
+Note that all three terms in the above equation can be directly computed without requiring test labels.
+
+By using $\hat{\alpha_t}$, we can update the aggregated message from \PMP to align the second-order statistics.
+
+$$
+\ M_i^{JJnorm} \leftarrow (\hat\mu_M(y_i,t_i) -\hat\mu_M(\cdot,t_i) )+\hat{\alpha}_{t_i} (M_i - \hat\mu_M(y_i,t_i)),\ \forall i \in \bold{V}\setminus\bold{V}_{\cdot,t_{max}}
+$$
+
+### Lazy operation of \JJnorm
+
+\JJnorm offers significant advantages over the \PNY method in terms of both time and space complexity. Moreover, when applied to decoupled GNNs without nonlinear semantic aggregation functions at each layer, \JJnorm exhibits even better adaptability. This is because \JJnorm can be applied only once after all topological aggregations are completed, instead of applying it at each layer during message passing.
+
+More formally, we can express the operation as follows:
+
+$$
+M_i^{pmp(k+1)} \leftarrow \text{PMP}(X_u^{pmp(k)},u\in \mathcal{N}_i)\\
+X_i^{pmp(k+1)} \leftarrow A^{(k+1)}M^{pmp(k+1)}, \ \forall k<K, i\in \bold{V}
+$$
+
+Here, $A^{(k+1)}$ represents linear semantic aggregation, $X_i^{pmp(0)}=X_i$, and $X_i^{pmp(k+1)}$ serves as the final representation, which becomes the input to downstream classifiers. Since the \PMP function and linear transformation preserves the property of first moment invariance, if $\mathbb{E}[X_i ^{pmp(k)}]=\mathbb{E}[X_j^{pmp(k)}], \forall i, j\in\bold{V}\text{ s.t. }t_i=t_j$, then $\mathbb{E}[A^{(k+1)}M_i ^{(k+1)}]=\mathbb{E}[A^{(k+1)}M_j^{(k+1)}], \forall i, j\in\bold{V}\text{ s.t. }t_i=t_j$. By *Assumption 2*, $\mathbb{E}[X_i ^{pmp(0)}]=\mathbb{E}[X_j^{pmp(0)}], \forall i, j\in\bold{V}\text{ s.t. }t_i=t_j$ holds, thus all first moments of representations are invariant here.
+
+Let's use mathematical induction. First, for initial features, $\Sigma_{XX}^{pmp (0)}(y,t_{max})= \Sigma_{XX}^{pmp (0)}(y,t)$ holds. Suppose that in the $k$-th layer, representation $X^{(k)}$ satisfies $\beta_{t}^{(k)}\Sigma_{XX}^{pmp (k)}(y,t_{max})= \Sigma_{XX}^{pmp (k)}(y,t)$. This assumes that the expected covariance matrix of representations of nodes with identical labels but differing time information only differs by a constant factor.
+
+$$
+\Sigma^{pmp(k+1)}_{MM}(y_i,t_i) = {\sum_{y\in \bold{Y}}\left(\sum_{t\in\bold{T}_{t_i}^{\text{single}}}4\mathcal{P}_{y_i t_i}(y, t)\Sigma^{pmp(k)}_{XX}(y,t)+\sum_{t\in\bold{T}_{t_i}^{\text{double}}}\mathcal{P}_{y_i t_i}(y, t)\Sigma^{pmp(k)}_{XX}(y,t)\right)
+\over
+\left(\sum_{y\in \bold{Y}}\left(\sum_{t\in\bold{T}_{t_i}^{\text{single}}}2\mathcal{P}_{y_i t_i}(y, t)+\sum_{t\in\bold{T}_{t_i}^{\text{double}}}\mathcal{P}_{y_i t_i}(y, t)\right)\right)^2}
+$$
+
+$$
+ = {\sum_{y\in \bold{Y}}\left(\sum_{t\in\bold{T}_{t_i}^{\text{single}}}4\mathcal{P}_{y_i t_i}(y, t)\beta_{t}^{(k)}+\sum_{t\in\bold{T}_{t_i}^{\text{double}}}\mathcal{P}_{y_i t_i}(y, t)\beta_{t}^{(k)}\right)\Sigma_{XX}^{pmp (k)}(y,t_{max})
+\over
+\left(\sum_{y\in \bold{Y}}\left(\sum_{t\in\bold{T}_{t_i}^{\text{single}}}2\mathcal{P}_{y_i t_i}(y, t)+\sum_{t\in\bold{T}_{t_i}^{\text{double}}}\mathcal{P}_{y_i t_i}(y, t)\right)\right)^2}
+$$
+
+By *Assumption 4,* following value is invariant to $y_i$.
+
+$$
+{\sum_{t\in\bold{T}_{t_i}^{\text{single}}}4\mathcal{P}_{y_i t_i}(y, t)\beta_t^{(k)}+\sum_{t\in\bold{T}_{t_i}^{\text{double}}}\mathcal{P}_{y_i t_i}(y, t)\beta_t^{(k)}\over \sum_{t\in\bold{T}}4\mathcal{P}_{y_i t_i}(y, t)\beta_t^{(k)}}=\gamma_{t_i}^{(k)}
+$$
+
+Furthermore, using the previously defined $\lambda_{t_i}$,
+
+$$
+\Sigma^{pmp(k+1)}_{MM}(y_i,t_i) = {\gamma_{t_i}^{(k)}\over\lambda_{t_i}^2} {\sum_{y\in \bold{Y}}\sum_{t\in\bold{T}}4\mathcal{P}_{y_i t_i}(y, t)\beta_t^{(k)}\Sigma_{XX}^{pmp (k)}(y,t_{max})
+\over
+\left(\sum_{y\in \bold{Y}}\sum_{t\in\bold{T}}2\mathcal{P}_{y_i t_i}(y, t)\right)^2} = {\gamma_{t_i}^{(k)}\over\lambda_{t_i}^2} \Sigma^{pmp(k+1)}_{MM}(y_i,t_{max}) 
+$$
+
+Since $X_i^{(k+1)}=A^{(k+1)}M_i^{(k+1)}$, the following equation holds.
+
+$$
+\Sigma^{pmp(k+1)}_{XX}(y_i,t_i)= A^{(k+1)}\Sigma^{pmp(k+1)}_{MM}(y_i,t_i)A^{(k+1)\top}=\\A^{(k+1)}{\gamma_{t_i}^{(k)}\over\lambda_{t_i}^2}\Sigma^{pmp(k+1)}_{MM}(y_i,t_{max})A^{(k+1)\top} ={\gamma_{t_i}^{(k)}\over\lambda_{t_i}^2} \Sigma^{pmp(k+1)}_{MM}(y_i,t_{max}) 
+$$
+
+Here, $\beta_t^{(k+1)}$ is recursively defined as follows.
+
+$$
+\beta_t^{(k+1)} = {\gamma_{t_i}^{(k)}\over\lambda_{t_i}^2}={\sum_{t\in\bold{T}_{t_i}^{\text{single}}}4\mathcal{P}_{y_i t_i}(y, t)\beta_t^{(k)}+\sum_{t\in\bold{T}_{t_i}^{\text{double}}}\mathcal{P}_{y_i t_i}(y, t)\beta_t^{(k)}\over \lambda_{t_i}^2\sum_{t\in\bold{T}}4\mathcal{P}_{y_i t_i}(y, t)\beta_t^{(k)}}
+$$
+
+Therefore, it is proven that $\beta_{t}^{(k)}\Sigma_{XX}^{pmp (k)}(y,t_{max})= \Sigma_{XX}^{pmp (k)}(y,t)$ holds for all representations for any $k\le K$. 
+
+Such a property can be applied in most decoupled GNNs that solely collect topological information linearly, such as in \cite{SeHGNN} or \cite{RpHGNN}. By applying \JJnorm only once at the final representation instead of at each layer's message passing process, alignment of the 2nd moment becomes efficient. This is because the condition for applying \JJnorm at the final representation, $\beta_{t}^{(K)}\Sigma_{XX}^{pmp (K)}(y,t_{max})= \Sigma_{XX}^{pmp (K)}(y,t)$, is satisfied.
+
+This property endows \JJnorm, when used in conjunction with \PMP in most decoupled GNNs, with very high scalability and adaptability. Since \PMP can be applied by reconstructing the graph, and \JJnorm only needs to correct the final representation which serves input to the downstream classifier. As it can obtain invariant information without modifying the message passing function of the baseline model, it enables effective operation with minimal cost when applied to chronological split datasets.
+
+\\\\\YAYAYAYAYAYAYAYAYAYAY\\\\\\
+
+Here, we give the motivation of PMP and JJ norm by reviewing theoretical domain adaptation bounds.
+
+We call $\mathcal{X}$ the feature space and $\mathcal{Y}$ the label space. For simplicity, we will consider the setting of binary classification with $\mathcal{Y} = \{0, 1\}$, since the extension case of multiclass classification with $\vert\mathcal{Y}\vert > 2$ has been established by Sicilia, et al, and therefore the identical discussions can be held.
+
+For a distribution $\mathcal{D}$ over $\mathcal{X} \times \mathcal{Y}$, we define the risk functional $\mathbf{R}_{\mathcal{D}}(h) : \mathcal{Y}^\mathcal{X} \rightarrow [0, 1]$ as 
+
+$\mathbf{R}_{\mathcal{D}}(h) = \mathbf{Pr}(h(X) \neq Y)$ for $(X, Y) \sim \mathcal{D}$.
+
+Here, $h$ is called the hypothesis or the model.
+We denote the hypothesis class as $\mathcal{H}$, which is indeed a subset of $\mathcal{Y}^{\mathcal{X}}$. ~~While the risk functional gives the precise error rate of a specific hypothesis $h$, in PAC (probably approximately correct)-Bayes theory, we also consider the risk of Gibbs predictors. For a distribution $\mathcal{Q}$ over the hypothesis class $\mathcal{H}$, the Gibbs risk is given as~~ 
+
+$~~\mathbf{R}_{\mathcal{D}}(\mathcal{Q}) = \mathbb{E}[\mathbf{R}_{\mathcal{D}}(H)]$ for $H \sim Q$.~~
+
+Def A1. (Based on[ KIF04]) Given two domains $\mathcal{S}$ and $\mathcal{T}$, consider marginal distributions $\mathcal{S}_{\mathbf{X}}$ and **$\mathcal{T}_{\mathbf{X}}$ over the input space $\mathcal{X}$. The symmetric difference hypothesis space with notation $\mathcal{H}\Delta\mathcal{H}$ is defined as
+
+$h \in \mathcal{H}\Delta\mathcal{H} \Leftrightarrow h(x) = g(x) \oplus g'(x)$ for some $h, h' \in \mathcal{H}$,
+
+where $\oplus$ is the XOR function.
+
+Denote by $I(h)$ the set for which $h \in \mathcal{H}$ is the characteristic function, i.e., $x \in I(h) \Leftrightarrow h(X) = 1$. The $\mathcal{H}\Delta\mathcal{H}$-divergence between  $\mathcal{S}_{\mathbf{X}}$ **and **$\mathcal{T}_{\mathbf{X}}$ is defined as
+
+$d_{\mathcal{H}\Delta\mathcal{H}}(\mathcal{S}_{\mathbf{X}}, \mathcal{T}_{\mathbf{X}}) =
+2\sup\limits_{h \in \mathcal{H}\Delta\mathcal{H}} \vert \Pr\limits_{\mathcal{S}_{\mathbf{X}}}(I(h)) - \Pr\limits_{\mathcal{T}_{\mathbf{X}}}(I(h)) \vert$
+
+Thm A1. (Ben David et al, 2010)
+
+For $\forall h \in \mathcal{H}$, $\mathbf{R}_{\mathcal{T}}(h) \leq \mathbf{R}_{\mathcal{S}}(h) +\lambda + \frac{1}{2} d_{\mathcal{H}\Delta\mathcal{H}}(\mathcal{S}_{\mathbf{X}}, \mathcal{T}_{\mathbf{X}})$
+
+where $\lambda = \mathbf{R}_{\mathcal{T}}(h^*) + \mathbf{R}_{\mathcal{S}}(h^*)$ for $h^* \in {arg\,min}_{h \in \mathcal{H}}(\mathbf{R}_{\mathcal{T}}(h) + \mathbf{R}_{\mathcal{S}}(h))$.
+
+This bound relies on three terms. The first term $\mathbf{R}_{\mathcal{S}}(h)$ is the expected error on the source domain.  The second term $\lambda$ is related to the best hypothesis $h^* \in \mathcal{H}$, hence acts as a quality measure of $\mathcal{H}$.
+
+Here, we focused on the final term which corresponds to the maximum deviation between the source and target distributions. If we let $\phi_S$ and $\phi_T$ be the density functions of $\mathcal{S}_\mathbf{X}$ and $\mathcal{T}_\mathbf{X}$, note that
+
+$d_{\mathcal{H}\Delta\mathcal{H}}(\mathcal{S}_{\mathbf{X}}, \mathcal{T}_{\mathbf{X}}) = 2\sup\limits_{h, h' \in \mathcal{H}} \vert \Pr_{x \sim \mathcal{S}_{\mathbf{X}}}(h(x) \neq h'(x)) - \Pr_{x \sim \mathcal{T}_{\mathbf{X}}}(h(x) \neq h'(x)) \vert$
+
+$= 2\sup\limits_{h, h' \in \mathcal{H}} \vert \int_{\mathcal{X}} (\phi_S (x) - \phi_T (x)) \mathbf{1}_{\{h(x) \neq h'(x)\}} dx \vert$.
+
+Therefore we can observe that $d_{\mathcal{H}\Delta\mathcal{H}}(\mathcal{S}_{\mathbf{X}}, \mathcal{T}_{\mathbf{X}})$ represents the discrepancy between distributions $\mathcal{S}_{\mathbf{X}}$ and **$\mathcal{T}_{\mathbf{X}}$. For random variables $X_{tr} \sim \mathcal{S}_{\mathbf{X}}$ and  $X_{te} \sim \mathcal{T}_{\mathbf{X}}$, PMP gives the condition $\mathbf{E}[X_{tr}] = \mathbf{E}[X_{te}]$. This will give a restraint to the upper bound of $d_{\mathcal{H}\Delta\mathcal{H}}(\mathcal{S}_{\mathbf{X}}, \mathcal{T}_{\mathbf{X}})$ under additionary assumptions. In simple terms, the discrepancy between two probability distributions is less likely to differ if the first order is aligned, which will decrease the upper bound of $\mathbf{R}_{\mathcal{T}}(h)$ according to the uniform convergence bound proposed by Ben-David et al.
+
+The motivation of JJ normalization is to align not only the first, but also the second order of the source (i.e., train) and target (i.e., test) distributions which gives an additionary restraint. Therefore, it is more likely to decrease the discrepancy between the two probability distributions $\mathcal{S}_{\mathbf{X}}$ and **$\mathcal{T}_{\mathbf{X}}$ compared to PMP. In conclusion, we expected JJ norm to have the best performance since it aligns the mean and variance of the source distribution $\mathcal{S}_{\mathbf{X}}$ and target distribution **$\mathcal{T}_{\mathbf{X}}$, so it will give a strongest restraint to the upper bound of $d_{\mathcal{H}\Delta\mathcal{H}}(\mathcal{S}_{\mathbf{X}}, \mathcal{T}_{\mathbf{X}})$, which will give a smallest upper bound of $\mathbf{R}_{\mathcal{T}}(h)$.

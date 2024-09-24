@@ -26,13 +26,32 @@ using pli=pair<ll,int>;
 using pll=pair<ll,ll>;
 using t3=tuple<int,int,int>;
 
-#define N 300030
+#define N 500030
 #define MOD 998244353
 #define INF 1000000007 
-__attribute__((optimize("Ofast,unroll-loops"),target("avx,avx2,fma")))
+random_device rd; 
+mt19937 gen(rd());
+uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist(gen)
+
 
 void Solve(){
-
+    string s,x,y;
+    cin>>s>>x>>y;
+    // s,x,y모두 다른 길이를 가진다.
+    int x0=0, x1=0, y0=0, y1=0;
+    int n=x.size();
+    int m=y.size();
+    int sn=s.size();
+    int tn;
+    rng(i,0,n-1){
+        if(x[i]=='0') x0++;
+        else x1++;
+    }
+    rng(i,0,m-1){
+        if(y[i]=='0') y0++;
+        else y1++;
+    }
+    
 }
 
 int main(){

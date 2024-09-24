@@ -1,0 +1,48 @@
+\begin{algorithm}
+    \caption{\name PNY transformation}
+    \label{alg:PNY}
+            \SetKwInOut{Input}{Input}\SetKwInOut{Output}{Output}
+        \Input{~Previous layer's representation $X_v, \forall v\in \bold{V}$; Aggregated message $M_v, \forall v\in \bold{V}$, obtained from 1st moment alignment message passing; node time function $time:\bold{V}\rightarrow \bold{T}$; train, test split $\bold{V}^{tr}=\{v\mid v\in \bold{V}, time(v) < t_{\max}\}$ and $\bold{V}^{te}=\{v\mid v\in \bold{V}, time(v) = t_{\max}\}$; node label funtion $label:\bold{V}^{tr} \rightarrow \bold{Y}$; Estimated relative connectivity $\hat{\mathcal{P}}_{y, t}(\tilde y ,\tilde t)$, $\forall y, \tilde y\in \bold{Y},\ t, \tilde t \in \bold{T}$.}
+        \BlankLine
+        \Output{~Modified aggregated message $M_v', \forall v\in \bold{V}$}
+        \BlankLine
+        \BlankLine
+        
+        Let $\bold{V}_{y,t} = \{u \in \bold{V} \mid label(u)=y, time(u)=t\}$\;
+        Let $\bold{V}_{\cdot,t} = \{u \in \bold{V} \mid time(u)=t\}$\;
+        Let $\bold{T}_{\tau}^{\text{single}}= \{t \in \bold{T}\ \big |\  t =\tau \text{ or }t<2\tau-t_{\max}\}$\;
+        Let $\bold{T}_{\tau}^{\text{double}}= \{t \in \bold{T}\ \big | \ |t- \tau| \le|t_{\max}-\tau|, t\neq \tau\}$\;
+        Let $|\mathcal{N}_{yt}|={1\over{|\bold{V}_{y,t}|}}\sum_{u\in\bold{V}_{y,t}}|\mathcal{N}_u|$\;
+        
+        \BlankLine
+        \textbf{Estimate covariance matrices of previous layer's representation.}\\
+        \For{$t \in \bold{T}$}{
+            $\hat\mu_{X}(\cdot,t)\leftarrow \hat\mu_M(\cdot,t) ={1\over {\mid \bold{V}_{\cdot,t} \mid}}\sum_{v\in \bold{V}_{\cdot,t}}X_v$\;
+            $\hat\Sigma_{XX}(y)\leftarrow {1\over |\bold{V}_{\cdot,t}|-1}\sum_{v \in \bold{V}_{\cdot,t}} (X_v-\hat\mu_{X}(\cdot,t))(X_v-\hat\mu_{X}(\cdot,t))^{\top}$\;
+        }
+        
+        \BlankLine
+        \textbf{Estimate covariance matrices of aggregated message.}\\
+        \For{$y \in \bold{Y}$}{
+            \For{$t \in \bold{T}$}{
+                $\hat{\Sigma}_{MM}(y,t) \leftarrow {\sum_{\tilde y\in \bold{Y}}\left(\sum_{\tilde t\in\bold{T}_{t}^{\text{single}}}4\hat{\mathcal{P}}_{y, t}(\tilde y, \tilde t)+\sum_{\tilde t\in\bold{T}_{t}^{\text{double}}}\hat{\mathcal{P}}_{y, t}(\tilde y, \tilde t)\right)\hat\Sigma_{XX}(\tilde y)\over\left(\sum_{\tilde y\in \bold{Y}}\sum_{\tilde t\in\bold{T}_{t}^{\text{single}}}2\hat{\mathcal{P}}_{y, t}(\tilde y, \tilde t)+\sum_{\tilde y\in \bold{Y}}\sum_{\tilde t\in\bold{T}_{t}^{\text{double}}}\hat{\mathcal{P}}_{y, t}(\tilde y, \tilde t)\right)^2|\mathcal{N}_{yt}|}$\;
+            }
+        }
+    
+        \BlankLine
+        \textbf{Orthogonal diagonalization.}\\
+        \For{$y \in \bold{Y}$}{
+            \For{$t \in \bold{T}$}{
+                Find $\hat P_{y, t},\ \hat D_{y,t}$ s.t. $\hat\Sigma_{MM}(y,t)=\hat P_{y, t}\hat D_{y,t} \hat P_{y, t}^{-1}$ and $\hat P_{y, t}^{-1}=\hat P_{y, t}^{\top}$\;
+            }
+        }
+        
+        \BlankLine
+        \textbf{Update aggregated message.}\\
+        \For{$v \in \bold{V}\setminus\bold{V}_{\cdot,t_{\max}}$}{
+            Let $y= label(v)$\;
+            Let $t= time(v)$\;
+            $M_v^{'} \leftarrow  \hat P_{y, t_{\max}}\hat D_{y, t_{\max}}^{1/2}\hat D_{y, t}^{-1/2}\hat P_{y, t}^{\top}(M_v-\hat\mu_{M}(y))+\hat \mu_{M}(y)$\;
+        }
+    \end{algorithm}
+    

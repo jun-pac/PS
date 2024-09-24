@@ -1,0 +1,9 @@
+\begin{theorem}\label{thm:env2}\textbf{The optimal minimizer function learned on a larger environment set gives a larger risk for such environments satisfying the condition of the statement.} \\
+    Let $\delta = \sup_{e\in \epsilon_2} \hat{R}(f_2^*\mid e) - \sup_{e\in \epsilon_1} \hat{R}(f_1^*\mid e) \geq 0$. Non-negativity is obtained by Thm1. For $e_{te} \in \epsilon_1 \subseteq \epsilon_2$ such that $\hat{R}(f_2^* \mid e_{te}) \geq \sup_{e\in \epsilon_2} \hat{R}(f_2^* \mid e) - \delta$, $\hat{R}(f_1^* \mid e_{te}) \leq \hat{R}(f_2^* \mid e_{te})$ holds.
+    \end{theorem}
+    \begin{proof}
+        $\hat{R}(f_1^* \mid e_{te}) \leq \sup_{e\in \epsilon_1} \hat{R}(f_1^* \mid e) = \sup_{e\in \epsilon_2} \hat{R}(f_2^*\mid e) - \delta \leq \hat{R}(f_2^*\mid e_{te})$
+    
+        First inequality holds from definition of supremum, and second inequality holds from the assumption of $e_{te}$. Hence, we established the inequality $\hat{R}(f_1^* \mid e_{te}) \leq \hat{R}(f_2^* \mid e_{te})$ for specific test environments satisfying the inequality assumption.
+    \end{proof}
+    

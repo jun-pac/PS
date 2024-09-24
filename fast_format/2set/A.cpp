@@ -30,6 +30,9 @@ __attribute__((optimize("Ofast,unroll-loops"),target("avx,avx2,fma")))
 #define N 300030
 #define MOD 998244353
 #define INF 1000000007 
+random_device rd; 
+mt19937 gen(rd());
+uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist(gen)
 
 void Solve(){
 
