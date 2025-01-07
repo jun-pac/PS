@@ -33,38 +33,15 @@ random_device rd;
 mt19937 gen(rd());
 uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist(gen)
 
-vc<pii> es; // only additional
-ll DP[N];
 
 void Solve(){
-    int n,m,k;
-    cin>>n>>m>>k;
-    rng(i,0,m-1){
-        int a,b;
-        cin>>a>>b;
-        a--, b--;
-        es.pb({a,b});
-    }
-    fill(DP,DP+n,0);
-    DP[0]=1;
-    rng(i,0,k-1){
-        vc<pll> ads;
-        rng(j,0,m-1){
-            int a=((es[j].fi-i)%n+n)%n, b=((es[j].se-i-1)%n+n)%n;
-            ads.pb({b,DP[a]});
-        }
-        rng(j,0,m-1) DP[ads[j].fi]=(DP[ads[j].fi]+ads[j].se)%MOD;
-    }
-    ll sum=0;
-    rng(i,0,n-1) sum=(sum+DP[i])%MOD;
-    cout<<(sum%MOD+MOD)%MOD<<'\n';
-    
+
 }
 
 int main(){
     ios_base::sync_with_stdio(false); cin.tie(NULL);
     int t=1;
-    //cin>>t;
+    cin>>t;
     while(t--){
         Solve();
     }

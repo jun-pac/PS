@@ -34,55 +34,8 @@ mt19937 gen(rd());
 uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist(gen)
 
 
-int ans[220];
-
 void Solve(){
-    int n;
-    cin>>n;
-    int l=100,r=100;
-    int res;
-    cout<<"? 0"<<endl;
-    cin>>res;
-    assert(res!=-1);
-    if(res) ans[l]=0;
-    else ans[l]=1;
 
-    for(int i=1;i<=n-1;i++){
-        cout<<"? ";
-        cout<<0;
-        rng(j,l,r) cout<<ans[j];
-        cout<<endl;
-        cin>>res;
-        assert(res!=-1);
-        if(res) ans[--l]=0;
-        else{
-            cout<<"? ";
-            cout<<1;
-            rng(j,l,r) cout<<ans[j];
-            cout<<endl;
-            cin>>res;
-            assert(res!=-1);
-            if(res) ans[--l]=1;
-            else{
-                // 얘는 이제 무조건 시작하는 녀석임.
-                for(;i<=n-1;i++){
-                    cout<<"? ";
-                    rng(j,l,r) cout<<ans[j];
-                    cout<<0;
-                    cout<<endl;
-                    cin>>res;
-                    assert(res!=-1);
-                    if(res) ans[++r]=0;
-                    else ans[++r]=1;
-                }
-                break;
-            }
-        }
-    }
-    cout<<"! ";
-    assert(r-l+1==n);
-    rng(i,l,r) cout<<ans[i];
-    cout<<endl;
 }
 
 int main(){

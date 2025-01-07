@@ -33,14 +33,9 @@ random_device rd;
 mt19937 gen(rd());
 uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist(gen)
 
-int datas[N];
 
 void Solve(){
-    int n;
-    cin>>n;
-    rng(i,0,n-1) cin>>datas[i];
-    sort(datas,datas+n);
-    cout<<datas[n/2]<<'\n';
+
 }
 
 int main(){

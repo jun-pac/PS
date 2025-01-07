@@ -1,4 +1,5 @@
 
+
 #include <bits/stdc++.h>
 using namespace std;
 #define fi first
@@ -29,41 +30,21 @@ using t3=tuple<int,int,int>;
 #define N 300030
 #define MOD 998244353
 #define INF 1000000007 
-random_device rd; 
-mt19937 gen(rd());
-uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist(gen)
+// random_device rd; 
+// mt19937 gen(rd());
+// uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist(gen)
 
-int datas[N];
 
 void Solve(){
-    int n;
-    cin>>n;
-    rng(i,0,n-1) cin>>datas[i];
-    rng(i,0,n-1) datas[i]--;
-    int mx=-1;
-    bool flag=0;
-    rng(i,0,n-1){
-        if(datas[i]!=i) flag=1;
-    }
-    if(!flag){
-        cout<<0<<'\n';
-        return;
-    }
-    rng(i,0,n-1){
-        if(datas[i]==i && mx==i-1){
-            cout<<1<<'\n';
-            return;
-        } 
-        mx=max(mx,datas[i]);
-    }
-    if(datas[0]==n-1 && datas[n-1]==0) cout<<3<<'\n';
-    else cout<<2<<'\n';
+    ll a,b;
+    cin>>a>>b;
+    cout<<(a+b)*(a+b)<<'\n';
 }
 
 int main(){
     ios_base::sync_with_stdio(false); cin.tie(NULL);
     int t=1;
-    cin>>t;
+    //cin>>t;
     while(t--){
         Solve();
     }

@@ -26,38 +26,30 @@ using pli=pair<ll,int>;
 using pll=pair<ll,ll>;
 using t3=tuple<int,int,int>;
 
-#define N 500030
+#define N 300030
 #define MOD 998244353
 #define INF 1000000007 
-random_device rd; 
-mt19937 gen(rd());
-uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist(gen)
+// random_device rd; 
+// mt19937 gen(rd());
+// uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist(gen)
 
 
 void Solve(){
-    string s,x,y;
-    cin>>s>>x>>y;
-    // s,x,y모두 다른 길이를 가진다.
-    int x0=0, x1=0, y0=0, y1=0;
-    int n=x.size();
-    int m=y.size();
-    int sn=s.size();
-    int tn;
-    rng(i,0,n-1){
-        if(x[i]=='0') x0++;
-        else x1++;
+    int x;
+    cin>>x;
+    ll res=0;
+    rng(i,0,8){
+        rng(j,0,8){
+            if((i+1)*(j+1)!=x) res+=(i+1)*(j+1);
+        }
     }
-    rng(i,0,m-1){
-        if(y[i]=='0') y0++;
-        else y1++;
-    }
-    
+    cout<<res<<'\n';
 }
 
 int main(){
     ios_base::sync_with_stdio(false); cin.tie(NULL);
     int t=1;
-    cin>>t;
+    //cin>>t;
     while(t--){
         Solve();
     }

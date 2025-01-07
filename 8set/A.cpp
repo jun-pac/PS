@@ -35,10 +35,7 @@ uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist
 
 
 void Solve(){
-    ll n,x,y;
-    cin>>n>>x>>y;
-    if(y>=x) cout<<cediv(n,x)<<'\n';
-    else cout<<cediv(n,y)<<'\n';
+
 }
 
 int main(){

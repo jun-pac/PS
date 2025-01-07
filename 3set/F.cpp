@@ -33,49 +33,15 @@ random_device rd;
 mt19937 gen(rd());
 uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist(gen)
 
-int datas[N];
-int grundy[N];
 
 void Solve(){
-    int n,mx=0;
-    cin>>n;
-    rng(i,0,n-1) cin>>datas[i];
-    sort(datas,datas+n);
-    mx=datas[n-1];
-    grundy[1]=0;
-    rng(i,2,mx){
-        vc<int> temp;
-        int j=1;
-        while(j*j<=i && j!=i){
-            if(i%j==0){
-                temp.pb(grundy[j]);
-                temp.pb(grundy[i/j]);
-            }
-            j++;
-        } 
-        sort(temp.begin(),temp.end());
-        int idx=0;
-        int num=0;
-        while(idx<temp.size()){
-            if(temp[idx]<num) idx++;
-            else if(temp[idx]==num){
-                idx++; num++;
-            }
-            else break;
-        }
-        grundy[i]=num;
-        //cout<<"grundy "<<i<<' '<<num<<'\n';
-    }
-    int ans=0;
-    rng(i,0,n-1) ans=ans^grundy[datas[i]];
-    if(ans==0) cout<<"Bruno\n";
-    else cout<<"Anna\n";
+
 }
 
 int main(){
     ios_base::sync_with_stdio(false); cin.tie(NULL);
     int t=1;
-    //cin>>t;
+    cin>>t;
     while(t--){
         Solve();
     }

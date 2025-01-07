@@ -35,12 +35,7 @@ uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist
 
 
 void Solve(){
-    int n;
-    cin>>n;
-    string s;
-    cin>>s;
-    if(s[0]!=s[n-1]) cout<<"YES\n";
-    else cout<<"NO\n";
+
 }
 
 int main(){

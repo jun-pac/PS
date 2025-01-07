@@ -32,29 +32,16 @@ using t3=tuple<int,int,int>;
 random_device rd; 
 mt19937 gen(rd());
 uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist(gen)
-int datas[200][200];
+
 
 void Solve(){
-    int n;
-    cin>>n;
-    rng(i,0,n-1){
-        rng(j,0,i){
-            cin>>datas[i][j]; // i>=j
-            datas[i][j]--;
-        }
-    }
-    int res=0;
-    rng(i,0,n-1){
-        if(res>=i) res=datas[res][i];
-        else res=datas[i][res];
-    }
-    cout<<res+1<<'\n';
+
 }
 
 int main(){
     ios_base::sync_with_stdio(false); cin.tie(NULL);
     int t=1;
-    //cin>>t;
+    cin>>t;
     while(t--){
         Solve();
     }

@@ -34,15 +34,8 @@ mt19937 gen(rd());
 uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist(gen)
 
 
-ll datas[N];
-
 void Solve(){
-    int n;
-    cin>>n;
-    rng(i,0,n-1) cin>>datas[i];
-    ll sum=datas[n-1]-datas[n-2];
-    rng(i,0,n-3) sum+=datas[i];
-    cout<<sum<<'\n';
+
 }
 
 int main(){

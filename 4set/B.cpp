@@ -34,68 +34,8 @@ mt19937 gen(rd());
 uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist(gen)
 
 
-int a[N], b[N], last_pos[N];
-
 void Solve(){
-    int n,k;
-    cin>>n>>k;
-    rng(i,0,n-1) cin>>a[i];
-    rng(i,0,n-1) cin>>b[i];
-    bool ff=1;
-    rng(i,0,n-1) if(a[i]!=b[i]) ff=0;
-    if(ff){
-        cout<<"Yes\n";
-    }
-    else if(k==1){
-        vc<int> anum;
-        int last=-1;
-        rng(i,0,n-1){
-            if(a[i]!=last){
-                last=a[i];
-                anum.pb(a[i]);
-            }
-        }
-        bool flag=1;
-        last=-1;
-        int cur=0;
-        int asz=anum.size();
-        rng(i,0,n-1){
-            if(b[i]!=last){
-                while(cur<asz && anum[cur]!=b[i]) cur++;
-                if(cur==asz){
-                    flag=0;
-                    break;
-                }
-                else cur++;
-                last=b[i];
-            }
-        }
-        cout<<(flag?"Yes\n":"No\n");
-    }
-    else{
-        set<int> aset,bset;
-        rng(i,0,n-1) aset.insert(a[i]);
-        bool flag=1;
-        rng(i,0,n-1){
-            if(aset.find(b[i])==aset.end()){
-                flag=0;
-                break;
-            }
-            bset.insert(b[i]);
-        }
-        if(!flag || (int)bset.size()==n) cout<<"No\n";
-        else{
-            // 거리 k이하인 같은 원소가 있어야 함.
-            fill(last_pos,last_pos+n+1,-1);
-            int mn=INF;
-            rng(i,0,n-1){
-                if(last_pos[b[i]]!=-1) mn=min(mn,i-last_pos[b[i]]);
-                last_pos[b[i]]=i;
-            }
-            if(mn<=k) cout<<"Yes\n";
-            else cout<<"No\n";
-        }
-    }
+
 }
 
 int main(){

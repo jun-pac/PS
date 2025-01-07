@@ -33,34 +33,15 @@ random_device rd;
 mt19937 gen(rd());
 uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist(gen)
 
-string s,t;
-vc<int> ppos, npos;
 
 void Solve(){
-    cin>>s>>t;
-    int n=s.size();
-    rng(i,0,n-1){
-        if(s[i]!=t[i]){
-            if(s[i]>t[i]) ppos.pb(i);
-            else npos.pb(i);
-        }
-    }
-    cout<<ppos.size()+npos.size()<<'\n';
-    rng(i,0,(int)ppos.size()-1){
-        s[ppos[i]]=t[ppos[i]];
-        cout<<s<<'\n';
-    }
-    reverse(npos.begin(),npos.end());
-    rng(i,0,(int)npos.size()-1){
-        s[npos[i]]=t[npos[i]];
-        cout<<s<<'\n';
-    }
+
 }
 
 int main(){
     ios_base::sync_with_stdio(false); cin.tie(NULL);
     int t=1;
-    //cin>>t;
+    cin>>t;
     while(t--){
         Solve();
     }
