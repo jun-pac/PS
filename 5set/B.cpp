@@ -29,19 +29,36 @@ using t3=tuple<int,int,int>;
 #define N 300030
 #define MOD 998244353
 #define INF 1000000007 
-random_device rd; 
-mt19937 gen(rd());
-uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist(gen)
+// random_device rd; 
+// mt19937 gen(rd());
+// uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist(gen)
 
 
 void Solve(){
-
+    int n;
+    cin>>n;
+    bool login=0;
+    int cnt=0;
+    rng(i,0,n-1){
+        string s;
+        cin>>s;
+        if(s[0]=='l' && s[3]=='i'){
+            login=1;
+        }
+        if(s[0]=='l' && s[3]=='o'){
+            login=0;
+        }
+        if(s[0]=='p' && s[1]=='r'){
+            if(!login) cnt++;
+        }
+    }
+    cout<<cnt<<'\n';
 }
 
 int main(){
     ios_base::sync_with_stdio(false); cin.tie(NULL);
     int t=1;
-    cin>>t;
+    // cin>>t;
     while(t--){
         Solve();
     }

@@ -33,9 +33,29 @@ random_device rd;
 mt19937 gen(rd());
 uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist(gen)
 
+map<int,int> row;
+map<int,int> col;
+
 
 void Solve(){
-
+    int n;
+    cin>>n;
+    row.clear();
+    col.clear();
+    rng(i,0,n-1){
+        int a,b;
+        cin>>a>>b;
+        row[a]++;
+        col[a+b]++;
+    }
+    pii ans={INF,INF};
+    for(auto cur: row){
+        if(cur.se%2==1) ans.fi=cur.fi;
+    }
+    for(auto cur: col){
+        if(cur.se%2==1) ans.se=cur.fi-ans.fi;
+    }
+    cout<<ans.fi<<' '<<ans.se<<'\n';
 }
 
 int main(){

@@ -35,31 +35,7 @@ uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist
 
 
 void Solve(){
-    ll l,r;
-    cin>>l>>r;
-    ll val=1; 
-    while(2*val<=r){
-        val*=2;
-    }
-    ll a=0,b=0,c=0;
-    while(val>0){
-        if((r&val)==(l&val)){
-            a+=(r&val);
-            r=r%val;
-            l=l%val;
-            // cout<<"after "<<l<<' '<<r<<' '<<val<<'\n';
-            val=val/2;
-        }
-        else break;
-    }
-    b=c=a;
 
-    if(val-2>=l){
-        cout<<a+val-2<<' '<<a+val-1<<' '<<a+val<<'\n';
-    }
-    else{
-        cout<<a+val-1<<' '<<a+val<<' '<<a+val+1<<'\n';
-    }
 }
 
 int main(){

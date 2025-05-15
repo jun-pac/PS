@@ -34,8 +34,19 @@ mt19937 gen(rd());
 uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist(gen)
 
 
-void Solve(){
-
+void Solve(){   
+    int n;
+    cin>>n;
+    if(n%2==0){
+        cout<<-1<<'\n';
+    }
+    else{
+        cout<<n<<' ';
+        if(n!=1){
+            rng(i,1,n-1) cout<<i<<' ';
+        }
+        cout<<'\n';
+    }
 }
 
 int main(){

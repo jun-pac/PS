@@ -33,9 +33,36 @@ random_device rd;
 mt19937 gen(rd());
 uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist(gen)
 
+string s;
 
 void Solve(){
-
+    int n;
+    cin>>n;
+    cin>>s;
+    ll pscore=0;
+    ll res=0;
+    ll pcnt=0;
+    bool prev_o=0;
+    gnr(i,n-1,0) if(s[i]=='P'){
+        ll tar=n-1-pcnt;
+        pcnt++;
+        ll d=tar-i;
+        res+=d/2;
+        if(d%2==1){
+            res++;
+            if(prev_o){
+                prev_o=0;
+                res--;
+            }
+            else{
+                prev_o=1;
+            }
+        }
+        else{
+            prev_o=0;
+        }
+    }
+    cout<<res<<'\n';
 }
 
 int main(){

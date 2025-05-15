@@ -33,9 +33,29 @@ random_device rd;
 mt19937 gen(rd());
 uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist(gen)
 
+string a,b;
 
 void Solve(){
-
+    int n;
+    cin>>n;
+    cin>>a>>b;
+    int c0=0, c1=0;
+    rng(i,0,n-1) if(a[i]=='1'){
+        if(i%2==0) c0++;
+        else c1++;
+    } 
+    rng(i,0,n-1) if(b[i]=='1'){
+        if(i%2==0) c1++;
+        else c0++;
+    } 
+    if(n%2==0){
+        if(c0<=n/2 && c1<=n/2) cout<<"YES\n";
+        else cout<<"NO\n";
+    }
+    else{
+        if(c0<=n/2 && c1<=(n+1)/2) cout<<"YES\n";
+        else cout<<"NO\n";
+    }
 }
 
 int main(){

@@ -34,8 +34,84 @@ mt19937 gen(rd());
 uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist(gen)
 
 
-void Solve(){
+pii datas[N];
+int ab[N], ba[N], aidx[N]; 
 
+void Solve(){
+    int n;
+    cin>>n;
+    rng(i,0,n-1) cin>>datas[i].fi;
+    rng(i,0,n-1) cin>>datas[i].se;
+    rng(i,0,n-1){
+        datas[i].fi--;
+        datas[i].se--;
+    }
+    rng(i,0,n-1) ab[datas[i].fi]=datas[i].se;
+    rng(i,0,n-1) ba[datas[i].se]=datas[i].fi;
+    rng(i,0,n-1) aidx[datas[i].fi]=i;
+
+    int cnt=0;
+    rng(i,0,n-1){
+        // cout<<i<<' '<<ab[i]<<' '<<ba[ab[i]]<<'\n';
+        if(ab[ab[i]]!=i){
+            cout<<-1<<'\n';
+            return;
+        }
+        if(ab[i]==i) cnt++;
+    }
+
+    vc<pii> ans;
+    if(n%2==0){
+        if(cnt!=0){
+            cout<<-1<<'\n';
+            return;
+        }
+        rng(i,0,n/2-1){
+            int aval=datas[i].fi;
+            assert(datas[i].fi!=datas[i].se);
+
+            int bidx=aidx[ab[aval]];
+            assert(datas[bidx].fi!=datas[bidx].se);
+            if(bidx!=n-1-i){
+                ans.pb({bidx,n-1-i});
+                swap(aidx[datas[bidx].fi], aidx[datas[n-1-i].fi]);
+                swap(datas[bidx],datas[n-1-i]);
+            }
+        }
+    }
+    else{
+        if(cnt!=1){
+            cout<<-1<<'\n';
+            return;
+        }
+        rng(i,0,n-1){
+            if(datas[i].fi==datas[i].se){
+                if(i!=n/2){
+                    ans.pb({i,n/2});
+                    swap(aidx[datas[i].fi], aidx[datas[n/2].fi]);
+                    swap(datas[i],datas[n/2]);
+                }
+                break;
+            }
+        }
+        rng(i,0,n/2-1){
+            int aval=datas[i].fi;
+            assert(datas[i].fi!=datas[i].se);
+
+            int bidx=aidx[ab[aval]];
+            assert(datas[bidx].fi!=datas[bidx].se);
+            if(bidx!=n-1-i){
+                ans.pb({bidx,n-1-i});
+                swap(aidx[datas[bidx].fi], aidx[datas[n-1-i].fi]);
+                swap(datas[bidx],datas[n-1-i]);
+            }
+        }
+    }
+
+    cout<<ans.size()<<'\n';
+    rng(i,0,(int)ans.size()-1){
+        cout<<ans[i].fi+1<<' '<<ans[i].se+1<<'\n';
+    }
 }
 
 int main(){

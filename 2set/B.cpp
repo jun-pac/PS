@@ -33,36 +33,9 @@ random_device rd;
 mt19937 gen(rd());
 uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist(gen)
 
-int datas[N];
-map<int,int> cnt;
-int nums[N];
 
 void Solve(){
-    int n,k;
-    cin>>n>>k;
-    rng(i,0,n-1) cin>>datas[i];
-    cnt.clear();
-    rng(i,0,n-1) cnt[datas[i]]++;
-    int temp=0;
-    auto cur=cnt.begin();
-    while(cur!=cnt.end()){
-        nums[temp++]=(cur->se);
-        cur=next(cur);
-    }
-    sort(nums,nums+temp);
-    // cout<<"temp "<<temp<<'\n';
-    // rng(i,0,temp-1) cout<<nums[i]<<'\n';
-    int tot=0;
-    int idx=0;
-    while(idx<temp){
-        if(tot+nums[idx]<=k){
-            tot+=nums[idx];
-            idx++;
-            // cout<<"what "<<tot<<' '<<k<<' '<<idx<<' '<<temp<<'\n';
-        }
-        else break;
-    }
-    cout<<max(1,temp-idx)<<'\n';
+
 }
 
 int main(){

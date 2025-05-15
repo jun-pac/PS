@@ -33,84 +33,9 @@ random_device rd;
 mt19937 gen(rd());
 uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist(gen)
 
-int datas[N];
-class node{
-public:
-    node(){}
-    node(int a, int b, int c, int d, int e){
-        mx_plus=a;
-        mn_plus=b;
-        mx_minus=c;
-        mn_minus=d;
-        mx_res=e;
-    }
-    node operator+(node x){
-        int a,b,c,d,e;
-        a=max(mx_plus,x.mx_plus);
-        b=min(mn_plus,x.mn_plus);
-        c=max(mx_minus,x.mx_minus);
-        d=min(mn_minus,x.mn_minus);
-        e=max(max(mx_res, x.mx_res),max(-x.mn_plus+mx_plus,-mn_minus+x.mx_minus));
-        return node(a,b,c,d,e);
-    }
-    int mx_plus, mn_plus, mx_minus, mn_minus, mx_res;
-};
-
-class segtree{
-public:	
-	node seg[1<<19];
-	segtree(){}
-
-	void build_seg(int idx, int l, int r){
-		if(l==r){
-			seg[idx]=node(datas[l]+l,datas[l]+l,datas[l]-l,datas[l]-l,0);
-			return;
-		}
-		int mid=(l+r)>>1;
-		build_seg(2*idx,l,mid);
-		build_seg(2*idx+1,mid+1,r);
-		seg[idx]=(seg[2*idx]+seg[2*idx+1]); 
-	}
-
-	void update_seg(int idx, int l, int r, int t_idx, int val){
-		if(l==r){
-            seg[idx]=node(val+l,val+l,val-l,val-l,0);
-			return;
-		}
-		int mid=(l+r)>>1;
-		if(t_idx<=mid) update_seg(2*idx,l,mid,t_idx, val);
-		else update_seg(2*idx+1,mid+1,r,t_idx, val);
-		seg[idx]=(seg[2*idx]+seg[2*idx+1]);
-	}
-
-	node find_seg(int idx, int l, int r, int t_l, int t_r){
-		if(t_l<=l && r<=t_r) return seg[idx];
-		int mid=(l+r)>>1;
-        node ans=node(-INF,INF,-INF,INF,-INF);
-		if(t_l<=mid) ans=(ans+find_seg(2*idx,l,mid,t_l,t_r)); // Modify
-		if(t_r>mid) ans=(ans+find_seg(2*idx+1,mid+1,r,t_l,t_r)); // Modify
-		return ans;
-	}
-};
-
-
-segtree seg;
 
 void Solve(){
-    int n,q;
-    cin>>n>>q;
-    rng(i,0,n-1) cin>>datas[i];
-    seg.build_seg(1,0,n-1);    
-    cout<<seg.find_seg(1,0,n-1,0,n-1).mx_res<<'\n';
 
-    rng(i,0,q-1){
-        int p,x;
-        cin>>p>>x;
-        p--;
-        datas[p]=x; 
-        seg.update_seg(1,0,n-1,p,x);
-        cout<<seg.find_seg(1,0,n-1,0,n-1).mx_res<<'\n';
-    }
 }
 
 int main(){

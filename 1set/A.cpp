@@ -1,5 +1,4 @@
 
-
 #include <bits/stdc++.h>
 using namespace std;
 #define fi first
@@ -34,17 +33,47 @@ using t3=tuple<int,int,int>;
 // mt19937 gen(rd());
 // uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist(gen)
 
+int a[N], b[N];
+int fmatch[N], lmatch[N];
 
 void Solve(){
-    ll a,b;
-    cin>>a>>b;
-    cout<<(a+b)*(a+b)<<'\n';
+    int n,m;
+    cin>>n>>m;
+    rng(i,0,n-1) cin>>a[i];
+    rng(i,0,m-1) cin>>b[i];
+    // 가장 앞선 match와 뒤의 match가 다른지 확인
+    int idx=0;
+    rng(i,0,m-1){
+        while(idx<n && b[i]!=a[idx]) idx++;
+        if(idx==n){
+            cout<<"No\n";
+            return;
+        }
+        fmatch[i]=idx;
+        idx++;
+    }
+    idx=n-1;
+    gnr(i,m-1,0){
+        while(idx>=0 && b[i]!=a[idx]) idx--;
+        if(idx==-1){
+            cout<<"No\n";
+            return;
+        }
+        lmatch[i]=idx;
+        idx--;
+    }
+
+    rng(i,0,m-1) if(fmatch[i]!=lmatch[i]){
+        cout<<"Yes\n";
+        return;
+    }
+    cout<<"No\n";
 }
 
 int main(){
     ios_base::sync_with_stdio(false); cin.tie(NULL);
     int t=1;
-    //cin>>t;
+    // cin>>t;
     while(t--){
         Solve();
     }

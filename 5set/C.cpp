@@ -26,22 +26,33 @@ using pli=pair<ll,int>;
 using pll=pair<ll,ll>;
 using t3=tuple<int,int,int>;
 
-#define N 300030
-#define MOD 998244353
+#define N 1000030
+#define MOD 1000000000
 #define INF 1000000007 
-random_device rd; 
-mt19937 gen(rd());
-uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist(gen)
+// random_device rd; 
+// mt19937 gen(rd());
+// uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist(gen)
 
+ll datas[N], sum[N];
 
 void Solve(){
+    int n,k;
+    cin>>n>>k;
+    fill(datas,datas+k,1);
+    rng(i,0,k-1) sum[i]=i+1;
 
+    rng(i,k,n){
+        datas[i]=(sum[i-1]-(i==k?0:sum[i-1-k]))%MOD;
+        sum[i]=sum[i-1]+datas[i];
+        sum[i]%=MOD;
+    }
+    cout<<(datas[n]+MOD)%MOD<<'\n';
 }
 
 int main(){
     ios_base::sync_with_stdio(false); cin.tie(NULL);
     int t=1;
-    cin>>t;
+    // cin>>t;
     while(t--){
         Solve();
     }

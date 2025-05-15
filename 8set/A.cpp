@@ -33,9 +33,33 @@ random_device rd;
 mt19937 gen(rd());
 uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist(gen)
 
+int datas[N];
+map<int,int> mp;
 
 void Solve(){
-
+    int n;
+    cin>>n;
+    rng(i,0,n-1) cin>>datas[i];
+    mp.clear();
+    rng(i,0,n-1) mp[datas[i]]++;
+    int last2=INF;
+    for(auto temp: mp){
+        if(temp.se>=4){
+            cout<<"Yes\n";
+            return;
+        }
+        if(temp.se>=2 && last2+1==temp.fi){
+            cout<<"Yes\n";
+            return;
+        }
+        if(temp.se>=2){
+            last2=temp.fi;
+        }
+        else if(last2+1==temp.fi){
+            last2=temp.fi;
+        }
+    }
+    cout<<"No\n";
 }
 
 int main(){

@@ -33,8 +33,30 @@ random_device rd;
 mt19937 gen(rd());
 uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist(gen)
 
+ll datas[N];
+
+long long gcd(long long x, long long y){
+    if(x<y) swap(x,y);
+    if(y==0) return x;
+    if(x%y==0) return y;
+    return gcd(y,x%y);
+}
 
 void Solve(){
+    int n;
+    cin>>n;
+    rng(i,0,n-1) cin>>datas[i];
+    sort(datas,datas+n);
+    ll val=datas[0];
+    ll gg=-1;
+    rng(i,1,n-1){
+        if(datas[i]%val==0){
+            if(gg==-1) gg=datas[i];
+            else gg=gcd(gg, datas[i]);
+        }
+    }
+    if(gg==val) cout<<"Yes\n";
+    else cout<<"No\n";
 
 }
 

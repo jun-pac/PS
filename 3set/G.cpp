@@ -33,9 +33,23 @@ random_device rd;
 mt19937 gen(rd());
 uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist(gen)
 
+string s;
 
 void Solve(){
-
+    int n;
+    cin>>n;
+    cin>>s;
+    if(n==1){
+        cout<<-1<<'\n';
+        return;
+    }
+    rng(i,0,n-2) if(s[i]==s[i+1]){
+        cout<<-1<<'\n';
+        return;
+    }
+    int cnt[3];
+    fill(cnt,cnt+3,0);
+    
 }
 
 int main(){

@@ -32,115 +32,84 @@ using t3=tuple<int,int,int>;
 // random_device rd; 
 // mt19937 gen(rd());
 // uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist(gen)
-ll power_of_ten[20];
 
-ll get_cnt_mx(ll a, ll b, ll k, ll mx){
-    // mx digit이하만 가능하다?
-    if(k==1){
-        return max(0LL,min(b,mx)-a+1);
-    }
-    ll p10=power_of_ten[k-1];
-    ll aa=a/p10;
-    ll bb=b/p10;
-    if(aa>mx) return 0;
-    if(aa==bb){
-        return get_cnt_mx(a%p10, b%p10, k-1, mx);
-    }
-    ll res=get_cnt_mx(a%p10, p10-1, k-1, mx);
-    if(bb>mx){
-        ll temp=1;
-        rng(i,0,k-2) temp*=(mx+1);
-        res+=temp*(mx-(aa+1)+1);
-    }
-    else{
-        ll temp=1;
-        rng(i,0,k-2) temp*=(mx+1);
-        res+=temp*((bb-1)-(aa+1)+1);
-        res+=get_cnt_mx(0, b%p10, k-1, mx);
-    }
-    return res;
-}
-
-ll get_cnt(ll a, ll b, ll k){
-    // a, b has same digit, k
-    // cout<<"debug; "<<a<<' '<<b<<' '<<k<<'\n';
-    if(k==1) return b-a+1;
-    ll p10=power_of_ten[k-1];
-    ll aa=a/p10;
-    ll bb=b/p10;
-    // cout<<aa<<' '<<bb<<' '<<p10<<'\n';
-    if(aa==bb){
-        if(aa==1){
-            if(a==aa*p10) return 1;
-            else return 0;
-        }
-        else{
-            // cout<<"get mx : "<<a%p10<<' '<<b%p10<<' '<<k-1<<' '<<aa-1<<' '<<get_cnt_mx(a%p10, b%p10, k-1, aa-1)<<'\n';
-            return get_cnt_mx(a%p10, b%p10, k-1, aa-1);
-        }
-    }
-    else{
-        ll res=0;
-        if(aa==1){
-            if(a==aa*p10) res+=1;
-            else res+=0;
-        }
-        else{
-            // cout<<"get mx : "<<a%p10<<' '<<p10-1<<' '<<k-1<<' '<<aa-1<<' '<<get_cnt_mx(a%p10, p10-1, k-1, aa-1)<<'\n';
-            res+=get_cnt_mx(a%p10, p10-1, k-1, aa-1);
-        }
-
-        rng(i,aa+1,bb-1){
-            ll temp=1;
-            rng(j,0,k-2) temp=temp*i;
-            res+=temp;
-        }
-
-        res+=get_cnt_mx(0,b%p10, k-1, bb-1);
-        // cout<<"get mx : "<<0<<' '<<b%p10<<' '<<k-1<<' '<<bb-1<<' '<<get_cnt_mx(0,b%p10, k-1, bb-1)<<'\n';
-        return res;
-    }
-}
 
 void Solve(){
-    ll a,b;
-    cin>>a>>b;
-    ll val=10;
-    ll k=1;
-    ll temp=1;
-    rng(i,0,18){
-        power_of_ten[i]=temp;
-        temp*=10;
-    }
-    if(a==1000000000000000000LL){
-        cout<<1<<'\n';
+    int r,b;
+    cin>>r>>b;
+    if(r%2==1 || (r==0 && b%2==1)){
+        cout<<"No\n";
         return;
     }
-    while(val<=a){
-        val*=10;
-        k++;
+    vc<pii> mv;
+    if(b==0){
+        rng(i,0,(r-2)/2-1) mv.pb({0,1});
+        mv.pb({1,0});
+        rng(i,0,(r-2)/2-1) mv.pb({0,-1});
+        mv.pb({-1,0});
     }
-    if(val-1>=b){
-        cout<<get_cnt(a,b,k);
+    else if(r==0){
+        rng(i,0,(b-2)/2-1) mv.pb({1,1});
+        mv.pb({1,-1});
+        rng(i,0,(b-2)/2-1) mv.pb({-1,-1});
+        mv.pb({-1,1});
+    }
+    else if(b%2==0){
+        if(r<=b){
+            rng(i,0,r-1) mv.pb({0,1});
+            rng(i,r,(r+b)/2-1) mv.pb({1,1});
+            rng(i,(r+b)/2,r+b/2-1) mv.pb({1,-1});
+            rng(i,0,b/2-1) mv.pb({-1,-1});
+        }
+        else{
+            rng(i,0,(r+b)/2-1) mv.pb({0,1});
+            rng(i,0,b/2-1) mv.pb({1,-1});
+            rng(i,(r+b)/2,r-1) mv.pb({0,-1});
+            rng(i,0,b/2-1) mv.pb({-1,-1});
+        }
     }
     else{
-        ll res=0;
-        while(true){
-            res+=get_cnt(a, val-1, k);
-            a=val;
-            if(val>b/10) break;
-            val*=10;
-            k++;
+        if(r<b){
+            rng(i,0,r-2) mv.pb({0,1});
+            mv.pb({1,0});
+            rng(i,r,(r-1+b)/2-1) mv.pb({1,1});
+            rng(i,(r-1+b)/2,r-1+(1+b)/2-1) mv.pb({1,-1});
+            rng(i,r-1+(1+b)/2,r+b-1) mv.pb({-1,-1});
         }
-        if(a<=b) res+=get_cnt(a,b,k+1);
-        cout<<res<<'\n';
+        else{
+            rng(i,0,(r-1+b)/2-1) mv.pb({0,1});
+            mv.pb({1,0});
+            rng(i,0,r-1-(r-1+b)/2-1) mv.pb({0,-1});
+            rng(i,0,b-(b+1)/2-1) mv.pb({1,-1});
+            rng(i,b-(b+1)/2,b-1) mv.pb({-1,-1});
+        }
     }
+
+    int x=1000000, y=1000000;
+    // int x=0, y=0;
+    int rcnt=0;
+    int bcnt=0;
+    cout<<"Yes\n";
+    rng(i,0,(int) mv.size()-1){
+        if(mv[i].fi==0 || mv[i].se==0){
+            rcnt++;
+            cout<<"R "<<x<<' '<<y<<'\n';
+        }
+        else{
+            bcnt++;
+            cout<<"B "<<x<<' '<<y<<'\n';
+        }
+        x+=mv[i].fi;
+        y+=mv[i].se;
+    }
+    assert(rcnt==r && bcnt==b);
+    // cout<<'\n';
 }
 
 int main(){
     ios_base::sync_with_stdio(false); cin.tie(NULL);
     int t=1;
-    //cin>>t;
+    cin>>t;
     while(t--){
         Solve();
     }

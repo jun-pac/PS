@@ -33,8 +33,22 @@ random_device rd;
 mt19937 gen(rd());
 uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist(gen)
 
+pll datas[N];
+ll mx[N], mn[N];
 
 void Solve(){
+    ll n,k;
+    cin>>n>>k;
+    rng(i,0,n-1) cin>>datas[i].fi;
+    rng(i,0,n-1) cin>>datas[i].se;
+    rng(i,0,n-1) mx[i]=max(datas[i].fi,datas[i].se);
+    rng(i,0,n-1) mn[i]=min(datas[i].fi,datas[i].se);
+    sort(mn,mn+n);
+    
+    ll res=0;
+    rng(i,0,n-1) res+=mx[i];
+    rng(i,0,k-2) res+=mn[n-1-i];
+    cout<<res+1<<'\n';
 
 }
 
