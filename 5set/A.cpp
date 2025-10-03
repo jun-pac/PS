@@ -29,26 +29,29 @@ using t3=tuple<int,int,int>;
 #define N 300030
 #define MOD 998244353
 #define INF 1000000007 
-// random_device rd; 
-// mt19937 gen(rd());
-// uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist(gen)
+random_device rd; 
+mt19937 gen(rd());
+uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist(gen)
 
-
+ll val(ll a, ll num){
+    return a+(num)*(num-1)/2;
+}
 void Solve(){
-    int n;
-    cin>>n;
-    if(200<=n && n<=299){
-        cout<<"Success\n";
+    ll a,b;
+    cin>>a>>b;
+    ll l=1, r=INF;
+    while(l<r){
+        ll mid=(l+r+1)>>1;
+        if(val(a,mid)<=b) l=mid;
+        else r=mid-1;
     }
-    else{
-        cout<<"Failure\n";
-    }
+    cout<<l<<'\n';
 }
 
 int main(){
     ios_base::sync_with_stdio(false); cin.tie(NULL);
     int t=1;
-    // cin>>t;
+    cin>>t;
     while(t--){
         Solve();
     }

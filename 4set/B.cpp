@@ -33,35 +33,46 @@ random_device rd;
 mt19937 gen(rd());
 uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist(gen)
 
-ll datas[N];
-
-long long gcd(long long x, long long y){
-    if(x<y) swap(x,y);
-    if(y==0) return x;
-    if(x%y==0) return y;
-    return gcd(y,x%y);
-}
-
-void Solve(){
-    int n;
-    cin>>n;
-    rng(i,0,n-1) cin>>datas[i];
-    sort(datas,datas+n);
-    ll val=datas[0];
-    ll gg=-1;
-    rng(i,1,n-1){
-        if(datas[i]%val==0){
-            if(gg==-1) gg=datas[i];
-            else gg=gcd(gg, datas[i]);
-        }
+int getcnt(ll x){
+    int cnt=0;
+    ll temp=x;
+    while(temp!=0){
+        temp=temp/10;
+        cnt++;
     }
-    if(gg==val) cout<<"Yes\n";
-    else cout<<"No\n";
-
+    return cnt;
+}
+void Solve(){
+    ll x;
+    cin>>x;
+    int cnt=getcnt(x);
+    assert(cnt<=8);
+    // cout<<"Cnt "<<cnt<<'\n';
+    if(cnt%2==1){
+        cout<<x<<0<<'\n';
+    }
+    else if(cnt<=4){
+        cout<<x;
+        rng(i,0,cnt-1) cout<<0;
+        cout<<endl;
+    }
+    else if(cnt==6){
+        cout<<x<<0<<0<<'\n';
+    }
+    else{
+        if(getcnt(2*x)!=cnt) cout<<2*x<<'\n';
+        else if(getcnt(8*x)!=cnt) cout<<2*x<<'\n';
+        else cout<<26*x<<'\n';
+    }
 }
 
 int main(){
     ios_base::sync_with_stdio(false); cin.tie(NULL);
+
+    // rng(k,1,100){
+    //     cout<<k<<' '<<(1000000000+k)%(k+1)<<'\n';
+    // }
+
     int t=1;
     cin>>t;
     while(t--){

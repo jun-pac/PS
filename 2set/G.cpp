@@ -27,14 +27,41 @@ using pll=pair<ll,ll>;
 using t3=tuple<int,int,int>;
 
 #define N 300030
-#define MOD 998244353
-#define INF 1000000007 
+#define MOD 1000000007
 random_device rd; 
 mt19937 gen(rd());
-uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist(gen)
 
+#define MAX_DIGIT 63
+ll powab(ll a, ll b){
+    // Calculate a^b
+    ll res=1, mult=a;
+    for(int i=0; i<MAX_DIGIT; i++){
+        if(b&(1LL<<i)){
+            res=(res*mult)%MOD;
+        }
+        mult=(mult*mult)%MOD;
+    }
+    return res;
+}
 
 void Solve(){
+    ll l,r,k;
+    cin>>l>>r>>k;
+    if(k==1){
+        ll v2 = powab(10,r);
+        ll v1 = powab(10,l);
+        cout<<((v2-v1)%MOD+MOD)%MOD<<'\n';
+        return;
+    }
+    if(k<=9){
+        ll v=9/k+1;
+        ll v2 = powab(v,r);
+        ll v1 = powab(v,l);
+        cout<<((v2-v1)%MOD+MOD)%MOD<<'\n';
+        return;
+    }
+    else cout<<0<<'\n';
+
 
 }
 

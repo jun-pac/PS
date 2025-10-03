@@ -26,84 +26,62 @@ using pli=pair<ll,int>;
 using pll=pair<ll,ll>;
 using t3=tuple<int,int,int>;
 
-#define N 300030
+#define N 3000
 #define MOD 998244353
 #define INF 1000000007 
-// random_device rd; 
-// mt19937 gen(rd());
-// uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist(gen)
+random_device rd; 
+mt19937 gen(rd());
+uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist(gen)
 
+int level[N];
+vc<int> lev_idx[N];
+vc<int> ans;
 
 void Solve(){
-    int r,b;
-    cin>>r>>b;
-    if(r%2==1 || (r==0 && b%2==1)){
-        cout<<"No\n";
-        return;
+    int n;
+    cin>>n;
+    rng(i,0,n) lev_idx[i].clear();
+    ans.clear();
+    int mx=0, mx_idx;
+    rng(i,0,n-1){
+        cout<<"? "<<i+1<<' '<<n<<' ';
+        rng(j,0,n-1) cout<<j+1<<' ';
+        cout<<endl;
+        int res;
+        cin>>res;
+        level[i]=res;
+        lev_idx[res].pb(i);
+        if(mx<res) mx_idx=i;
+        mx=max(mx,res);
     }
-    vc<pii> mv;
-    if(b==0){
-        rng(i,0,(r-2)/2-1) mv.pb({0,1});
-        mv.pb({1,0});
-        rng(i,0,(r-2)/2-1) mv.pb({0,-1});
-        mv.pb({-1,0});
-    }
-    else if(r==0){
-        rng(i,0,(b-2)/2-1) mv.pb({1,1});
-        mv.pb({1,-1});
-        rng(i,0,(b-2)/2-1) mv.pb({-1,-1});
-        mv.pb({-1,1});
-    }
-    else if(b%2==0){
-        if(r<=b){
-            rng(i,0,r-1) mv.pb({0,1});
-            rng(i,r,(r+b)/2-1) mv.pb({1,1});
-            rng(i,(r+b)/2,r+b/2-1) mv.pb({1,-1});
-            rng(i,0,b/2-1) mv.pb({-1,-1});
-        }
-        else{
-            rng(i,0,(r+b)/2-1) mv.pb({0,1});
-            rng(i,0,b/2-1) mv.pb({1,-1});
-            rng(i,(r+b)/2,r-1) mv.pb({0,-1});
-            rng(i,0,b/2-1) mv.pb({-1,-1});
-        }
-    }
-    else{
-        if(r<b){
-            rng(i,0,r-2) mv.pb({0,1});
-            mv.pb({1,0});
-            rng(i,r,(r-1+b)/2-1) mv.pb({1,1});
-            rng(i,(r-1+b)/2,r-1+(1+b)/2-1) mv.pb({1,-1});
-            rng(i,r-1+(1+b)/2,r+b-1) mv.pb({-1,-1});
-        }
-        else{
-            rng(i,0,(r-1+b)/2-1) mv.pb({0,1});
-            mv.pb({1,0});
-            rng(i,0,r-1-(r-1+b)/2-1) mv.pb({0,-1});
-            rng(i,0,b-(b+1)/2-1) mv.pb({1,-1});
-            rng(i,b-(b+1)/2,b-1) mv.pb({-1,-1});
+    int remain_n=n-lev_idx[mx].size();
+    ans.pb(mx_idx);
+
+    gnr(l,mx-1,1){
+        remain_n-=lev_idx[l].size();
+        for(auto i: lev_idx[l]){
+            cout<<"? "<<mx_idx+1<<' '<<remain_n+ans.size()+1<<' ';
+            for(auto j: ans){
+                cout<<j+1<<' ';
+            }
+            cout<<i+1<<' ';
+            rng(j,0,n-1) if(level[j]<l) cout<<j+1<<' ';
+            cout<<endl;
+            
+            int res;
+            cin>>res;
+            if(res==mx){
+                ans.pb(i);
+                break;
+            }
         }
     }
 
-    int x=1000000, y=1000000;
-    // int x=0, y=0;
-    int rcnt=0;
-    int bcnt=0;
-    cout<<"Yes\n";
-    rng(i,0,(int) mv.size()-1){
-        if(mv[i].fi==0 || mv[i].se==0){
-            rcnt++;
-            cout<<"R "<<x<<' '<<y<<'\n';
-        }
-        else{
-            bcnt++;
-            cout<<"B "<<x<<' '<<y<<'\n';
-        }
-        x+=mv[i].fi;
-        y+=mv[i].se;
-    }
-    assert(rcnt==r && bcnt==b);
-    // cout<<'\n';
+    cout<<"! "<<mx<<' ';
+    for(auto i: ans) cout<<i+1<<' ';
+    cout<<endl;
+
+
 }
 
 int main(){

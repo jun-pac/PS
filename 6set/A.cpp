@@ -33,18 +33,28 @@ random_device rd;
 mt19937 gen(rd());
 uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist(gen)
 
-string s;
+ll datas[N];
 
 void Solve(){
-    cin>>s;
-    int n=s.size();
+    int n;
+    cin>>n;
+    rng(i,0,n-1) cin>>datas[i];
+    int l=0, r=n-1;
+    ll s1=0, s2=0;
 
-    rng(i,0,n-1){
-        if('A'<=s[i] && s[i]<='Z') cout<<s[i];
-
+    while(l<=r){
+        int t=r-l+1;
+        if(t%2==n%2){
+            if(datas[l] > datas[r]) s1+=datas[l++];
+            else s1+=datas[r--];
+        }
+        else{
+            if(datas[l] > datas[r]) s2+=datas[l++];
+            else s2+=datas[r--];
+        }     
     }
-    cout<<'\n';
-}
+    cout<<s1<<' '<<s2<<'\n';
+}  
 
 int main(){
     ios_base::sync_with_stdio(false); cin.tie(NULL);

@@ -33,9 +33,42 @@ random_device rd;
 mt19937 gen(rd());
 uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist(gen)
 
+int perm[N];
+ll score[N];
 
 void Solve(){
+    int n,k,x,y;
+    cin>>n>>k>>x>>y;
+    x--, y--;
+    rng(i,0,n-1) cin>>perm[i];
+    rng(i,0,n-1) perm[i]--;
+    rng(i,0,n-1) cin>>score[i];
 
+    ll xmx=score[x]*k;
+    ll sum=score[x];
+    int temp=perm[x];
+    int cnt=1;
+    while(temp!=x && cnt<=k){
+        xmx=max(xmx,score[temp]*(k-cnt)+sum);
+        sum+=score[temp];
+        temp=perm[temp];
+        cnt++;
+    }
+
+    ll ymx=score[y]*k;
+    sum=score[y];
+    temp=perm[y];
+    cnt=1;
+    while(temp!=y && cnt<=k){
+        ymx=max(ymx,score[temp]*(k-cnt)+sum);
+        sum+=score[temp];
+        temp=perm[temp];
+        cnt++;
+    }
+
+    if(xmx<ymx) cout<<"Sasha\n";
+    else if(xmx>ymx) cout<<"Bodya\n";
+    else cout<<"Draw\n";
 }
 
 int main(){

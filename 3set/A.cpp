@@ -33,21 +33,26 @@ random_device rd;
 mt19937 gen(rd());
 uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist(gen)
 
-int datas[N];
+int cnta[26], cntb[26];
 
 void Solve(){
-    int n;
-    cin>>n;
-    rng(i,0,n-1) cin>>datas[i];
-    sort(datas,datas+n);
-    int mx=datas[n-1]-datas[0];
-    cout<<mx<<'\n';
-}
+    string a,b;
+    cin>>a>>b;
+    int n =a.size();
+    int m = b.size();
+    rng(i,0,n-1){
+        cnta[a[i]-'a']++;
+    }
+    rng(i,0,m-1){
+        cntb[b[i]-'a']++;
+    }
+    rng(i,0,25) rng(j,0,max(cnta[i],cntb[i])-1) cout<<(char)('a'+i);
+}  
 
 int main(){
     ios_base::sync_with_stdio(false); cin.tie(NULL);
     int t=1;
-    cin>>t;
+    // cin>>t;
     while(t--){
         Solve();
     }

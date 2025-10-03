@@ -26,30 +26,68 @@ using pli=pair<ll,int>;
 using pll=pair<ll,ll>;
 using t3=tuple<int,int,int>;
 
-#define N 300030
+#define N 400030
 #define MOD 998244353
 #define INF 1000000007 
 random_device rd; 
 mt19937 gen(rd());
 uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist(gen)
 
-pll datas[N];
-ll mx[N], mn[N];
+int ans[N];
 
 void Solve(){
-    ll n,k;
-    cin>>n>>k;
-    rng(i,0,n-1) cin>>datas[i].fi;
-    rng(i,0,n-1) cin>>datas[i].se;
-    rng(i,0,n-1) mx[i]=max(datas[i].fi,datas[i].se);
-    rng(i,0,n-1) mn[i]=min(datas[i].fi,datas[i].se);
-    sort(mn,mn+n);
-    
-    ll res=0;
-    rng(i,0,n-1) res+=mx[i];
-    rng(i,0,k-2) res+=mn[n-1-i];
-    cout<<res+1<<'\n';
+    int n;
+    cin>>n;
+    if(n<=3){
+        if(n==2){
+            cout<<"1 2 1 2\n";
+        }
+        else if(n==3){
+            cout<<"1 3 1 2 3 2\n";
+        }
+        else{
+            cout<<"1 1\n";
+        }
+    }
+    else if(n%2==0){
+        // easy
+        rng(i,1,n/2-1){
+            ans[n/2+i] = i*2+1;
+            ans[n/2+i-(i*2+1)] = i*2+1;
+        }
+        ans[n/2-1]=n;
+        ans[n/2+n-1]=n;
+        ans[n/2]=1;
+        ans[2*n-1]=1;
 
+        // cout<<n/2+n-1<<' '<<ans[n/2+n-1]<<'\n';
+        rng(i,0,n/2-2){
+            ans[2*n-n/2+i] = i*2+2;
+            ans[2*n-n/2+i-(i*2+2)] = i*2+2;
+        }
+                // cout<<n/2+n-1<<' '<<ans[n/2+n-1]<<'\n';
+
+        rng(i,0,2*n-1) cout<<ans[i]<<' ';
+        cout<<'\n';
+    }
+    else{
+        rng(i,1,n/2){
+            ans[n/2-i] = i*2+1;
+            ans[n/2-i+i*2+1] = i*2+1;
+        }
+        ans[n/2+1]=n-1;
+        ans[n/2+n]=n-1;
+        ans[n/2]=1;
+        ans[2*n-1]=1;
+
+        rng(i,0,n/2-2){
+            ans[2*n-n/2+1+i-1] = i*2+2;
+            ans[2*n-n/2-1-i-1] = i*2+2;
+        }
+        rng(i,0,2*n-1) cout<<ans[i]<<' ';
+        cout<<'\n';
+    }
+    
 }
 
 int main(){

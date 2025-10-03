@@ -31,11 +31,27 @@ using t3=tuple<int,int,int>;
 #define INF 1000000007 
 random_device rd; 
 mt19937 gen(rd());
-uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist(gen)
 
+pii datas[200];
+int dist(pii a, pii b){
+    return abs(a.fi-b.fi)+abs(a.se-b.se);
+}
 
 void Solve(){
-
+    int n,k;
+    cin>>n>>k;
+    rng(i,0,n-1) cin>>datas[i].fi>>datas[i].se;
+    rng(i,0,n-1){
+        bool flag=1;
+        rng(j,0,n-1){
+            if(i!=j && dist(datas[i],datas[j])>k) flag=0;
+        }    
+        if(flag){
+            cout<<1<<'\n';
+            return;
+        }
+    }
+    cout<<-1<<'\n';
 }
 
 int main(){

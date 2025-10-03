@@ -35,7 +35,22 @@ uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist
 
 
 void Solve(){
-
+    int n,m;
+    cin>>n>>m;
+    ll num=0;
+    ll xs=0, ys=0;
+    rng(i,0,n-1){
+        string s;
+        cin>>s;
+        rng(j,0,m-1){
+            if(s[j]=='#'){
+                num++;
+                xs+=i;
+                ys+=j;
+            }
+        }
+    }
+    cout<<xs/num+1<<' '<<ys/num+1<<'\n';
 }
 
 int main(){

@@ -26,38 +26,28 @@ using pli=pair<ll,int>;
 using pll=pair<ll,ll>;
 using t3=tuple<int,int,int>;
 
-#define N 1000030
+#define N 300030
 #define MOD 998244353
 #define INF 1000000007 
 random_device rd; 
 mt19937 gen(rd());
 uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist(gen)
 
-ll bcnt[N];
+ll datas[N];
+ll sum[N];
 
 void Solve(){
-    ll n,m;
-    cin>>n>>m;
-    rng(i,0,m-1){
-        int a,b;
-        cin>>a>>b;
-        if(a==(n-b)){
-            bcnt[0]++;
-        }
-        else if(a<n-b){
-            bcnt[b+a]++;
-        }
-        else{
-            bcnt[a-(n-b)]++;
-        }
-    }
-
-    ll res=(m*(m-1))/2;
+    ll n, tot;
+    cin>>n>>tot;
+    rng(i,0,n-1) cin>>datas[i];
+    rng(i,0,n-1) sum[i]=(i==0?0:sum[i-1])+ datas[i];
+    int mx=0;
     rng(i,0,n-1){
-        res-=(bcnt[i]*(bcnt[i]-1))/2;
+        // less than or equal to sum[i-1]+tot
+        int pos = upper_bound(sum,sum+n,(i==0?0:sum[i-1])+tot)-sum;
+        mx=max(mx,pos-i);
     }
-    cout<<res<<'\n';
-
+    cout<<mx<<'\n';
 }
 
 int main(){

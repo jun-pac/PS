@@ -26,17 +26,15 @@ using pli=pair<ll,int>;
 using pll=pair<ll,ll>;
 using t3=tuple<int,int,int>;
 
-#define N 5050
-#define MOD 1000000007
+#define N 300030
+#define MOD 998244353
 #define INF 1000000007 
+random_device rd; 
+mt19937 gen(rd());
+uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist(gen)
 
-ll datas[N];
-int pos[N];
 
 void Solve(){
-    int n;
-    cin>>n;
-    rng(i,0,n-1) cin>>datas[i];
 
 }
 

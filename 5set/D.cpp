@@ -29,109 +29,29 @@ using t3=tuple<int,int,int>;
 #define N 300030
 #define MOD 998244353
 #define INF 1000000007 
-// random_device rd; 
-// mt19937 gen(rd());
-// uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist(gen)
+random_device rd; 
+mt19937 gen(rd());
+uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist(gen)
 
-string s;
-int ans[N]; // 'o'면 1, '.'이면 2, 상관없으면 0
 
 void Solve(){
-    int n,k;
-    cin>>n>>k;
-    cin>>s;
-    
-    // 일단 정해진 것은 정해진 것임.
-    int ocnt=0;
-    vc<int> vacancy;
-    int mx=0;
-    int last=-1;
-    rng(i,0,n-1){
-        if(s[i]=='o'){
-            ans[i]=1;
-            ocnt++;
-            if(last!=-1) mx+=(i-last+1)/2;
-            last=-1;
-        }
-        if(s[i]=='.'){
-            ans[i]=2;
-            if(last!=-1) mx+=(i-last+1)/2;
-            last=-1;
-        }
-        if(s[i]=='?'){
-            if((i!=0 && s[i-1]=='o') || (i!=n-1 && s[i+1]=='o')){
-                ans[i]=2;
-                if(last!=-1) mx+=(i-last+1)/2;
-                last=-1;
-            }
-            else{
-                // 진정한 ?
-                ans[i]=0;
-                if(last==-1) last=i;
-            }
-        }
+    int l=2, r=999;
+    while(l<r){
+        int mid=(l+r)>>1;
+        // is x greater than mid?
+        cout<<"? "<<mid<<' '<<mid<<endl;
+        int res;
+        cin>>res;
+        if(res==mid*mid) l=mid+1;
+        else r=mid;
     }
-    if(last!=-1) mx+=(n-last+1)/2;
-    last=-1;
-
-    // rng(i,0,n-1){
-    //     if(ans[i]==0) cout<<'?';
-    //     if(ans[i]==1) cout<<'o';
-    //     if(ans[i]==2) cout<<'.';        
-    // }
-    // cout<<'\n';
-
-    // cout<<ocnt<<' '<<k<<' '<<mx<<'\n';
-
-
-    last=-1;
-    if(mx==(k-ocnt)){
-        rng(i,0,n-1){
-            if(ans[i]!=0){
-                // 짝수길이는 ?으로 냅두는 게 맞음.
-                if(last!=-1){
-                    if((i-last)%2==1){
-                        rng(kk,0,i-last-1){
-                            if(kk%2==0) ans[kk+last]=1;
-                            else ans[kk+last]=2;
-                        }
-                    }
-                    last=-1;
-                }
-            }
-            else{
-                if(last==-1) last=i;
-            }
-        }
-        if(last!=-1){
-            if((n-last)%2==1){
-                rng(kk,0,n-last-1){
-                    if(kk%2==0) ans[kk+last]=1;
-                    else ans[kk+last]=2;
-                }
-            }
-            last=-1;
-        }
-    }
-    if(k==ocnt){
-        rng(i,0,n-1){
-            if(ans[i]==0) ans[i]=2;
-        }
-    }
- 
-
-    rng(i,0,n-1){
-        if(ans[i]==0) cout<<'?';
-        if(ans[i]==1) cout<<'o';
-        if(ans[i]==2) cout<<'.';        
-    }
-    cout<<'\n';
+    cout<<"! "<<l<<endl;
 }
 
 int main(){
     ios_base::sync_with_stdio(false); cin.tie(NULL);
     int t=1;
-    // cin>>t;
+    cin>>t;
     while(t--){
         Solve();
     }

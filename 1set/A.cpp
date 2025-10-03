@@ -29,51 +29,28 @@ using t3=tuple<int,int,int>;
 #define N 300030
 #define MOD 998244353
 #define INF 1000000007 
-// random_device rd; 
-// mt19937 gen(rd());
-// uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist(gen)
+random_device rd; 
+mt19937 gen(rd());
+uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist(gen)
 
-int a[N], b[N];
-int fmatch[N], lmatch[N];
+int datas[1001];
 
 void Solve(){
-    int n,m;
-    cin>>n>>m;
-    rng(i,0,n-1) cin>>a[i];
-    rng(i,0,m-1) cin>>b[i];
-    // 가장 앞선 match와 뒤의 match가 다른지 확인
-    int idx=0;
-    rng(i,0,m-1){
-        while(idx<n && b[i]!=a[idx]) idx++;
-        if(idx==n){
-            cout<<"No\n";
-            return;
-        }
-        fmatch[i]=idx;
-        idx++;
+    int n;
+    cin>>n;
+    rng(i,0,n-1) cin>>datas[i];
+    sort(datas,datas+n);
+    bool flag=0;
+    rng(i,0,n-2){
+        if(datas[i]==datas[i+1]) flag=1;
     }
-    idx=n-1;
-    gnr(i,m-1,0){
-        while(idx>=0 && b[i]!=a[idx]) idx--;
-        if(idx==-1){
-            cout<<"No\n";
-            return;
-        }
-        lmatch[i]=idx;
-        idx--;
-    }
-
-    rng(i,0,m-1) if(fmatch[i]!=lmatch[i]){
-        cout<<"Yes\n";
-        return;
-    }
-    cout<<"No\n";
+    cout<<(flag?"YES":"NO")<<'\n';
 }
 
 int main(){
     ios_base::sync_with_stdio(false); cin.tie(NULL);
     int t=1;
-    // cin>>t;
+    cin>>t;
     while(t--){
         Solve();
     }

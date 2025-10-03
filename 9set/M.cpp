@@ -26,47 +26,34 @@ using pli=pair<ll,int>;
 using pll=pair<ll,ll>;
 using t3=tuple<int,int,int>;
 
-#define N 300030
+#define N 500030
 #define MOD 998244353
 #define INF 1000000007 
 random_device rd; 
 mt19937 gen(rd());
 uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist(gen)
 
-pair<double,double> datas[N];
-ll n,k;
-double epsilon=0.000000001;
-
-double calc_intersect(pair<double,double> pnt){
-    // in a polar coordinate
-    
-}
-
-ll count_incident(double r){
-    
-    ll cnt=0;
-    rng(i,0,n-1){
-
-    }
-
-    return cnt/2;
-}
+int cnt[N];
+int ans[N];
 
 void Solve(){
-    cin>>n>>k;
-    rng(i,0,n-1){
-        cin>>datas[i].fi>>datas[i].se;
-    }
-    double l=0, r=100000;
-    while(r-l>epsilon){
-        double mid=(l+r)/2;
-        if(count_incident(mid) > k) r=mid;
-        else l=mid;
+    int n,k,m;
+    cin>>n>>k>>m;
+    rng(i,0,m-1){
+        int a,b;
+        cin>>a>>b;
     }
 
-    cout<<fixed;
-    cout.precision(12);
-    cout<<l;
+
+    rng(i,0,n*k-1){
+        int x;
+        cin>>x;
+        ans[i]=++cnt[x];
+    }
+
+    rng(i,0,n*k-1){
+        cout<<ans[i]<<' ';
+    }
 
 }
 

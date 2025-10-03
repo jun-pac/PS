@@ -26,22 +26,63 @@ using pli=pair<ll,int>;
 using pll=pair<ll,ll>;
 using t3=tuple<int,int,int>;
 
-#define N 300030
+#define N 500030
 #define MOD 998244353
 #define INF 1000000007 
 random_device rd; 
 mt19937 gen(rd());
 uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist(gen)
 
+ll datas[N];
+int num1[N], num2[N];
+
+ll DP[N][3][3];
 
 void Solve(){
+    int n;
+    cin>>n;
+    rng(i,0,n-1){
+        ll x;
+        cin>>x;
+        datas[i]=x%3;
+    }
+    rng(i,0,2) rng(j,0,2) DP[0][i][j]=0;
+    if(datas[0]%3==1) DP[0][1][0]=1;
+    else if(datas[0]%3==2) DP[0][0][1]=1;
+    else DP[0][0][0]=1;
 
+    rng(k,1,n-1){
+        if(datas[k]%3==1){
+            DP[k][1][0]=1;
+            rng(i,0,2) rng(j,0,2){
+                DP[k][i][j]+=DP[k-1][(i+2)%3][j];
+            }
+        }
+        else if(datas[k]%3==2){
+            DP[k][0][1]=1;
+            rng(i,0,2) rng(j,0,2){
+                DP[k][i][j]+=DP[k-1][i][(j+2)%3];
+            }
+        }
+        else{
+            DP[k][0][0]=1;
+            rng(i,0,2) rng(j,0,2){
+                DP[k][i][j]+=DP[k-1][i][j];
+            }
+        }
+    }
+
+    ll res=0;
+    rng(i,0,n-1){
+        res+=DP[i][0][0]+DP[i][1][0]+DP[i][0][1];
+    }
+    cout<<res<<'\n';
 }
 
 int main(){
     ios_base::sync_with_stdio(false); cin.tie(NULL);
     int t=1;
-    cin>>t;
+    // cin>>t;
     while(t--){
         Solve();
     }

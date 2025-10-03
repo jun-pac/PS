@@ -26,33 +26,34 @@ using pli=pair<ll,int>;
 using pll=pair<ll,ll>;
 using t3=tuple<int,int,int>;
 
-#define N 1000030
-#define MOD 1000000000
+#define N 300030
+#define MOD 998244353
 #define INF 1000000007 
-// random_device rd; 
-// mt19937 gen(rd());
-// uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist(gen)
+random_device rd; 
+mt19937 gen(rd());
+uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist(gen)
 
-ll datas[N], sum[N];
+ll n, le, ta, tar;
+
+ll w(ll day){
+    return min(2*day,(n+6)/7)*ta+day*le;
+}
 
 void Solve(){
-    int n,k;
-    cin>>n>>k;
-    fill(datas,datas+k,1);
-    rng(i,0,k-1) sum[i]=i+1;
-
-    rng(i,k,n){
-        datas[i]=(sum[i-1]-(i==k?0:sum[i-1-k]))%MOD;
-        sum[i]=sum[i-1]+datas[i];
-        sum[i]%=MOD;
+    cin>>n>>tar>>le>>ta;
+    ll l=0, r=n; // working day-> min
+    while(l<r){
+        ll mid=(l+r)>>1;
+        if(w(mid) >= tar) r=mid;
+        else l=mid+1;
     }
-    cout<<(datas[n]+MOD)%MOD<<'\n';
+    cout<<n-l<<'\n';
 }
 
 int main(){
     ios_base::sync_with_stdio(false); cin.tie(NULL);
     int t=1;
-    // cin>>t;
+    cin>>t;
     while(t--){
         Solve();
     }

@@ -35,7 +35,39 @@ uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist
 
 
 void Solve(){
-
+    double p,r,y;
+    cin>>p>>r>>y;
+    double ap=abs(p), ar=abs(r), ay=abs(y);
+    double k, pp, rp;
+    if(ap>ar){
+        if(ap-ar >= ay){
+            k=ap/2;
+            pp=0;
+            rp=y;
+        }
+        else{
+            double arp = (ay+ap-ar)/2;
+            double app = (ay-ap+ar)/2;
+            if(y<0) pp=-app, rp=-arp;
+            else pp=app, rp=arp; 
+        }
+    }
+    else{
+        if(ar-ap >= ay){
+            k=ar/2;
+            rp=0;
+            pp=y;
+        }
+        else{
+            double arp = (ay+ap-ar)/2;
+            double app = (ay-ap+ar)/2;
+            if(y<0) pp=-app, rp=-arp;
+            else pp=app, rp=arp;
+        }
+    }
+    cout<<fixed;
+    cout.precision(12);
+    cout<<(r+rp)/2<<' '<<(p+pp)/2<<' '<<(rp-r)/2<<' '<<(pp-p)/2<<'\n';
 }
 
 int main(){

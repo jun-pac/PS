@@ -33,25 +33,9 @@ random_device rd;
 mt19937 gen(rd());
 uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist(gen)
 
-ll datas[N];
 
 void Solve(){
-    int n;
-    cin>>n;
-    rng(i,0,n-1) cin>>datas[i];
 
-    ll sum=0, cnto=0;
-    rng(i,0,n-1){
-        if(datas[i]%2==1) cnto++;  
-    }
-    if(cnto==0 || cnto==n){
-        ll mx=datas[0];
-        rng(i,0,n-1) mx=max(mx,datas[i]);
-        cout<<mx<<'\n';
-        return;
-    }
-    rng(i,0,n-1) sum+=datas[i];
-    cout<<sum-(cnto-1)<<'\n';
 }
 
 int main(){

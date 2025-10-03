@@ -35,7 +35,10 @@ uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist
 
 
 void Solve(){
-
+    string a,b;
+    cin>>a>>b;
+    swap(a[0], b[0]);
+    cout<<a<<' '<<b<<'\n';
 }
 
 int main(){

@@ -25,6 +25,7 @@ using pil=pair<int,ll>;
 using pli=pair<ll,int>;
 using pll=pair<ll,ll>;
 using t3=tuple<int,int,int>;
+
 #define N 300030
 #define MOD 998244353
 #define INF 1000000007 
@@ -32,25 +33,15 @@ random_device rd;
 mt19937 gen(rd());
 uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist(gen)
 
-string s;
-int ans[N];
 
 void Solve(){
-    int n;
-    cin>>n;
-    cin>>s;
-    int l=1, r=n;
-    gnr(i,n-2,0){
-        if(s[i]=='<'){
-            ans[i+1]=l++;
-        }
-        else{
-            ans[i+1]=r--;
-        }
+    int n,m;
+    cin>>n>>m;
+    if(n<m) cout<<2<<'\n';
+    else{
+        if(n>=m+2 && m>1) cout<<3<<'\n';
+        else cout<<-1<<'\n';
     }
-    ans[0]=l;
-    rng(i,0,n-1) cout<<ans[i]<<' ';
-    cout<<'\n';
 }
 
 int main(){

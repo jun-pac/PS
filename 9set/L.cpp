@@ -33,41 +33,63 @@ random_device rd;
 mt19937 gen(rd());
 uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist(gen)
 
-pair<double,double> datas[N];
-ll n,k;
-double epsilon=0.000000001;
+int n;
+pll datas[N]; // cur, need
+ll minpsum[N];
 
-double calc_intersect(pair<double,double> pnt){
-    // in a polar coordinate
-    
-}
 
-ll count_incident(double r){
-    
-    ll cnt=0;
-    rng(i,0,n-1){
-
+bool check(ll num){
+    ll mx=-INF;
+    ll msum=0, psum=0;
+    priority_queue<ll> pr; // -p, min heap
+    gnr(i,n-1,2*num){
+        pr.push(-datas[i].se);
+    }
+    minpsum[n-2*num]=0;
+    gnr(i,2*num-1,num){
+        pr.push(-datas[i].se);
+        psum-=pr.top();
+        pr.pop();
+        minpsum[n-i]=psum;
     }
 
-    return cnt/2;
+    // m part
+    priority_queue<ll> mq; // -(m+p)
+    rng(i,0,num-1){
+        msum+=datas[i].fi;
+        mq.push(-(datas[i].fi+datas[i].se));
+    }
+
+
+    mx=max(mx,msum-minpsum[n-num]);
+    rng(i, num, 2*num-1){
+        msum+=datas[i].fi;
+        mq.push(-(datas[i].fi+datas[i].se));
+        ll temp=-mq.top();
+        mq.pop();
+        msum-=temp;
+
+        mx=max(mx,msum-minpsum[n-(i+1)]);
+    }
+
+    return mx>=0;    
+
 }
 
 void Solve(){
-    cin>>n>>k;
-    rng(i,0,n-1){
-        cin>>datas[i].fi>>datas[i].se;
-    }
-    double l=0, r=100000;
-    while(r-l>epsilon){
-        double mid=(l+r)/2;
-        if(count_incident(mid) > k) r=mid;
-        else l=mid;
-    }
+    cin>>n;
+    rng(i,0,n-1) cin>>datas[i].fi; // m_i
+    rng(i,0,n-1) cin>>datas[i].se; // p_i
+    sort(datas, datas+n);
+    reverse(datas, datas+n);
 
-    cout<<fixed;
-    cout.precision(12);
-    cout<<l;
-
+    ll l=0, r=n/2;
+    while(l<r){
+        ll mid=(l+r+1)>>1;
+        if(check(mid)) l=mid;
+        else r=mid-1;
+    }
+    cout<<l<<'\n';
 }
 
 int main(){

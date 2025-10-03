@@ -35,7 +35,16 @@ uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist
 
 
 void Solve(){
-
+    ll x, mx=-1, mxn;
+    cin>>x;
+    rng(t,2,x){
+        ll val=t*(x/t)*(x/t+1)/2;
+        if(val>mx){
+            mx=val;
+            mxn=t;
+        }
+    }
+    cout<<mxn<<'\n';
 }
 
 int main(){

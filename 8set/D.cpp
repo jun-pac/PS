@@ -33,8 +33,26 @@ random_device rd;
 mt19937 gen(rd());
 uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist(gen)
 
+ll datas[N];
 
 void Solve(){
+    ll n,x;
+    cin>>n>>x;
+    rng(i,0,n-1) cin>>datas[i];
+    sort(datas,datas+n);
+
+    // 1. make more than or equal to (x+1)/2
+    ll tar=(x+1)/2;
+    ll mn=cediv(tar,datas[n-1])*2;
+
+    // 2. make x with less tokens
+    if((mn-1)*datas[n-1]>=x){
+        // maybe possible
+        mn=max(mn-1,2LL);
+    }
+    rng(i,0,n-1) if(datas[i]==x) mn=1;
+
+    cout<<mn<<'\n';
 
 }
 
