@@ -35,17 +35,7 @@ uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist
 
 
 void Solve(){
-    int l=2, r=999;
-    while(l<r){
-        int mid=(l+r)>>1;
-        // is x greater than mid?
-        cout<<"? "<<mid<<' '<<mid<<endl;
-        int res;
-        cin>>res;
-        if(res==mid*mid) l=mid+1;
-        else r=mid;
-    }
-    cout<<"! "<<l<<endl;
+
 }
 
 int main(){

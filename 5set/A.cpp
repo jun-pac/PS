@@ -33,19 +33,9 @@ random_device rd;
 mt19937 gen(rd());
 uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist(gen)
 
-ll val(ll a, ll num){
-    return a+(num)*(num-1)/2;
-}
+
 void Solve(){
-    ll a,b;
-    cin>>a>>b;
-    ll l=1, r=INF;
-    while(l<r){
-        ll mid=(l+r+1)>>1;
-        if(val(a,mid)<=b) l=mid;
-        else r=mid-1;
-    }
-    cout<<l<<'\n';
+
 }
 
 int main(){

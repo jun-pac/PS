@@ -33,46 +33,13 @@ random_device rd;
 mt19937 gen(rd());
 uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist(gen)
 
-int getcnt(ll x){
-    int cnt=0;
-    ll temp=x;
-    while(temp!=0){
-        temp=temp/10;
-        cnt++;
-    }
-    return cnt;
-}
+
 void Solve(){
-    ll x;
-    cin>>x;
-    int cnt=getcnt(x);
-    assert(cnt<=8);
-    // cout<<"Cnt "<<cnt<<'\n';
-    if(cnt%2==1){
-        cout<<x<<0<<'\n';
-    }
-    else if(cnt<=4){
-        cout<<x;
-        rng(i,0,cnt-1) cout<<0;
-        cout<<endl;
-    }
-    else if(cnt==6){
-        cout<<x<<0<<0<<'\n';
-    }
-    else{
-        if(getcnt(2*x)!=cnt) cout<<2*x<<'\n';
-        else if(getcnt(8*x)!=cnt) cout<<2*x<<'\n';
-        else cout<<26*x<<'\n';
-    }
+
 }
 
 int main(){
     ios_base::sync_with_stdio(false); cin.tie(NULL);
-
-    // rng(k,1,100){
-    //     cout<<k<<' '<<(1000000000+k)%(k+1)<<'\n';
-    // }
-
     int t=1;
     cin>>t;
     while(t--){

@@ -35,15 +35,7 @@ uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist
 
 
 void Solve(){
-    int n;
-    cin>>n;
-    string s;
-    cin>>s;
-    int l=0, r=n-1; 
-    while(l<r && s[l]!=s[r]){
-        l++, r--;
-    }
-    cout<<r-l+1<<'\n';
+
 }
 
 int main(){

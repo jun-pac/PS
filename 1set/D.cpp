@@ -34,29 +34,8 @@ mt19937 gen(rd());
 uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist(gen)
 
 
-ll datas[N], h[N], sts[N];
-ll DP[N];
 void Solve(){
-    int n;
-    cin>>n;
-    rng(i,0,n-1) cin>>datas[i];
-    int validx=-1;
-    rng(i,0,n-1){
-        if(datas[i]!=1) validx=i;
-        sts[i]=validx;
-    }
-    DP[0]=datas[0];
-    rng(i,1,n-1){
-        DP[i]=min(datas[i] -1 +DP[i-1], (i==1?0:DP[i-2]) + datas[i-1] + max(0LL,datas[i]-i));
-        // if(datas[i]==1){
-        //     int st=sts[i];
-        //     if(st==-1) DP[i]=1;
-        //     else DP[i]=DP[st];
-        // }
-    }
-    cout<<DP[n-1]<<'\n';
-    // rng(i,0,n-1) cout<<DP[i]<<' ';
-    // cout<<'\n';
+
 }
 
 int main(){

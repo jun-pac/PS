@@ -33,62 +33,8 @@ random_device rd;
 mt19937 gen(rd());
 uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist(gen)
 
-vc<int> edges[N];
-vc<int> groups[N];
-vc<pii> ans;
-
-int DFS(int idx, int p){
-    int subsz=1;
-    int num=0;
-    vc<int> temp;
-    for(auto next: edges[idx]){
-        if(next!=p){
-            int res=DFS(next,idx);
-            subsz+=res;
-            if(res>0) temp.pb(next);
-        }
-    }
-    if(subsz>=4){
-        // cout<<"a "<<idx<<'\n';
-        groups[idx].pb(idx);
-        ans.pb({2,idx+1});
-        return 0;
-    }
-
-    for(auto next: temp){
-        for(auto val: groups[next]) groups[idx].pb(val);
-        groups[next].clear();
-    }
-    groups[idx].pb(idx);
-    if(subsz==3 && temp.size()==2){
-        swap(groups[idx][2], groups[idx][1]);
-    }
-    return subsz;
-}
 
 void Solve(){
-    int n;
-    cin>>n;
-    ans.clear();
-    rng(i,0,n-1) edges[i].clear();
-    rng(i,0,n-2){
-        int a,b;
-        cin>>a>>b;
-        a--, b--;
-        edges[a].pb(b);
-        edges[b].pb(a);
-    }
-    rng(i,0,n) groups[i].clear();
-    DFS(0, -1);
-    
-    rng(i,0,n-1){
-        rng(j,0,(int)groups[i].size()-1) ans.pb({1,groups[i][j]+1});
-    }
-
-    cout<<ans.size()<<'\n';
-    rng(i,0,(int)ans.size()-1){
-        cout<<ans[i].fi<<' '<<ans[i].se<<'\n';
-    }
 
 }
 

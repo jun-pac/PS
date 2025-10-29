@@ -34,30 +34,8 @@ mt19937 gen(rd());
 uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist(gen)
 
 
-ll a[N], c[N];
-ll h,n;
-
-bool enough_score(ll turn){
-    ll res=0;
-    rng(i,0,n-1){
-        res+=a[i]*(1+turn/c[i]);
-        if(res>=h) return 1;
-    }
-    return 0;
-}
-
 void Solve(){
-    cin>>h>>n;
-    rng(i,0,n-1) cin>>a[i];
-    rng(i,0,n-1) cin>>c[i];
-    ll tot=40000000000;
-    ll l=0, r=tot;
-    while(l<r){
-        ll mid=(l+r)>>1;
-        if(enough_score(mid)) r=mid;
-        else l=mid+1;
-    }
-    cout<<l+1<<'\n';
+
 }
 
 int main(){

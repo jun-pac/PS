@@ -33,54 +33,15 @@ random_device rd;
 mt19937 gen(rd());
 uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist(gen)
 
-ll datas[N];
-ll DP[N];
-ll inter[N]; // (j+1)**2 + DP[j]
-pair<double,pll> st[N];
 
 void Solve(){
-    int n;
-    cin>>n;
-    rng(i,0,n-1) cin>>datas[i];
-    DP[0]=0;
-    inter[0]=1;
-    int stsz=0;
-    st[stsz++]={-INF,{inter[0],-2*0}};    
-    
-    rng(i,1,n-1){
-        pair<double,pll> temp={i,{0,0}};
-        double ta, ty, tx, a, y, x;
-        int idx=upper_bound(st,st+stsz,temp)-st-1;
 
-        ty=st[idx].se.fi;
-        ta=st[idx].se.se;
-        cout<<"i idx, ty ta:"<<i<<' '<<idx<<' '<<ty<<' '<<ta<<'\n';
-
-        DP[i]=ty+ta*i+i*i-2*i;
-        cout<<"DP "<<DP[i]<<'\n';
-        inter[i]=DP[i]+(i+1)*(i+1);
-        while(stsz>0){
-            temp=st[stsz-1];
-            ta=temp.se.se, ty=temp.se.fi, tx=temp.fi;
-            a=-2*i, y=inter[i];
-            x=(y-ty)/(ta-a);
-            if(x>tx){
-                break;
-            }
-            stsz--;
-        }
-        st[stsz++]={x,{inter[i],-2*i}};
-    }
-
-    ll ans=n*n;
-    rng(i,0,n-1) ans=min(ans,DP[i]+(n-1-i)*(n-1-i));
-    cout<<ans<<'\n';
 }
 
 int main(){
     ios_base::sync_with_stdio(false); cin.tie(NULL);
     int t=1;
-    // cin>>t;
+    cin>>t;
     while(t--){
         Solve();
     }

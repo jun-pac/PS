@@ -33,21 +33,9 @@ random_device rd;
 mt19937 gen(rd());
 uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist(gen)
 
-ll n, le, ta, tar;
-
-ll w(ll day){
-    return min(2*day,(n+6)/7)*ta+day*le;
-}
 
 void Solve(){
-    cin>>n>>tar>>le>>ta;
-    ll l=0, r=n; // working day-> min
-    while(l<r){
-        ll mid=(l+r)>>1;
-        if(w(mid) >= tar) r=mid;
-        else l=mid+1;
-    }
-    cout<<n-l<<'\n';
+
 }
 
 int main(){

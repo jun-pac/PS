@@ -33,53 +33,9 @@ random_device rd;
 mt19937 gen(rd());
 uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist(gen)
 
-string s;
-bool DP[2];
 
 void Solve(){
-    int n;
-    cin>>n;
-    cin>>s;
-    DP[0]=1, DP[1]=1;
-    int idx=0;
 
-    int last0, last1;
-
-    while(idx<n && s[idx]=='1') idx++;
-    last1=idx;
-
-    while(idx<n && s[idx]=='0') idx++;
-    last0=idx;
-
-    if(last1!=0 && last0-last1==1) DP[0]=0;
-    
-
-    // DP[0] left, dp[1] right
-    while(idx<n){
-        while(idx<n && s[idx]=='1') idx++;
-        if(idx==n){
-            DP[1] = 0;
-            break;
-        }
-        if(idx-last0>=2) DP[1]=0; // 1...1
-
-        last1=idx;
-
-        while(idx<n && s[idx]=='0') idx++;
-        if(idx - last1 == 1){
-            // 1..1 0 1..
-            bool p0=DP[0];
-            DP[0]=(DP[1] && last1-last0==1);
-            DP[1]=(p0);
-        }
-        else{
-            bool temp=(DP[1] && last1-last0==1)||(DP[0]);
-            DP[0]=DP[1]=temp;
-        }
-        last0=idx;
-    }   
-    if(DP[0]||DP[1]) cout<<"YES\n";
-    else cout<<"NO\n";
 }
 
 int main(){

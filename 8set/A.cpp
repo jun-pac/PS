@@ -35,12 +35,7 @@ uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist
 
 
 void Solve(){
-    int n,m,x,y;
-    cin>>n>>m>>x>>y;
-    int a;
-    rng(i,0,n-1) cin>>a;
-    rng(i,0,m-1) cin>>a;
-    cout<<n+m<<'\n';
+
 }
 
 int main(){

@@ -33,27 +33,8 @@ random_device rd;
 mt19937 gen(rd());
 uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist(gen)
 
-int datas[N], cnt[31];
-int margin[N][31];
 
 void Solve(){
-    int n,q;
-    cin>>n>>q;
-    rng(i,0,n-1) cin>>datas[i];
-    fill(cnt,cnt+31,0);
-    rng(i,0,n-1){
-        rng(j,0,30){
-            bool temp = datas[i]&(1<<j);
-            cnt[j]+=temp;
-
-            if(datas[i]&(1<<j)) margin[i][j]=0;
-            else margin[i][j] = (1<<j) - datas[i]%(1<<j);
-        }
-    }
-    rng(i,0,n-1) {
-        cin>>datas[i];
-        
-    }
 
 }
 

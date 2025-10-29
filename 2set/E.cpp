@@ -35,22 +35,7 @@ uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist
 
 
 void Solve(){
-    ll a,b;
-    cin>>a>>b;
-    if(a==b+1){
-        ll val=2;
-        while(val*val<=a+b){
-            if((a+b)%val==0){
-                cout<<"NO\n";
-                return;
-            }
-            val++;
-        }
-        cout<<"YES\n";
-    }
-    else{
-        cout<<"NO\n";
-    }
+
 }
 
 int main(){

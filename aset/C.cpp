@@ -33,44 +33,15 @@ random_device rd;
 mt19937 gen(rd());
 uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist(gen)
 
-pii dir[4];
-ll datas[1001][1001];
-bool visited[1001][1001];
-int n,m;
-
-ll DFS(int i, int j){
-    visited[i][j]=1;
-    ll res=datas[i][j];
-    rng(k,0,3){
-        int ni=i+dir[k].fi;
-        int nj=j+dir[k].se;
-        if(0<=ni && ni<n && 0<=nj && nj<m && !visited[ni][nj] && datas[ni][nj]>0) res+=DFS(ni,nj);
-    }
-    return res;
-}
-
 
 void Solve(){
-    cin>>n>>m;
-    rng(i,0,n-1) rng(j,0,m-1) cin>>datas[i][j];
-    rng(i,0,n-1) fill(visited[i],visited[i]+m,0);
-    ll mx=0;
-    rng(i,0,n-1){
-        rng(j,0,m-1){
-            if(!visited[i][j] && datas[i][j]>0) mx=max(mx,DFS(i,j));
-        }
-    }
-    cout<<mx<<'\n';
+
 }
 
 int main(){
     ios_base::sync_with_stdio(false); cin.tie(NULL);
     int t=1;
     cin>>t;
-    dir[0]={0,1};
-    dir[1]={0,-1};
-    dir[2]={1,0};
-    dir[3]={-1,0};
     while(t--){
         Solve();
     }

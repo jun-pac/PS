@@ -35,24 +35,13 @@ uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist
 
 
 void Solve(){
-    string s;
-    cin>>s;
-    int n=s.size();
-    
-    ll inv=0;
-    ll onecnt=0;
-    rng(i,0,n-1){
-        if(s[i]=='1') onecnt++;
-        else inv+=onecnt;
-    }
-    if(inv%3!=0) cout<<"Alice\n";
-    else cout<<"Bob\n";
+
 }
 
 int main(){
     ios_base::sync_with_stdio(false); cin.tie(NULL);
     int t=1;
-    // cin>>t;
+    cin>>t;
     while(t--){
         Solve();
     }

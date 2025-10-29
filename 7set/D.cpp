@@ -26,39 +26,16 @@ using pli=pair<ll,int>;
 using pll=pair<ll,ll>;
 using t3=tuple<int,int,int>;
 
-#define N 500030
+#define N 300030
 #define MOD 998244353
 #define INF 1000000007 
 random_device rd; 
 mt19937 gen(rd());
 uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist(gen)
 
-ll datas[N];
-map<ll,ll> cnt;
-vc<ll> vals;
 
 void Solve(){
-    int n;
-    cin>>n;
-    rng(i,0,n-1) cin>>datas[i];
-    sort(datas,datas+n);
-    ll sum=0;
-    rng(i,0,n-1) sum+=datas[i];
-    cnt.clear();
-    rng(i,0,n-1) cnt[datas[i]]++;
-    
-    vals.clear();
-    for(auto [k,v] : cnt) if(v>0 && k%2==1) vals.pb(v);
-    sort(all(vals));
-    reverse(all(vals));
-    
-    ll diff=0;
-    rng(i,0,(int)vals.size()-1){
-        if(i%2==0) diff+=vals[i];
-        else diff-=vals[i];
-    }
 
-    cout<<(sum+diff)/2<<' '<<(sum-diff)/2<<'\n';
 }
 
 int main(){

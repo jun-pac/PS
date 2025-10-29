@@ -33,27 +33,15 @@ random_device rd;
 mt19937 gen(rd());
 uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist(gen)
 
-ll datas[N];
-ll sum[N];
 
 void Solve(){
-    ll n, tot;
-    cin>>n>>tot;
-    rng(i,0,n-1) cin>>datas[i];
-    rng(i,0,n-1) sum[i]=(i==0?0:sum[i-1])+ datas[i];
-    int mx=0;
-    rng(i,0,n-1){
-        // less than or equal to sum[i-1]+tot
-        int pos = upper_bound(sum,sum+n,(i==0?0:sum[i-1])+tot)-sum;
-        mx=max(mx,pos-i);
-    }
-    cout<<mx<<'\n';
+
 }
 
 int main(){
     ios_base::sync_with_stdio(false); cin.tie(NULL);
     int t=1;
-    // cin>>t;
+    cin>>t;
     while(t--){
         Solve();
     }

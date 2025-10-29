@@ -35,13 +35,7 @@ uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist
 
 
 void Solve(){
-    int n,m;
-    cin>>n>>m;
-    if(n<m) cout<<2<<'\n';
-    else{
-        if(n>=m+2 && m>1) cout<<3<<'\n';
-        else cout<<-1<<'\n';
-    }
+
 }
 
 int main(){

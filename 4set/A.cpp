@@ -35,20 +35,7 @@ uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist
 
 
 void Solve(){
-    int n;
-    cin>>n;
-    string s;
-    cin>>s;
-    ll cur=0;
-    int onecnt=0;
-    rng(i,0,n-1){
-        if(s[i]=='1'){
-            onecnt++;
-        }
-    }
-    int diffcnt=0;
-    rng(i,n-onecnt,n-1) if(s[i]=='0') diffcnt++;
-    cout<<diffcnt<<'\n';
+
 }
 
 int main(){

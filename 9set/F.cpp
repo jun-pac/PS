@@ -27,44 +27,21 @@ using pll=pair<ll,ll>;
 using t3=tuple<int,int,int>;
 
 #define N 300030
-#define MOD 1000000007
+#define MOD 998244353
 #define INF 1000000007 
 random_device rd; 
 mt19937 gen(rd());
 uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist(gen)
 
-int datas[N];
-ll DP[3030][3030];
-ll DPsum[3030][3030]; // from the smallest 
 
 void Solve(){
-    int n;
-    cin>>n;
-    rng(i,0,n-1) cin>>datas[i];
-    DP[0][datas[0]]=1;
-    rng(i,1,n) DPsum[0][i]=DPsum[0][i-1]+DP[0][datas[0]];
 
-    rng(i,1,n-1){
-        // left to right influence
-        int mx=min(datas[i-1], datas[i]-1);
-        rng(j,1,mx){
-            DP[i][j]=DPsum[i-1][j];
-        }
-        int lastpos=i;
-        while(lastpos>=0 && datas[lastpos]>=datas[i]) lastpos--;
-        DP[i][datas[i]]=DPsum[i-1][n]; // all is possible
-        
-
-        rng(j,1,n) DPsum[i][j]=(DPsum[i][j-1]+DP[i][j])%MOD;
-    }
-
-    // cout<<(DP[n-1]%MOD+MOD)%MOD<<'\n';
 }
 
 int main(){
     ios_base::sync_with_stdio(false); cin.tie(NULL);
     int t=1;
-    // cin>>t;
+    cin>>t;
     while(t--){
         Solve();
     }

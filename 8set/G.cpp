@@ -33,47 +33,15 @@ random_device rd;
 mt19937 gen(rd());
 uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist(gen)
 
-pair<double,double> datas[N];
-ll n,k;
-double epsilon=0.000000001;
-
-double calc_intersect(pair<double,double> pnt){
-    // in a polar coordinate
-    
-}
-
-ll count_incident(double r){
-    
-    ll cnt=0;
-    rng(i,0,n-1){
-
-    }
-
-    return cnt/2;
-}
 
 void Solve(){
-    cin>>n>>k;
-    rng(i,0,n-1){
-        cin>>datas[i].fi>>datas[i].se;
-    }
-    double l=0, r=100000;
-    while(r-l>epsilon){
-        double mid=(l+r)/2;
-        if(count_incident(mid) > k) r=mid;
-        else l=mid;
-    }
-
-    cout<<fixed;
-    cout.precision(12);
-    cout<<l;
 
 }
 
 int main(){
     ios_base::sync_with_stdio(false); cin.tie(NULL);
     int t=1;
-    // cin>>t;
+    cin>>t;
     while(t--){
         Solve();
     }

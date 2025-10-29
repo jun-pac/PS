@@ -34,75 +34,14 @@ mt19937 gen(rd());
 uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist(gen)
 
 
-vc<int> divs[N];
-int datas[N];
-bool is_data[N];
-vc<ll> temp[N];
-vc<pll> all_temp;
-
-
 void Solve(){
-    ll n,m;
-    cin>>n>>m;
-    rng(i,0,n-1) cin>>datas[i];
-    sort(datas,datas+n);
 
-    fill(is_data,is_data+n,0);
-    rng(i,0,n-1) is_data[datas[i]]=1;
-    
-    rng(i,0,m) temp[i].clear();
-    all_temp.clear();
-
-
-    rng(i,0,n-1){
-        for(auto val: divs[datas[i]]) if(val<=m) temp[val].pb(datas[i]);
-    }
-    // rng(i,1,m){
-    //     for(auto val: temp[i]) cout<<val<<' ';
-    //     cout<<'\n';
-    // }
-
-    ll r=0;
-    rng(i,1,m){
-        if((int)temp[i].size()==0){
-            cout<<-1<<'\n';
-            return;
-        }
-        r=max(r,temp[i][0]);
-        rng(j,0,(int)temp[i].size()-1){
-            int next;
-            if(j==(int)temp[i].size()-1) next=INF; 
-            else next=temp[i][j+1];
-            all_temp.pb({temp[i][j],next});
-        }
-    }
-
-    sort(all(all_temp));
-    int idx=0;
-    ll mn=r-datas[0]; // r is value, not idx
-    rng(l,1,n-1){
-        while(idx<all_temp.size() && all_temp[idx].fi<datas[l]){
-            r=max(r,all_temp[idx].se);
-            idx++;
-        }
-        mn=min(mn,r-datas[l]);
-    }
-    cout<<mn<<'\n';
-    
 }
 
 int main(){
     ios_base::sync_with_stdio(false); cin.tie(NULL);
     int t=1;
     cin>>t;
-
-    rng(i,1,100000){
-        int j=1;
-        while(i*j<=100000){
-            divs[i*j].pb(i);
-            j++;
-        }
-    }
     while(t--){
         Solve();
     }

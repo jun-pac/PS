@@ -33,42 +33,8 @@ random_device rd;
 mt19937 gen(rd());
 uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist(gen)
 
-ll datas[N];
-pll sdata[N]; // {val, idx}
-ll ans[N];
-ll sum[N];
-
-
 
 void Solve(){
-    int n;
-    cin>>n;
-    rng(i,0,n-1) cin>>datas[i];
-    rng(i,0,n-1) sdata[i]={datas[i],i};
-    sort(sdata,sdata+n);
-    rng(i,0,n-1) sum[i]=(i==0?0:sum[i-1])+sdata[i].fi;
-    
-    
-    ll cursum=0;
-    int idx=0;
-
-    rng(i,0,n-1){
-        if(idx<=i){
-            cursum=sum[i];
-            // cout<<"d "<<i<<' '<<sum[i]<<'\n';
-            idx=i+1;
-        }
-        while(idx<n && sdata[idx].fi<=cursum){
-            // cout<<"A "<<i<<' '<<cursum<<' '<<sdata[idx].fi<<"\n";
-            cursum+=sdata[idx].fi;
-            idx++;
-        } 
-        
-        ans[sdata[i].se]=idx-1;
-        // cout<<"? "<<sdata[i].se<<' '<<idx-1<<'\n';
-    }
-    rng(i,0,n-1) cout<<ans[i]<<' ';
-    cout<<'\n';
 
 }
 

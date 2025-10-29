@@ -35,17 +35,7 @@ uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist
 
 
 void Solve(){
-    ll d,k;
-    cin>>d>>k;
-    ll l=0, r=d/k;
-    while(l<r){
-        ll mid=(l+r+1)>>1;
-        if(mid*mid*2*k*k <= d*d) l=mid;
-        else r=mid-1;
-    }
-    // cout<<"l d "<<l<<' '<<d<<'\n';
-    if((l*l+(l+1)*(l+1))*k*k>d*d) cout<<"Utkarsh\n";
-    else cout<<"Ashish\n";
+
 }
 
 int main(){

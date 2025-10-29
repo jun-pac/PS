@@ -33,39 +33,15 @@ random_device rd;
 mt19937 gen(rd());
 uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist(gen)
 
-bool  a[10001], b[10001];
 
 void Solve(){
-    int n,s;
-    cin>>n>>s;
-    s--; // tar
-    rng(i,0,n-1){
-        cin>>a[i];
-    }
-    rng(i,0,n-1){
-        cin>>b[i];
-    }
-    if(a[0] && a[s]){
-        cout<<"YES\n";
-        return;
-
-    }
-    if(!a[0] || !b[s]){
-        cout<<"NO\n";
-        return;
-    }
-    rng(i,s+1,n-1) if(a[i]==1 && b[i]==1){
-        cout<<"YES\n";
-        return;
-    }
-    cout<<"NO\n";
 
 }
 
 int main(){
     ios_base::sync_with_stdio(false); cin.tie(NULL);
     int t=1;
-    // cin>>t;
+    cin>>t;
     while(t--){
         Solve();
     }

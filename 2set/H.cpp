@@ -35,17 +35,7 @@ uniform_int_distribution<> dist(0, INF); // random integer from [0, INF] // dist
 
 
 void Solve(){
-    ll x,y,z,k;
-    cin>>x>>y>>z>>k;
-    ll mx=0;
-    rng(i,1,x){
-        if(k%i!=0) continue;
-        rng(j,1,y){
-            if(k%(i*j)!=0 || k/(i*j)>z) continue;
-            mx=max(mx,(x-i+1)*(y-j+1)*(z-k/(i*j)+1));
-        }
-    }
-    cout<<mx<<'\n';
+
 }
 
 int main(){
